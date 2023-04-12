@@ -34,7 +34,6 @@ function App() {
           {message.map((text, index) => <li key={`${index}-${text}`}>{text}</li>)}
         </ul>
         <p>Git 테스트 (정훈)</p>
-        
         <p>Git 테스트 (준규)</p>
       </header>
     </div>
