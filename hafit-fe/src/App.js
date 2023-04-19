@@ -1,7 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
-import {useEffect, useState} from "react";
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes
+} from "react-router-dom";
 
+import './App.css';
+
+import LandingPage from './pages/LandingPage';
+import NavBar from './components/Navbar';
+import Footer from './components/Footer';
+
+function App() {
+  return (
+    <Router>
+      <div>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
+  );
+}
+
+/* 초기 연동 테스트
+ * 추후 삭제 !
 function App() {
   const [message, setMessage] = useState([]);
 
@@ -18,18 +43,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
         <ul>
           {message.map((text, index) => <li key={`${index}-${text}`}>{text}</li>)}
         </ul>
@@ -39,5 +52,6 @@ function App() {
     </div>
   );
 }
+*/
 
 export default App;
