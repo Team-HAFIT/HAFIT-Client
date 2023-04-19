@@ -8,14 +8,14 @@ import {
 import './App.css';
 
 import LandingPage from './pages/LandingPage';
-import NavBar from './components/Navbar';
+import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 function App() {
   return (
     <Router>
       <div>
-        <NavBar />
+        <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
         </Routes>
