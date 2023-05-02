@@ -1,12 +1,13 @@
-import React from 'react'
+import React from "react";
+import "../styles/landingPage.css";
 
 function LandingPage() {
+
   return (
     <div>
-        <hr />
-        <h1>Landing Page</h1>
+      해핏이다
     </div>
-  )
-}
+  );
+};
 
-export default LandingPage
+export default LandingPage;

@@ -6,14 +6,14 @@ import "../styles/navbar.css";
 
 import Logo from "../assets/img/testlogo.jpg";
 
-function Header() {
+const NavbarTest = () => {
   return (
     <Menu mode="horizontal" theme="light" className="navbar" defaultSelectedKeys={['intro']}>
-      <div key="logo">
+      <Menu.Item key="logo">
         <Link to="/" >
             <img src={Logo} alt="로고" className="logo" />
         </Link>
-      </div>
+      </Menu.Item>
 
       {/* 데스크톱에서는 '소개'와 '공지사항'을 보여줍니다. */}
       <React.Fragment>
@@ -50,4 +50,4 @@ function Header() {
   );
 };
 
-export default Header;
+export default NavbarTest;
