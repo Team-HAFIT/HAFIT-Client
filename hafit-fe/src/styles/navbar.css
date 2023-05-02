@@ -3,8 +3,11 @@ body {
 }
 
 .navbar {
+  height: 70px;
+  min-height: 70px;
   margin-left: 5rem;
   margin-right: 5rem;
+  margin-top: 8px;
 }
 
 @media (max-width: 768px) {
