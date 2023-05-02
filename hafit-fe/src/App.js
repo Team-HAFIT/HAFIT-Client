@@ -5,21 +5,32 @@ import {
   Routes
 } from "react-router-dom";
 
-import './App.css';
+// import './App.css';
+
+import Header from './components/Navbar';
+// import NavbarTest from './components/Navbar_test'
+// import NavbarTest2 from './components/Navbar_test2'
 
 import LandingPage from './pages/LandingPage';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import NoticePage from './pages/NoticePage';
+import LoginPage from './pages/LoginPage';
+import JoinPage from './pages/JoinPage';
 
 function App() {
   return (
     <Router>
       <div>
-        <Navbar />
+        <Header />
+        {/* <NavbarTest /> */}
+        {/* <NavbarTest2 /> */}
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/intro" element={<LandingPage />} /> 
+          <Route path="/notice" element={<NoticePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/join" element={<JoinPage />} />
         </Routes>
-        <Footer />
+        
       </div>
     </Router>
   );

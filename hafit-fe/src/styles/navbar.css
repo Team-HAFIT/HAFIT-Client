@@ -1,0 +1,35 @@
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.navbar {
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+
+@media (max-width: 768px) {
+  .group-menu.desktop-only {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .group-menu.mobile-only {
+    display: none;
+  }
+}
+
+.logo {
+  margin-right: 16px;
+  width: 100px;
+  height: 60px;
+}
+
+.nav-menu {
+  font-size: 16px; 
+  font-weight: 500;
+}
+
+/* :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light.ant-menu-horizontal >.ant-menu-item-selected::after, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light>.ant-menu.ant-menu-horizontal >.ant-menu-item-selected::after, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light.ant-menu-horizontal >.ant-menu-submenu-selected::after, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light>.ant-menu.ant-menu-horizontal >.ant-menu-submenu-selected::after {
+    border-bottom: none;
+} */
