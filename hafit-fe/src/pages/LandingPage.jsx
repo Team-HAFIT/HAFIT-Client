@@ -19,18 +19,18 @@ function LandingPage() {
           - 버튼은 추후 디자인 수정 예정, component로 분리하여 사용할 예정
           - 정렬, 마진 등은 추후 수정 예정
         */}
-        <h3 style={{marginTop: "56px", marginBottom: "0", marginRight:"152px", fontWeight: "400"}}>AI 헬스 메이트, 해핏 ˙ᵕ˙</h3>
-        <div style={{backgroundColor: "rgb(108, 0, 240)", marginTop: "8px", padding: "10px"}}>
-          <h1 style={{fontSize: "120px", fontWeight: "800", color: "white", textShadow: "4px 4px 64px #fff"}}>HAFIT</h1>
+        <h3>AI 헬스 메이트, 해핏 ˙ᵕ˙</h3>
+        <div>
+          <h1>HAFIT</h1>
         </div>
-        <p style={{ fontSize: "18px"}}>AI 분석을 통해 자세를 교정해주고, 개수와 세트수를 대신 세어드릴게요!</p>
+        <p>AI 분석을 통해 자세를 교정해주고, 개수와 세트수를 대신 세어드릴게요!</p>
         <Button type="primary" size="large" style={{marginTop: "156px", marginBottom:"16px", fontSize: "16px", fontWeight: "500", padding: "24px", display:"flex", alignItems: "center", backgroundColor: "rgb(108, 0, 240)"}}>
           해핏 시작하기
         </Button>
       </div>
 
       {/* Feature */}
-      <div className="container" style={{marginLeft:"5rem", marginRight:"5rem"}}>
+      <div className="container">
         {" "}
         <h2>Feature</h2>
         <Row gutter={32}>

@@ -11,6 +11,13 @@
   text-align: center;
 }
 
+.header > h3 {
+    margin-top: 56px;
+    margin-bottom: 0;
+    margin-right: 152px;
+    font-weight: 400;
+}
+
 .header > div {
     display: flex;
     align-items: center;
@@ -18,12 +25,30 @@
     height: 200px;
     width: 100px;
     margin-right: 212px;
+    border-radius: 8px;
+    background-color: rgb(108, 0, 240); 
+    margin-top: 8px;
+    padding: 10px;
+    backdrop-filter: blur(16px);
+}
+
+.header > div > h1 {
+    font-size: 120px;
+    font-weight: 800;
+    color: white;
+    text-shadow: 4px 4px 64px #fff;
+}
+
+.header > p {
+    font-size: 18px;
 }
 
 /* Container */
 .container {
   padding: 50px;
   text-align: center;
+  margin-left: 4rem;
+  margin-Right: 4rem
 }
 
 /* Feature */
