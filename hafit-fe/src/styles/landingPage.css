@@ -57,7 +57,7 @@ html, body {
     width: 100px;
     margin-right: 218px;
     border-radius: 8px;
-    background-color: rgb(108, 0, 240); 
+    background-color: rgba(108, 0, 240, 0.65); 
     margin-top: 8px;
     padding: 10px;
 }
