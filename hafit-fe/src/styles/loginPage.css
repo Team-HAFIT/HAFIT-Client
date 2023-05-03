@@ -1,0 +1,84 @@
+
+html,
+body {
+  height: 100vh;
+}
+
+:where(.css-dev-only-do-not-override-htwhyh).ant-form-item
+  .ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::before {
+  content: "";
+}
+
+/* Header */
+.header-login {
+  min-height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #111;
+  text-align: center;
+  margin: auto 0;
+}
+
+/* Login */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  text-align: center;
+  width: 100%;
+}
+
+.ant-form {
+  max-width: 600px; /* 폼의 최대 너비 */
+  width: 100%; /* 가변적으로 확장되도록 설정 */
+}
+
+.sns-login {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    text-align: center;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.kakao-login,
+.google-login,
+.naver-login {
+    margin: 2rem;
+}
+
+/* START :: footer 하단 고정 */
+.top-container {
+  min-height: 96vh;
+  position: relative;
+}
+
+.body-wrapper {
+  display: block;
+  padding-bottom: 60px; /* footer의 높이 */
+  margin-left: 4rem;
+  margin-right: 4rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer {
+  text-align: center;
+  padding: 40px 0;
+  background-color: transparent;
+
+  width: 100%;
+  height: 60px; /* footer의 높이 */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+/* END :: footer 하단 고정 */
