@@ -16,6 +16,9 @@ import NoticePage from './pages/NoticePage';
 import LoginPage from './pages/LoginPage';
 import JoinPage from './pages/JoinPage';
 
+import Test from './pages/test';
+import Test2 from './pages/Test2';
+
 function App() {
   return (
     <Router>
@@ -29,6 +32,9 @@ function App() {
           <Route path="/notice" element={<NoticePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/join" element={<JoinPage />} />
+
+          <Route path="/test" element={<Test />} />
+          <Route path="/test2" element={<Test2 />} />
         </Routes>
         
       </div>

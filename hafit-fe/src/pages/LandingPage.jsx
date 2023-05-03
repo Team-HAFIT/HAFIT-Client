@@ -1,12 +1,18 @@
 import React from "react";
 import { Button, Row, Col } from "antd";
-// import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import "../styles/landingPage.css";
 
 import Feature1 from "../assets/img/poseEstimation.png";
 
 function LandingPage() {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
   return (
     <div className="top-container">
       <div className="body-wrapper" style={{margin: 0}}>
@@ -25,7 +31,7 @@ function LandingPage() {
             <h1>HAFIT</h1>
           </div>
           <p>AI 분석을 통해 운동 자세 교정을 돕고, 개수와 세트수를 대신 세어드릴게요!</p>
-          <Button className="btn-start" style={{color: "white"}}>
+          <Button className="btn-start" style={{color: "white"}} onClick={handleLogin}>
             해핏 시작하기
           </Button>
         </div>
