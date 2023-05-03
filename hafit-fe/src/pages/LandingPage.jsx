@@ -9,7 +9,7 @@ import Feature1 from "../assets/img/poseEstimation.png";
 function LandingPage() {
   return (
     <div className="top-container">
-      <div className="body-wrapper">
+      <div className="body-wrapper" style={{margin: 0}}>
         {/* Header */}
         <div className="header">
           {" "}
