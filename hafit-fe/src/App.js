@@ -18,6 +18,7 @@ import JoinPage from './pages/JoinPage';
 
 import Test from './pages/test';
 import Test2 from './pages/Test2';
+import ExecTest from './pages/TestSquat';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
 
           <Route path="/test" element={<Test />} />
           <Route path="/test2" element={<Test2 />} />
+          <Route path="/exectest" element={<ExecTest />} />
         </Routes>
         
       </div>

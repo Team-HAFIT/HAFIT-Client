@@ -1,30 +1,32 @@
-
 html,
 body {
   height: 100vh;
 }
 
-
-
-.ant-form-item {
-    margin: 0 auto;
-    /* form, input 가운데 정렬 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-    text-align: center;
-    width: 100%;
-    height: 100%;
+label {
+  font-weight: bold;
 }
 
-.ant-row ant-form-item-row css-dev-only-do-not-override-htwhyh{
+.ant-input::placeholder {
+  font-weight: 400;
+  color: #cbcbcb;
+}
+
+:where(.css-dev-only-do-not-override-htwhyh).ant-form-item
+  .ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::before {
+  content: "";
+}
+
+/* .ant-row ant-form-item-row css-dev-only-do-not-override-htwhyh{
     margin: 0 auto;
-    /* form, input 가운데 정렬 */
+    
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center; 
+    align-items: center;
     text-align: center;
     width: 100%;
     height: 100%;
@@ -33,11 +35,10 @@ body {
 
 .ant-form-item login-form-item css-dev-only-do-not-override-htwhyh {
     margin: 0 auto;
-    /* form, input 가운데 정렬 */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center;
+    align-items: center; 
     text-align: center;
     width: 100%;
     height: 100%;
@@ -49,7 +50,7 @@ body {
     .ant-form-item-required-mark-optional
   )::before {
   content: "";
-}
+} */
 
 /* Header */
 .header-login {
@@ -58,51 +59,44 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  color: #111;
+  color: #667080;
   text-align: center;
-  margin: auto 0;
+  margin-top: 24px;
+  margin-bottom: 16px;
 }
 
 /* Login */
-.login-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* 수평 가운데 정렬 */
-  align-items: center; /* 수직 가운데 정렬 */
-  text-align: center;
-  width: 100%;
-}
 
 .ant-form {
-  max-width: 600px; /* 폼의 최대 너비 */
+  max-width: 320px; /* 폼의 최대 너비 */
   width: 100%; /* 가변적으로 확장되도록 설정 */
 }
 
 .sns-login {
-    display: flex;
-    flex-direction: row;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-    text-align: center;
-    width: 100%;
-    margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  text-align: center;
+  width: 100%;
+  margin-top: 1rem;
 }
 
 .kakao-login,
 .google-login,
 .naver-login {
-    margin: 2rem;
+  margin: 1rem;
 }
 
 /* START :: footer 하단 고정 */
 .top-container {
-  min-height: 96vh;
+  min-height: 86vh;
   position: relative;
 }
 
 .body-wrapper {
   display: block;
-  padding-bottom: 60px; /* footer의 높이 */
+  padding-bottom: 48px; /* footer의 높이 */
   margin-left: 4rem;
   margin-right: 4rem;
   align-items: center;
@@ -111,18 +105,32 @@ body {
 
 .footer {
   text-align: center;
-  padding: 40px 0;
+  padding: 8px 0;
   background-color: transparent;
 
   width: 100%;
-  height: 60px; /* footer의 높이 */
+  height: 48px; /* footer의 높이 */
   position: absolute;
   bottom: 0;
   left: 0;
 }
 /* END :: footer 하단 고정 */
 
-.body-wrapper :where(.css-dev-only-do-not-override-htwhyh)[class^="ant-form"] [class^="ant-form"], 
+.login-button {
+    width: 100%;
+    height: 48px;
+    background-color: rgb(108, 0, 240);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+
+/* .body-wrapper :where(.css-dev-only-do-not-override-htwhyh)[class^="ant-form"] [class^="ant-form"], 
 .body-wrapper :where(.css-dev-only-do-not-override-htwhyh)[class*=" ant-form"] [class^="ant-form"], 
 .body-wrapper :where(.css-dev-only-do-not-override-htwhyh)[class^="ant-form"] [class*=" ant-form"], 
 .body-wrapper :where(.css-dev-only-do-not-override-htwhyh)[class*=" ant-form"] [class*=" ant-form"] {
@@ -130,4 +138,4 @@ body {
   text-align: -webkit-center;
   display: block;
   margin: 16px;
-}
+} */

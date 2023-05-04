@@ -15,7 +15,7 @@ function LandingPage() {
 
   return (
     <div className="top-container">
-      <div className="body-wrapper" style={{margin: 0}}>
+      <div className="body-wrapper" style={{ margin: 0 }}>
         {/* Header */}
         <div className="header">
           {" "}
@@ -30,8 +30,15 @@ function LandingPage() {
           <div>
             <h1>HAFIT</h1>
           </div>
-          <p>AI 분석을 통해 운동 자세 교정을 돕고, 개수와 세트수를 대신 세어드릴게요!</p>
-          <Button className="btn-start" style={{color: "white"}} onClick={handleLogin}>
+          <p>
+            AI 분석을 통해 운동 자세 교정을 돕고, 개수와 세트수를 대신
+            세어드릴게요!
+          </p>
+          <Button
+            className="btn-start"
+            style={{ color: "white" }}
+            onClick={handleLogin}
+          >
             해핏 시작하기
           </Button>
         </div>
@@ -45,9 +52,7 @@ function LandingPage() {
               {" "}
               <img src={Feature1} alt="기능 1" />
               <h3>Feature 1</h3>
-              <p>
-                올바른 자세를 
-              </p>
+              <p>올바른 자세를</p>
             </Col>
             <Col span={8} className="feature">
               {" "}
@@ -74,8 +79,8 @@ function LandingPage() {
       {/* Footer */}
       <div className="footer">
         {" "}
-        <hr style={{background: "#dbdbdb", height: "1px", border: "0"}} />
-        <p style={{color:"#999999"}}>© 2023 HAFIT. All rights reserved.</p>
+        <hr style={{ background: "#dbdbdb", height: "1px", border: "0" }} />
+        <p style={{ color: "#999999" }}>© 2023 HAFIT. All rights reserved.</p>
       </div>
     </div>
   );
