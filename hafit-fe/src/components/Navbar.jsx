@@ -2,7 +2,7 @@ import React from "react";
 import { Menu, Button } from "antd";
 import { Link, useLocation } from "react-router-dom";
 
-import "../styles/navbar.css";
+import "../styles/components/navbar.css";
 
 import Logo from "../assets/img/testlogo.jpg";
 
@@ -40,17 +40,19 @@ function Header() {
         </Menu.Item>
       </React.Fragment>
 
-      <Menu.Item key="/login" style={{ marginLeft: "auto" }}>
-        <Button type="ghost">
-          <Link to="/login" className="nav-menu">로그인</Link>
-        </Button>
-      </Menu.Item>
+      <React.Fragment>
+        <Menu.Item key="/login" style={{ marginLeft: "auto" }}>
+          <Button type="ghost">
+            <Link to="/login" className="nav-menu">로그인</Link>
+          </Button>
+        </Menu.Item>
 
-      <Menu.Item key="/join">
-        <Button type="ghost">
-          <Link to="/join" className="nav-menu">회원가입</Link>
-        </Button>
-      </Menu.Item>
+        <Menu.Item key="/join"  style={{ marginRight: "4rem"}}>
+          <Button type="ghost">
+            <Link to="/join" className="nav-menu">회원가입</Link>
+          </Button>
+        </Menu.Item>
+      </React.Fragment>
     </Menu>
   );
 };
