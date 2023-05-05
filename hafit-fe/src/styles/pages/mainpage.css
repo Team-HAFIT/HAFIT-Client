@@ -1,0 +1,10 @@
+html,
+body {
+  height: 100vh;
+}
+
+.body-wrapper {
+  padding-bottom: 60px; /* footer의 높이 */
+  margin-left: 80px;
+  margin-right: 80px;
+}
