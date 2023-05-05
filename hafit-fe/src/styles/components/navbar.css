@@ -21,7 +21,7 @@ body {
 
 .logo {
   margin-right: 16px;
-  margin-left: 4rem;
+  margin-left: 80px;
   width: 100px;
   height: 60px;
 }
@@ -32,7 +32,7 @@ body {
 }
 
 .menu-right {
-  margin-right: 4rem;
+  margin-right: 80px;
 }
 
 /* :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light.ant-menu-horizontal >.ant-menu-item-selected::after, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light>.ant-menu.ant-menu-horizontal >.ant-menu-item-selected::after, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light.ant-menu-horizontal >.ant-menu-submenu-selected::after, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light>.ant-menu.ant-menu-horizontal >.ant-menu-submenu-selected::after {

@@ -47,7 +47,7 @@ function Header() {
           </Button>
         </Menu.Item>
 
-        <Menu.Item key="/join"  style={{ marginRight: "4rem"}}>
+        <Menu.Item key="/join"  style={{ marginRight: "80px"}}>
           <Button type="ghost">
             <Link to="/join" className="nav-menu">회원가입</Link>
           </Button>
