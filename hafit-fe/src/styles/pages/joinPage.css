@@ -1,0 +1,13 @@
+/* START :: footer 하단 고정 */
+.top-container {
+  min-height: 86vh;
+  position: relative;
+}
+
+.body-wrapper {
+  display: block;
+  padding-bottom: 48px; /* footer의 높이 */
+  margin-left: 4rem;
+  margin-right: 4rem;
+}
+/* END :: footer 하단 고정 */

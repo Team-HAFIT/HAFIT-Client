@@ -3,7 +3,9 @@ import { Button, Checkbox, Form, Input, Row, Col } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"; // axios 모듈 import
 
-import "../styles/loginPage.css";
+import Footer from "../components/Footer";
+
+import "../styles/pages/loginPage.css";
 
 import kakao from "../assets/img/sns-icons/kakao-icon.png";
 import google from "../assets/img/sns-icons/google-icon.png";
@@ -137,12 +139,7 @@ const LoginPage = () => {
           <span>아직 회원이 아니신가요?</span> <a href="/join">회원가입</a>
         </div>
 
-        {/* Footer */}
-        <div className="footer">
-          {" "}
-          <hr style={{ background: "#dbdbdb", height: "1px", border: "0" }} />
-          <p style={{ color: "#999999" }}>© 2023 HAFIT. All rights reserved.</p>
-        </div>
+        <Footer />
       </div>
     </div>
   );

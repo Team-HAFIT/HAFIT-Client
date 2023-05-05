@@ -2,7 +2,9 @@ import React from "react";
 import { Button, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 
-import "../styles/landingPage.css";
+import Footer from "../components/Footer";
+
+import "../styles/pages/landingPage.css";
 
 import Feature1 from "../assets/img/poseEstimation.png";
 
@@ -76,12 +78,7 @@ function LandingPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="footer">
-        {" "}
-        <hr style={{ background: "#dbdbdb", height: "1px", border: "0" }} />
-        <p style={{ color: "#999999" }}>© 2023 HAFIT. All rights reserved.</p>
-      </div>
+      <Footer />
     </div>
   );
 }
