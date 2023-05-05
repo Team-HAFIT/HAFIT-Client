@@ -14,7 +14,7 @@ import Header from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import NoticePage from './pages/NoticePage';
 import LoginPage from './pages/LoginPage';
-import JoinPage from './pages/JoinPage';
+import JoinPage from './pages/JoinPage'; 
 
 import Test from './pages/test';
 import Test2 from './pages/Test2';
