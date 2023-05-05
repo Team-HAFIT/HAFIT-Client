@@ -10,6 +10,8 @@ import {
 } from "antd";
 import { useState } from "react";
 
+import PhoneNumberInput from "../components/inputs/phoneNumberInput";
+
 import "../styles/joinPage.css";
 
 const { Option } = Select;
@@ -115,7 +117,7 @@ const JoinPage = () => {
                 <Option value="LG">LG U+</Option>
               </Select>
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="전화번호"
               name="phoneNumber"
               rules={[
@@ -126,7 +128,8 @@ const JoinPage = () => {
               ]}
             >
               <Input placeholder="010-1234-5678" />
-            </Form.Item>
+            </Form.Item> */}
+            <PhoneNumberInput />
             <Form.Item>
               <Checkbox checked={agreed} onChange={handleAgreeChange}>
                 약관에 동의합니다
