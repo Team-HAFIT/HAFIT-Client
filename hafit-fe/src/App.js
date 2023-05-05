@@ -14,11 +14,11 @@ import NoticePage from './pages/NoticePage';
 import LoginPage from './pages/LoginPage';
 import JoinPage from './pages/JoinPage'; 
 
-import Main from './pages/Main';
+import LoginMain from './pages/LoginMain';
+import SquatSetting from './pages/exercises/squat/SquatSetting';
 
 import Test from './pages/test';
 import Test2 from './pages/Test2';
-import ExecTest from './pages/TestSquat';
 
 function App() {
   return (
@@ -34,11 +34,11 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/join" element={<JoinPage />} />
 
-          <Route path="/main" element={<Main />} />
+          <Route path="/main" element={<LoginMain />} />
+          <Route path="/squat/setting" element={<SquatSetting />} />
 
           <Route path="/test" element={<Test />} />
           <Route path="/test2" element={<Test2 />} />
-          <Route path="/exectest" element={<ExecTest />} />
         </Routes>
         
       </div>

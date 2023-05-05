@@ -18,7 +18,11 @@ function MainHeader() {
       <Menu.Item key="1">내 프로필</Menu.Item>
       <Menu.Item key="2">내 정보 수정</Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="3">로그아웃</Menu.Item>
+      <Menu.Item key="logout">
+        <Link to="/" className="nav-menu">
+          로그아웃
+        </Link>
+      </Menu.Item>
     </Menu>
   );
 
@@ -29,8 +33,8 @@ function MainHeader() {
       className="navbar"
       selectedKeys={[location.pathname === "/" ? "/main" : location.pathname]}
     >
-      <div key="/">
-        <Link to="/">
+      <div key="/main">
+        <Link to="/main">
           <img src={Logo} alt="로고" className="logo" />
         </Link>
       </div>

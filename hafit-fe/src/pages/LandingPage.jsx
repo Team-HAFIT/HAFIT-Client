@@ -3,7 +3,7 @@ import { Button, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../components/Navbar";
-import Footer from "../components/Footer";
+import MyFooter from "../components/Footer";
 
 import "../styles/pages/landingPage.css";
 
@@ -80,7 +80,7 @@ function LandingPage() {
         </div>
       </div>
 
-      <Footer />
+      <MyFooter />
     </div>
   );
 }
