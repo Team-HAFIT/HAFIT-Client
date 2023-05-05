@@ -185,8 +185,8 @@ const JoinPage = () => {
             </Form>
           </Col>
         </Row>
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 };

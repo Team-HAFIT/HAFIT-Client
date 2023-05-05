@@ -140,9 +140,8 @@ const LoginPage = () => {
         <div className="sign-up" style={{ textAlign: "center" }}>
           <span>아직 회원이 아니신가요?</span> <a href="/join">회원가입</a>
         </div>
-
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 };
