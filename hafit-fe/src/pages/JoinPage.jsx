@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import PhoneNumberInput from "../components/inputs/PhoneNumberInput";
+import Header from "../components/Navbar";
 import Footer from "../components/Footer";
 
 import "../styles/pages/joinPage.css";
@@ -59,6 +60,7 @@ const JoinPage = () => {
 
   return (
     <div className="top-container">
+      <Header />
       <div className="body-wrapper">
         <Row justify="center" align="middle" style={{ height: "100vh" }}>
           <Col span={12} align="middle">

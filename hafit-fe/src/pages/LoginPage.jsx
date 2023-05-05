@@ -3,6 +3,7 @@ import { Button, Checkbox, Form, Input, Row, Col } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"; // axios 모듈 import
 
+import Header from "../components/Navbar";
 import Footer from "../components/Footer";
 
 import "../styles/pages/loginPage.css";
@@ -48,6 +49,7 @@ const LoginPage = () => {
 
   return (
     <div className="top-container">
+      <Header />
       <div className="body-wrapper">
         <div className="header-login">
           <h1>로그인</h1>

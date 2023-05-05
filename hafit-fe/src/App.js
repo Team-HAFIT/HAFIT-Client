@@ -7,9 +7,7 @@ import {
 
 // import './App.css';
 
-import Header from './components/Navbar';
-// import NavbarTest from './components/Navbar_test'
-// import NavbarTest2 from './components/Navbar_test2'
+// import Header from './components/Navbar';
 
 import LandingPage from './pages/LandingPage';
 import NoticePage from './pages/NoticePage';
@@ -24,7 +22,7 @@ function App() {
   return (
     <Router>
       <div>
-        <Header />
+        {/* <Header /> */}
         {/* <NavbarTest /> */}
         {/* <NavbarTest2 /> */}
         <Routes>
