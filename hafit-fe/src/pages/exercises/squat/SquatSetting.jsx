@@ -3,13 +3,11 @@ import { Form, InputNumber, Button, Card, Row, Col, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-import Header from "../components/Navbar";
-
-import "../styles/testSquat.css";
+import Header from "../../../components/MainNavbar";
 
 const { Title } = Typography;
 
-const ExecTest = () => {
+const SqautSetting = () => {
     const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
     const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
     
@@ -128,4 +126,4 @@ const ExecTest = () => {
   );
 };
 
-export default ExecTest;
+export default SqautSetting;

@@ -14,7 +14,7 @@ import axios from "axios";
 
 import PhoneNumberInput from "../components/inputs/PhoneNumberInput";
 import Header from "../components/Navbar";
-import Footer from "../components/Footer";
+import MyFooter from "../components/Footer";
 
 import "../styles/pages/joinPage.css";
 
@@ -186,7 +186,7 @@ const JoinPage = () => {
           </Col>
         </Row>
       </div>
-      <Footer />
+      <MyFooter />
     </div>
   );
 };

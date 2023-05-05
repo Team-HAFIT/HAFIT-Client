@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"; // axios 모듈 import
 
 import Header from "../components/Navbar";
-import Footer from "../components/Footer";
+import MyFooter from "../components/Footer";
 
 import "../styles/pages/loginPage.css";
 
@@ -28,7 +28,7 @@ const LoginPage = () => {
       .then((response) => {
         console.log(response.data); // 응답 결과 출력
 
-        navigate("/intro"); // 로그인 성공 시 메인 페이지로 이동
+        navigate("/main"); // 로그인 성공 시 메인 페이지로 이동
       })
       .catch((error) => {
         console.error(error);
@@ -141,7 +141,7 @@ const LoginPage = () => {
           <span>아직 회원이 아니신가요?</span> <a href="/join">회원가입</a>
         </div>
       </div>
-      <Footer />
+      <MyFooter />
     </div>
   );
 };
