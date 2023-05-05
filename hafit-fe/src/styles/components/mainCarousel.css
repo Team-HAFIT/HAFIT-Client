@@ -1,0 +1,108 @@
+html,
+body {
+  width: 100%;
+}
+
+.slider {
+  margin-top: 8px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 1rem;
+}
+.slider .wrapper {
+  height: 100%;
+  /* transition: 0.26s all linear; */
+  will-change: transform;
+}
+.slider .arrows {
+  position: absolute;
+  top: 50%;
+  background: none;
+  height: 60px;
+  border: 0;
+  cursor: pointer;
+  transition: ease 0.26s all;
+  outline: none;
+}
+.slider .arrows.prev {
+  left: 0;
+}
+.slider .arrows.prev:hover {
+  opacity: 0.7;
+  left: -10px;
+}
+.slider .arrows.next {
+  right: 0;
+}
+.slider .arrows.next:hover {
+  right: -10px;
+  opacity: 0.7;
+}
+.slider .dots-container {
+  height: auto;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: auto;
+  text-align: center;
+  left: 50%;
+  bottom: 9px;
+  transform: translateX(-50%);
+  z-index: 10;
+  list-style-type: none;
+}
+.slider .dots-container li {
+  display: inline-block;
+  padding: 5px;
+}
+.slider .dots-container li.active button {
+  color: #00d8ff;
+}
+.slider .dots-container li button {
+  color: #fff;
+  background-color: transparent;
+  border: none;
+}
+.slider .dots-container li button:hover {
+  text-decoration: none;
+  opacity: 0.7;
+  cursor: pointer;
+}
+.slider .toggle-play {
+  background: transparent;
+  border: none;
+  height: auto;
+  position: absolute;
+  width: auto;
+  right: 5%;
+  bottom: 9px;
+  color: #3d3d3d;
+  z-index: 1000000;
+}
+.slider .toggle-play:hover {
+  text-decoration: none;
+  opacity: 0.7;
+  cursor: pointer;
+}
+.slider .each-slide {
+  width: 100vw;
+  height: 60vh;
+  float: left;
+  line-height: 100vh;
+  font-size: 40vh;
+  text-align: center;
+  background-size: cover;
+  background-position: center center;
+  background-color: transparent;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.slider .each-slide.active {
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
