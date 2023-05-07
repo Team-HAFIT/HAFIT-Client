@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input } from "antd";
+import { Button, Input, Modal } from "antd";
+
 import "../../styles/pages/restTimerPage.css";
 
 const RestTimerPage = () => {
   const [timer, setTimer] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
-  const [selectedTime, setSelectedTime] = useState(0);
+  const [ setSelectedTime] = useState(0);
   const [inputTime, setInputTime] = useState(0);
 
   useEffect(() => {
@@ -62,8 +63,19 @@ const RestTimerPage = () => {
     // Next set button functionality
   };
 
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
   const handleEndWorkout = () => {
-    // End workout button functionality
+    setShowConfirmModal(true);
+  };
+
+  const handleOk = () => {
+    setShowConfirmModal(false);
+    window.location.href = "/exec/result";
+  };
+
+  const handleCancel = () => {
+    setShowConfirmModal(false);
   };
 
   return (
@@ -102,12 +114,19 @@ const RestTimerPage = () => {
       </Button>
       <Button
         type="primary"
-        onClick={handleEndWorkout}
-        disabled={!isExpired}
         className="action-button"
+        onClick={handleEndWorkout}
       >
         운동 끝내기
       </Button>
+      <Modal
+        title="운동을 끝내시겠어요?"
+        visible={showConfirmModal}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <p></p>
+      </Modal>
     </div>
   );
 };

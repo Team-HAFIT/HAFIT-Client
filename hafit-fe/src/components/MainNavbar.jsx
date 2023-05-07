@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import "../styles/components/navbar.css";
 
-import Logo from "../assets/img/testlogo.jpg";
+// import Logo from "../assets/img/testlogo.jpg";
 
 function MainHeader() {
   // 2023. 5. 4. 화요일 - 12:50
@@ -32,10 +32,11 @@ function MainHeader() {
       theme="light"
       className="navbar"
       selectedKeys={[location.pathname === "/" ? "/main" : location.pathname]}
+      style={{backgroundColor:"black"}}
     >
       <div key="/main">
         <Link to="/main">
-          <img src={Logo} alt="로고" className="logo" />
+          <p className="logo">Hafit</p>
         </Link>
       </div>
 

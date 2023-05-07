@@ -7,7 +7,7 @@ import Header from "../components/Navbar";
 const { Title } = Typography;
 
 const NoticePage = () => {
-  const [searchText, setSearchText] = useState("");
+  const [ setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -172,7 +172,7 @@ const NoticePage = () => {
           <Title level={2}>공지사항</Title>
           <Input.Search
             className="search"
-            placeholder="제목 또는 글 내용 검색"
+            placeholder="제목 또는 내용 검색"
             enterButton
             onSearch={(value) => console.log(value)}
             style={{float: "right", marginRight: "100px"}}
