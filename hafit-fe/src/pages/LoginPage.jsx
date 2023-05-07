@@ -112,8 +112,8 @@ const LoginPage = () => {
 
                 <Form.Item>
                   <Button
-                    className="login-button"
-                    type="primary"
+                    className="btn-submit"
+                    style={{ color: "white" }}
                     htmlType="submit"
                     loading={loading}
                     block

@@ -173,6 +173,7 @@ const JoinPage = () => {
               </Form.Item>
               <Form.Item>
                 <Button
+                  className="btn-submit-join"
                   type="primary"
                   htmlType="submit"
                   disabled={!agreed}
