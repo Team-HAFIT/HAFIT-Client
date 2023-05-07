@@ -23,6 +23,8 @@ import RestTimerPage from './pages/exercises/RestTimerPage';
 import Test from './pages/test';
 import Test2 from './pages/Test2';
 
+import ExecStatsPage from './pages/exercises/ExecStatsPage';
+
 function App() {
   return (
     <Router>
@@ -39,12 +41,14 @@ function App() {
 
           <Route path="/main" element={<LoginMain />} />
           <Route path="/squat/setting" element={<SquatSetting />} />
-          <Route path="/squat/exec/result" element={<SquatResult />} />
-
+          
+          <Route path="/exec/result" element={<SquatResult />} />
           <Route path="/exec/rest" element={<RestTimerPage />} />          
 
           <Route path="/test" element={<Test />} />
           <Route path="/test2" element={<Test2 />} />
+
+          <Route path="/stats" element={<ExecStatsPage />} />
         </Routes>
         
       </div>

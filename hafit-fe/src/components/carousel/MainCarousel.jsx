@@ -22,7 +22,7 @@ const slides = [
 
 const MainCarousel = () => {
   const [active, setActive] = useState(0);
-  const [autoplay, setAutoplay] = useState(false);
+  const [autoplay, setAutoplay] = useState(true);
   const max = slides.length;
 
   const intervalBetweenSlides = () =>

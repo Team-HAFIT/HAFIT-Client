@@ -8,7 +8,7 @@ import {
   Select,
   Typography,
 } from "antd";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -28,15 +28,16 @@ const JoinPage = () => {
   const onFinish = (values) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
 
+    // const { email, name, password, phone } = values; // 필요한 필드들을 추출하여 객체에 저장
+
     axios
-      .post("http://172.26.8.73:8080/user/join", JSON.stringify(values), {
+      .post("http://172.18.9.5:8080/user/signup", values, {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
       })
       .then((response) => {
         console.log(response.data); // 응답 결과 출력
-
         navigate("/intro"); // 로그인 성공 시 메인 페이지로 이동
       })
       .catch((error) => {
@@ -53,9 +54,14 @@ const JoinPage = () => {
 
   const [form] = Form.useForm();
   const [agreed, setAgreed] = useState(false);
+  const [phone, setPhone] = useState(""); // 전화번호 입력값 상태 저장
 
   const handleAgreeChange = (e) => {
     setAgreed(e.target.checked);
+  };
+
+  const handlePhoneChange = (value) => {
+    setPhone(JSON.parse(value)); // 전화번호 입력값 상태 업데이트
   };
 
   return (
@@ -155,7 +161,7 @@ const JoinPage = () => {
               </Form.Item>
               {/* <Form.Item
               label="전화번호"
-              name="phoneNumber"
+              name="phone"
               rules={[
                 {
                   required: true,
@@ -165,7 +171,10 @@ const JoinPage = () => {
             >
               <Input placeholder="010-1234-5678" />
             </Form.Item> */}
-              <PhoneNumberInput />
+              
+                <PhoneNumberInput onChange={handlePhoneChange} value={phone} />
+                <p>{phone}</p>
+              
               <Form.Item>
                 <Checkbox checked={agreed} onChange={handleAgreeChange}>
                   약관에 동의합니다

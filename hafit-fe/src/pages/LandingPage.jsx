@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Row, Col } from "antd";
+import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../components/Navbar";
@@ -7,7 +7,7 @@ import MyFooter from "../components/Footer";
 
 import "../styles/pages/landingPage.css";
 
-import Feature1 from "../assets/img/poseEstimation.png";
+// import Feature1 from "../assets/img/poseEstimation.png";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ function LandingPage() {
         </div>
 
         {/* Feature */}
-        <div className="container">
+        {/* <div className="container">
           {" "}
           <h2>Feature</h2>
           <Row gutter={32}>
@@ -77,7 +77,7 @@ function LandingPage() {
               </p>
             </Col>
           </Row>
-        </div>
+        </div> */}
       </div>
 
       <MyFooter />

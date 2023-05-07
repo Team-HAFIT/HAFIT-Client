@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input } from "antd";
 
-const PhoneNumberInput = () => {
-  const [phoneNumber, setPhoneNumber] = useState("");
-
-  useEffect(() => {
-    // 전화번호 하이픈(-) 자동으로 찍기
-    if (!phoneNumber) return;
+const PhoneNumberInput = ({ onChange, value }) => {
+  const [phone, setPhoneNumber] = useState(value || "");
 
     const addHyphen = (val) => {
       console.log(val, typeof val);
@@ -48,16 +44,28 @@ const PhoneNumberInput = () => {
       return res;
     };
 
-    setPhoneNumber(addHyphen(phoneNumber));
-  }, [phoneNumber]);
+    useEffect(() => {
+      if (!phone) return;
+      setPhoneNumber(addHyphen(phone));
+    }, [phone]);
+
+    useEffect(() => {
+      onChange && onChange(JSON.stringify(phone));
+    }, [onChange, phone]);
+
+    const handlePhoneChange = (e) => {
+      const value = e.target.value;
+      const newValue = value.replace(/-/g, "");
+      const numericValue = newValue.replace(/[^0-9]/g, "");
+      setPhoneNumber(addHyphen(numericValue));
+      onChange && onChange(JSON.stringify(addHyphen(numericValue)));
+    };
 
   return (
     <>
       <Form.Item
         label="전화번호"
-        name="phoneNumber"
-        valuePropName={phoneNumber}
-        // initialValue
+        name="phone"
         rules={[
           {
             required: true,
@@ -68,9 +76,9 @@ const PhoneNumberInput = () => {
         <Input
           type="text"
           placeholder="숫자만 입력해주세요"
-          maxLength={13}
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          maxLength={11}
+          value={phone}
+          onChange={handlePhoneChange}
         />
       </Form.Item>
     </>
