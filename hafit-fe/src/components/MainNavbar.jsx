@@ -48,17 +48,17 @@ function MainHeader() {
           </Link>
         </Menu.Item>
         <Menu.Item key="/calendar" className="group-menu desktop-only">
-          <Link to="/calendar" className="nav-menu">
+          <Link to="/prepare" className="nav-menu">
             운동 일정
           </Link>
         </Menu.Item>
         <Menu.Item key="/stats" className="group-menu desktop-only">
-          <Link to="/stats" className="nav-menu">
+          <Link to="/prepare" className="nav-menu">
             운동 통계
           </Link>
         </Menu.Item>
         <Menu.Item key="/community" className="group-menu desktop-only">
-          <Link to="/community" className="nav-menu">
+          <Link to="/prepare" className="nav-menu">
             커뮤니티
           </Link>
         </Menu.Item>

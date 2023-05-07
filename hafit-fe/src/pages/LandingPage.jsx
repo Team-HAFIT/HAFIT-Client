@@ -32,7 +32,7 @@ function LandingPage() {
           */}
           <h3>AI 헬스 메이트, 해핏 ˙ᵕ˙</h3>
           <div>
-            <h1>HAFIT</h1>
+            <h1>Hafit</h1>
           </div>
           <p>
             AI 분석을 통해 운동 자세 교정을 돕고, 개수와 세트수를 대신

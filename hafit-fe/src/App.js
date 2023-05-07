@@ -13,6 +13,7 @@ import LandingPage from './pages/LandingPage';
 import NoticePage from './pages/NoticePage';
 import LoginPage from './pages/LoginPage';
 import JoinPage from './pages/JoinPage'; 
+import PreparingPage from './pages/PreparingPage';
 
 import LoginMain from './pages/LoginMain';
 import SquatSetting from './pages/exercises/squat/SquatSetting';
@@ -38,6 +39,7 @@ function App() {
           <Route path="/notice" element={<NoticePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/join" element={<JoinPage />} />
+          <Route path="/prepare" element={<PreparingPage />} />
 
           <Route path="/main" element={<LoginMain />} />
           <Route path="/squat/setting" element={<SquatSetting />} />

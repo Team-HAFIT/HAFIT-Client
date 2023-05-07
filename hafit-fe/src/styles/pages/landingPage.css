@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'OAGothic-ExtraBold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
 html,
 body {
   height: 100vh;
@@ -12,6 +19,7 @@ body {
 /* Header */
 .header {
   height: 80vh;
+  min-height: 600px;
   background-image: linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0.85),
@@ -31,7 +39,7 @@ body {
 }
 
 .header > h3 {
-  font-size: 1.18rem;
+  font-size: 19px;
   margin-top: 56px;
   margin-bottom: 0;
   margin-right: 120px;
@@ -54,14 +62,15 @@ body {
 }
 
 .header > div > h1 {
-  font-size: 8.4vw;
+  font-family: 'OAGothic-ExtraBold';
+  font-size: 120px;
   font-weight: 800;
   color: white;
   text-shadow: 4px 4px 64px #fff;
 }
 
 .header > p {
-  font-size: 1rem;
+  font-size: 16px;
   color: rgb(220, 220, 220);
   margin-top: 32px;
 }

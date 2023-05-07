@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button, Input, Modal } from "antd";
 
+import Header from "../../components/MainNavbar";
+
 import "../../styles/pages/restTimerPage.css";
 
 const RestTimerPage = () => {
   const [timer, setTimer] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
-  const [ setSelectedTime] = useState(0);
+  const [setSelectedTime] = useState(0);
   const [inputTime, setInputTime] = useState(0);
 
   useEffect(() => {
@@ -79,54 +81,59 @@ const RestTimerPage = () => {
   };
 
   return (
-    <div className="rest-timer-container">
-      <h1>{isExpired ? "휴식 시간이 종료되었습니다!" : "휴식시간 입니다!"}</h1>
-      <div className="button-group">
-        <Button onClick={() => handleButtonClick(15)}>15초</Button>
-        <Button onClick={() => handleButtonClick(30)}>30초</Button>
-        <Button onClick={() => handleButtonClick(45)}>45초</Button>
-        <Button onClick={() => handleButtonClick(60)}>1분</Button>
-        <Button onClick={() => handleButtonClick(90)}>1분 30초</Button>
+    <div>
+      <Header />
+      <div className="rest-timer-container">
+        <h1>
+          {isExpired ? "휴식 시간이 종료되었습니다!" : "휴식시간 입니다!"}
+        </h1>
+        <div className="button-group">
+          <Button onClick={() => handleButtonClick(15)}>15초</Button>
+          <Button onClick={() => handleButtonClick(30)}>30초</Button>
+          <Button onClick={() => handleButtonClick(45)}>45초</Button>
+          <Button onClick={() => handleButtonClick(60)}>1분</Button>
+          <Button onClick={() => handleButtonClick(90)}>1분 30초</Button>
+        </div>
+        <div className="time-input-group">
+          <Button onClick={handleMinusClick}>-</Button>
+          <Input
+            type="number"
+            value={inputTime}
+            onChange={handleInputChange}
+            style={{ width: "50px", margin: "0 10px" }}
+          />
+          <Button onClick={handlePlusClick}>+</Button>
+          <Button onClick={handleSetTime}>설정</Button>
+        </div>
+        <div className="timer-container">
+          <h2 className={`timer ${isExpired ? "expired" : ""}`}>
+            {formatTime(timer)}
+          </h2>
+        </div>
+        <Button
+          type="primary"
+          onClick={handleNextSet}
+          disabled={!isExpired}
+          className="action-button"
+        >
+          다음 세트 시작하기
+        </Button>
+        <Button
+          type="primary"
+          className="action-button"
+          onClick={handleEndWorkout}
+        >
+          운동 끝내기
+        </Button>
+        <Modal
+          title="운동을 끝내시겠어요?"
+          visible={showConfirmModal}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <p></p>
+        </Modal>
       </div>
-      <div className="time-input-group">
-        <Button onClick={handleMinusClick}>-</Button>
-        <Input
-          type="number"
-          value={inputTime}
-          onChange={handleInputChange}
-          style={{ width: "50px", margin: "0 10px" }}
-        />
-        <Button onClick={handlePlusClick}>+</Button>
-        <Button onClick={handleSetTime}>설정</Button>
-      </div>
-      <div className="timer-container">
-        <h2 className={`timer ${isExpired ? "expired" : ""}`}>
-          {formatTime(timer)}
-        </h2>
-      </div>
-      <Button
-        type="primary"
-        onClick={handleNextSet}
-        disabled={!isExpired}
-        className="action-button"
-      >
-        다음 세트 시작하기
-      </Button>
-      <Button
-        type="primary"
-        className="action-button"
-        onClick={handleEndWorkout}
-      >
-        운동 끝내기
-      </Button>
-      <Modal
-        title="운동을 끝내시겠어요?"
-        visible={showConfirmModal}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <p></p>
-      </Modal>
     </div>
   );
 };
