@@ -4,22 +4,19 @@ import "../../styles/components/mainCarousel.css";
 
 const slides = [
   {
-    eachSlide: "url(https://unsplash.it/1900/1024/?image=497)",
+    eachSlide: "url(https://images.unsplash.com/photo-1557682250-33bd709cbe85?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2858&q=80)",
   },
   {
-    eachSlide: "url(https://unsplash.it/1900/1024/?image=291)",
+    eachSlide: "url(https://images.unsplash.com/photo-1614851099511-773084f6911d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80)",
   },
   {
-    eachSlide: "url(https://unsplash.it/1900/1024/?image=786)",
+    eachSlide: "url(https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80)",
   },
   {
-    eachSlide: "url(https://unsplash.it/1900/1024/?image=768)",
+    eachSlide: "url(https://images.unsplash.com/photo-1614849286521-4c58b2f0ff15?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80)",
   },
   {
-    eachSlide: "url(https://unsplash.it/1900/1024/?image=726)",
-  },
-  {
-    eachSlide: "url(https://unsplash.it/1900/1024/?image=821)",
+    eachSlide: "url(https://images.unsplash.com/photo-1618556450994-a6a128ef0d9d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1664&q=80)",
   },
 ];
 

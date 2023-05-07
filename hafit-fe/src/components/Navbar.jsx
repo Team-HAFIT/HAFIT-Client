@@ -1,10 +1,8 @@
 import React from "react";
-import { Menu, Button } from "antd";
+import { Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
 
 import "../styles/components/navbar.css";
-
-import Logo from "../assets/img/testlogo.jpg";
 
 function Header() {
   // 2023. 5. 4. 화요일 - 12:50
@@ -13,10 +11,10 @@ function Header() {
   const location = useLocation();
 
   return (
-    <Menu mode="horizontal" theme="light" className="navbar" selectedKeys={[location.pathname === "/" ? "/intro" : location.pathname]}>
+    <Menu mode="horizontal" theme="light" className="navbar" selectedKeys={[location.pathname === "/" ? "/intro" : location.pathname]} style={{backgroundColor:"black"}}>
       <div key="/">
         <Link to="/" >
-            <img src={Logo} alt="로고" className="logo" />
+            <p className="logo">Hafit</p>
         </Link>
       </div>
 
@@ -42,15 +40,11 @@ function Header() {
 
       <React.Fragment>
         <Menu.Item key="/login" style={{ marginLeft: "auto" }}>
-          <Button type="ghost">
-            <Link to="/login" className="nav-menu">로그인</Link>
-          </Button>
+            <Link to="/login" className="nav-menu-user">로그인</Link>
         </Menu.Item>
 
         <Menu.Item key="/join"  style={{ marginRight: "80px"}}>
-          <Button type="ghost">
-            <Link to="/join" className="nav-menu">회원가입</Link>
-          </Button>
+            <Link to="/join" className="nav-menu-user">회원가입</Link>
         </Menu.Item>
       </React.Fragment>
     </Menu>
