@@ -7,7 +7,7 @@ import {
   Row,
   Select,
   Typography,
-  Modal
+  Modal,
 } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +35,7 @@ const JoinPage = () => {
   };
 
   const handlePhoneChange = (value) => {
-    setPhone(JSON.parse(value)); // 전화번호 입력값 상태 업데이트
+    setPhone(value); // 전화번호 입력값 상태 업데이트
   };
 
   const handleOk = () => {
@@ -49,7 +49,7 @@ const JoinPage = () => {
     // const { email, name, password, phone } = values; // 필요한 필드들을 추출하여 객체에 저장
 
     axios
-      .post("http://172.20.3.123:8080/user/signup", values, {
+      .post("http://172.26.20.147:8080/user/signup", values, {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
@@ -177,10 +177,20 @@ const JoinPage = () => {
             >
               <Input placeholder="010-1234-5678" />
             </Form.Item> */}
-              
-                <PhoneNumberInput onChange={handlePhoneChange} value={phone} />
-                <p>{phone}</p>
-              
+            
+              <Form.Item
+                label="전화번호"
+                name="phone"
+                rules={[
+                  {
+                    required: true,
+                    message: "전화번호를 입력해주세요",
+                  },
+                ]}
+              >
+                <PhoneNumberInput onChange={handlePhoneChange} value={phone}/>
+              </Form.Item>
+
               <Form.Item>
                 <Checkbox checked={agreed} onChange={handleAgreeChange}>
                   약관에 동의합니다
