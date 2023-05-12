@@ -15,7 +15,7 @@ function Signup() {
     const user = { email, password, name, phone };
 
     axios
-      .post("http://172.26.8.73:8080/user/signup", user, {
+      .post("http://172.20.3.123:8080/user/signup", user, {
         headers: {
           "Content-Type": "application/json",
         },

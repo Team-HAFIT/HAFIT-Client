@@ -28,7 +28,7 @@ function Test() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://172.26.24.217:8080/update", user, {
+      .post("http://172.20.3.123:8080/update", user, {
         headers: {
           "Content-Type": "application/json",
         },

@@ -6,7 +6,7 @@ import Header from "../../components/MainNavbar";
 import "../../styles/pages/restTimerPage.css";
 
 const RestTimerPage = () => {
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(3);
   const [isExpired, setIsExpired] = useState(false);
   const [setSelectedTime] = useState(0);
   const [inputTime, setInputTime] = useState(0);

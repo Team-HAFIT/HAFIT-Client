@@ -7,6 +7,7 @@ import {
   Row,
   Select,
   Typography,
+  Modal
 } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +25,23 @@ const { Title } = Typography;
 const JoinPage = () => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
   const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
+  const [form] = Form.useForm();
+  const [agreed, setAgreed] = useState(false);
+  const [phone, setPhone] = useState(""); // 전화번호 입력값 상태 저장
+  const [modalVisible, setModalVisible] = useState(false); // 모달 표시 여부 상태값
+
+  const handleAgreeChange = (e) => {
+    setAgreed(e.target.checked);
+  };
+
+  const handlePhoneChange = (value) => {
+    setPhone(JSON.parse(value)); // 전화번호 입력값 상태 업데이트
+  };
+
+  const handleOk = () => {
+    setModalVisible(false);
+    navigate("/intro"); // 로그인 성공 시 메인 페이지로 이동
+  };
 
   const onFinish = (values) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
@@ -31,14 +49,14 @@ const JoinPage = () => {
     // const { email, name, password, phone } = values; // 필요한 필드들을 추출하여 객체에 저장
 
     axios
-      .post("http://172.18.9.5:8080/user/signup", values, {
+      .post("http://172.20.3.123:8080/user/signup", values, {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
       })
       .then((response) => {
         console.log(response.data); // 응답 결과 출력
-        navigate("/intro"); // 로그인 성공 시 메인 페이지로 이동
+        setModalVisible(true);
       })
       .catch((error) => {
         console.error(error.response.data);
@@ -50,18 +68,6 @@ const JoinPage = () => {
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
-  };
-
-  const [form] = Form.useForm();
-  const [agreed, setAgreed] = useState(false);
-  const [phone, setPhone] = useState(""); // 전화번호 입력값 상태 저장
-
-  const handleAgreeChange = (e) => {
-    setAgreed(e.target.checked);
-  };
-
-  const handlePhoneChange = (value) => {
-    setPhone(JSON.parse(value)); // 전화번호 입력값 상태 업데이트
   };
 
   return (
@@ -197,6 +203,18 @@ const JoinPage = () => {
         </Row>
       </div>
       <MyFooter />
+      <Modal // 모달 추가
+        visible={modalVisible}
+        title="환영합니다!"
+        onOk={handleOk}
+        onCancel={() => setModalVisible(false)}
+        centered
+        closable={false}
+      >
+        회원 가입을 축하합니다!
+        <br />
+        로그인 후 이용해주세요 ˙ᵕ˙
+      </Modal>
     </div>
   );
 };

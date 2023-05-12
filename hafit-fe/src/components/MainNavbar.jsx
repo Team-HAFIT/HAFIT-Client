@@ -76,9 +76,13 @@ function MainHeader() {
           <Link to="/calendar">모바일 메뉴2</Link>
         </Menu.Item>
       </React.Fragment>
-
+      <Menu.Item key="/exec/rest" >
+          <Link to="/exec/rest">
+            ...
+          </Link>
+        </Menu.Item>
       <Menu.Item style={{ marginLeft: "auto", marginRight: "80px" }}>
-        <Dropdown overlay={menu} trigger={["click"]}>
+       <Dropdown overlay={menu} trigger={["click"]}>
           <a
             href="/#"
             className="ant-dropdown-link"

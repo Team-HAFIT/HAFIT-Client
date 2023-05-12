@@ -42,6 +42,7 @@ function App() {
           <Route path="/prepare" element={<PreparingPage />} />
 
           <Route path="/main" element={<LoginMain />} />
+          <Route path="/mainpage" element={<LoginMain />} />
           <Route path="/squat/setting" element={<SquatSetting />} />
           
           <Route path="/exec/result" element={<SquatResult />} />

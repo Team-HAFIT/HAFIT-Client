@@ -15,7 +15,7 @@ const SqautSetting = () => {
         setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
     
         axios
-          .post("http://172.26.24.217:8080/setexec", JSON.stringify(values), {
+          .post("http://172.20.3.123:8080/setexec", JSON.stringify(values), {
             headers: {
               "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
             },

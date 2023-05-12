@@ -1,5 +1,7 @@
 import React from "react";
 import { Button, Col, Row, Typography } from "antd";
+import { Link } from "react-router-dom";
+
 import "../../../styles/pages/squatResult.css";
 
 import MainHeader from "../../../components/MainNavbar";
@@ -15,7 +17,7 @@ const SquatResult = () => {
   }. ${currentDate.getDate()} - ${currentDate.getHours()}:${currentDate.getMinutes()}`;
 
   return (
-    <div style={{backgroundColor: "#421269", height:"100vh"}}>
+    <div className="exec-result" style={{backgroundColor: "#360d57", height:"100vh"}}>
       <MainHeader />
       <Row justify="center" style={{ marginTop: "24px" }}>
         <Col>
@@ -25,10 +27,10 @@ const SquatResult = () => {
         </Col>
       </Row>
       <Row justify="center" align="middle"
-          style={{backgroundColor: "rgb(20, 20, 20)", borderRadius: "6rem", maxWidth: "80vw", margin: "auto" }}>
+          style={{backgroundColor: "rgb(20, 20, 20)", borderRadius: "6rem", maxWidth: "70vw", margin: "auto" }}>
         <Col xs={20} md={20}>
-          <Row justify="center" align="middle" style={{ minHeight: "440px" }}>
-            <Col xs={0} md={8}>
+          <Row justify="center" align="middle" style={{ minHeight: "500px" }}>
+            <Col xs={0} md={8} >
               <div>
                 <img src={SquatMuscle} alt="사진.스쿼트 자극 부위" 
                 style={{
@@ -38,7 +40,7 @@ const SquatResult = () => {
               </div>
             </Col>
             <Col xs={24} md={16}>
-              <div style={{ textAlign: "left", color: "white", marginLeft:"64px", height: "100%" }}>
+              <div style={{ textAlign: "left", color: "white", marginLeft:"40px", height: "100%", borderLeft: "1px solid #eeeeee", paddingLeft: "40px" }}>
                 <Title level={2} style={{color: "white", marginBottom: "4px", fontWeight: "bold" }}>스쿼트 <span style={{fontSize: "18px", margin: "0 4px"}}>| Squat</span></Title>
                 <p style={{margin: 0 }}>{currentDateString}</p>
                 <p><span style={{fontSize: "40px", marginRight: "6px",fontWeight: "500"}}>5</span>개 
@@ -50,7 +52,7 @@ const SquatResult = () => {
                   <span style={{fontSize: "16px", marginRight: "12px"}}>소모 칼로리</span><span style={{fontSize: "28px", fontWeight:"550", marginRight: "10px"}}>15</span><span style={{fontSize:"16px"}}>kcal</span>
                 </p>
                 <p style={{margin: "32px 0"}}>
-                <span style={{fontSize: "16px", marginRight: "12px"}}>중량</span><span style={{fontSize: "28px", fontWeight:"550", marginRight: "10px"}}>10</span><span style={{fontSize:"16px"}}>kg</span>
+                <span style={{fontSize: "16px", marginRight: "12px"}}>중량</span><span style={{fontSize: "28px", fontWeight:"550", marginRight: "10px"}}>0</span><span style={{fontSize:"16px"}}>kg</span>
                 </p>
                 <p style={{margin: "32px 0"}}>
                 <span style={{fontSize: "16px", marginRight: "12px"}}>운동 강도</span>
@@ -70,11 +72,16 @@ const SquatResult = () => {
           <div style={{ marginTop: "24px" }}>
             <Button type="primary" 
             style={{ marginRight: "12px", width:"150px", height: "48px", backgroundColor: "#212325", fontSize:"18px", fontWeight: "600", borderRadius: "16px" }}>
-              홈으로
+              <Link to="/mainpage">
+                홈으로
+              </Link>
             </Button>
             <Button type="primary"
             style={{ marginRight: "12px", width:"150px", height: "48px", backgroundColor: "#c1eaca", color:"black", fontSize:"18px", fontWeight: "700", borderRadius: "16px" }}>
-              결과 자세히 보기</Button>
+              <Link to="/prepare">
+                결과 자세히 보기
+              </Link>
+            </Button>
           </div>
         </Col>
       </Row>
