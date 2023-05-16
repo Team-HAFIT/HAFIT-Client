@@ -12,6 +12,7 @@ import {
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+// import AxiosAPI from '../api/axios'
 
 import PhoneNumberInput from "../components/inputs/PhoneNumberInput";
 import Header from "../components/Navbar";
@@ -49,7 +50,7 @@ const JoinPage = () => {
     // const { email, name, password, phone } = values; // 필요한 필드들을 추출하여 객체에 저장
 
     axios
-      .post("http://172.26.20.147:8080/user/signup", values, {
+      .post("/user/signup", values, {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
