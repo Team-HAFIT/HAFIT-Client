@@ -1,30 +1,29 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 // import './App.css';
 
 // import Header from './components/Navbar';
 
-import LandingPage from './pages/LandingPage';
-import NoticePage from './pages/NoticePage';
-import LoginPage from './pages/LoginPage';
-import JoinPage from './pages/JoinPage'; 
-import PreparingPage from './pages/PreparingPage';
+import PreparingPage from "./pages/PreparingPage";
 
-import LoginMain from './pages/LoginMain';
-import SquatSetting from './pages/exercises/squat/SquatSetting';
-import SquatResult from './pages/exercises/squat/SquatResult';
+import LandingPage from "./pages/LandingPage";
+import NoticePage from "./pages/NoticePage";
+import LoginPage from "./pages/LoginPage";
+import JoinPage from "./pages/JoinPage";
 
-import RestTimerPage from './pages/exercises/RestTimerPage';
+import LoginMain from "./pages/LoginMain";
+import EditMyInfo from "./pages/user/EditMyInfo";
 
-import Test from './pages/test';
-import Test2 from './pages/Test2';
+import SquatSetting from "./pages/exercises/squat/SquatSetting";
+import SquatResult from "./pages/exercises/squat/SquatResult";
 
-import ExecStatsPage from './pages/exercises/ExecStatsPage';
+import RestTimerPage from "./pages/exercises/RestTimerPage";
+
+import Test from "./pages/test";
+import Test2 from "./pages/Test2";
+
+import ExecStatsPage from "./pages/exercises/ExecStatsPage";
 
 function App() {
   return (
@@ -34,26 +33,28 @@ function App() {
         {/* <NavbarTest /> */}
         {/* <NavbarTest2 /> */}
         <Routes>
+          <Route path="/prepare" element={<PreparingPage />} />
+
           <Route path="/" element={<LandingPage />} />
-          <Route path="/intro" element={<LandingPage />} /> 
+          <Route path="/intro" element={<LandingPage />} />
           <Route path="/notice" element={<NoticePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/join" element={<JoinPage />} />
-          <Route path="/prepare" element={<PreparingPage />} />
 
           <Route path="/main" element={<LoginMain />} />
           <Route path="/mainpage" element={<LoginMain />} />
+          <Route path="/user/info" element={<EditMyInfo />} />
+
           <Route path="/squat/setting" element={<SquatSetting />} />
-          
+
           <Route path="/exec/result" element={<SquatResult />} />
-          <Route path="/exec/rest" element={<RestTimerPage />} />          
+          <Route path="/exec/rest" element={<RestTimerPage />} />
 
           <Route path="/test" element={<Test />} />
           <Route path="/test2" element={<Test2 />} />
 
           <Route path="/stats" element={<ExecStatsPage />} />
         </Routes>
-        
       </div>
     </Router>
   );

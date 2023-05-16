@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, Row, Col } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"; // axios 모듈 import
+import axios from "axios";
+// import AxiosAPI from '../api/axios'
 
 import Header from "../components/Navbar";
 import MyFooter from "../components/Footer";
