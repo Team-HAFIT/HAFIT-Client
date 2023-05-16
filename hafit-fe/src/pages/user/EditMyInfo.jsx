@@ -10,7 +10,7 @@ import {
   Modal,
 } from "antd";
 import DatePicker from "react-datepicker";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -26,6 +26,38 @@ const { Option } = Select;
 const { Title } = Typography;
 
 const EditMyInfo = () => {
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    birthday: "",
+    gender: "",
+    height: "",
+    weight: "",
+  });
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get("userId");
+
+    if (userId) {
+      axios
+        .get("/user/info", {
+          params: {
+            userId: userId,
+          },
+        //   timeout: 1000, // 요청 제한 시간 설정
+        })
+        .then((response) => {
+          setUserInfo(response.data);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, []);
+
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
   const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
   const [form] = Form.useForm();
@@ -117,11 +149,11 @@ const EditMyInfo = () => {
                   },
                 ]}
               >
-                <Input value="김해핏" placeholder="홍길동" />
+                <Input value={userInfo.name} placeholder="홍길동" />
               </Form.Item>
               <Form.Item label="이메일" name="email">
-                <Input value="example@hafit.com" readOnly />
-                <Input type="hidden" value="example@hafit.com" />
+                <Input value={userInfo.email} readOnly />
+                <Input type="hidden" value={userInfo.email} />
               </Form.Item>
               <Form.Item label="비밀번호">
                 <Button onClick={handleChangePassword}>비밀번호 변경</Button>
@@ -152,7 +184,7 @@ const EditMyInfo = () => {
                   },
                 ]}
               >
-                <PhoneNumberInput onChange={handlePhoneChange} value={phone} />
+                <PhoneNumberInput onChange={handlePhoneChange} value={userInfo.phone || phone} />
               </Form.Item>
               <Form.Item
                 label="생년월일"
@@ -166,7 +198,7 @@ const EditMyInfo = () => {
               >
                 <DatePicker
                   locale={ko}
-                  selected={birth}
+                  selected={userInfo.birthday || birth}
                   onChange={(date) => setBirth(date)}
                   dateFormat="yyyy년 MM월 dd일"
                   minDate={new Date("1900-01-01")}
@@ -183,7 +215,7 @@ const EditMyInfo = () => {
                   },
                 ]}
               >
-                <Radio.Group>
+                <Radio.Group defaultValue={userInfo.gender}>
                   <Radio value="male">남자</Radio>
                   <Radio value="female">여자</Radio>
                   <Radio value="unchecked">선택안함</Radio>
@@ -199,7 +231,7 @@ const EditMyInfo = () => {
                   },
                 ]}
               >
-                <Input placeholder="160" suffix="cm" />
+                <Input placeholder="160" suffix="cm" value={userInfo.height} />
               </Form.Item>
               <Form.Item
                 label="몸무게(kg)"
@@ -211,7 +243,7 @@ const EditMyInfo = () => {
                   },
                 ]}
               >
-                <Input placeholder="60" suffix="kg" />
+                <Input placeholder="60" suffix="kg" value={userInfo.weight} />
               </Form.Item>
               <Form.Item>
                 <Button
