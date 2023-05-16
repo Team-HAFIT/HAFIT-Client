@@ -55,6 +55,7 @@ const EditMyInfo = () => {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
+        timeout: 1000, // 요청 제한 시간 설정
       })
       .then((response) => {
         console.log(response.data); // 응답 결과 출력
@@ -77,7 +78,9 @@ const EditMyInfo = () => {
       title: "정말 탈퇴하시겠어요?",
       onOk: () => {
         axios
-          .delete("/user/delete")
+          .delete("/user/delete", {
+            timeout: 1000, // 요청 제한 시간 설정
+          })
           .then(() => {
             navigate("/"); // 요청이 성공하면 '/' 랜딩 페이지로 이동
           })
