@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-import Header from "../components/Navbar";
+// import Header from "../components/Navbar";
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -31,7 +31,7 @@ function Signup() {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <form onSubmit={handleSubmit}>
         <label>
           Email:

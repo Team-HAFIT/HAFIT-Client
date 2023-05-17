@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Input, Modal } from "antd";
 
-import Header from "../../components/MainNavbar";
+// import Header from "../../components/MainNavbar";
 
 import "../../styles/pages/restTimerPage.css";
 
@@ -82,7 +82,7 @@ const RestTimerPage = () => {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <div className="rest-timer-container">
         <h1>
           {isExpired ? "휴식 시간이 종료되었습니다!" : "휴식시간 입니다!"}

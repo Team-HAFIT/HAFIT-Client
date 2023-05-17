@@ -20,7 +20,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 import PhoneNumberInput from "../../components/inputs/PhoneNumberInput";
-import Header from "../../components/Navbar";
+// import Header from "../../components/Navbar";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/esm/locale";
@@ -156,7 +156,7 @@ const EditMyInfo = (userId) => {
 
   return (
     <div className="top-container">
-      <Header />
+      {/* <Header /> */}
       {isLoading ? (
         <div>로딩중...</div>
       ) : (

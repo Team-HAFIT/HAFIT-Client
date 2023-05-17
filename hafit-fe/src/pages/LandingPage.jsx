@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 
-import Header from "../components/Navbar";
+// import Header from "../components/Navbar";
 import MyFooter from "../components/Footer";
 
 import "../styles/pages/landingPage.css";
@@ -18,9 +18,8 @@ function LandingPage() {
 
   return (
     <div className="top-container">
-      <Header />
+      {/* <Header /> */}
       <div className="body-wrapper" style={{ margin: 0 }}>
-        {/* Header */}
         <div className="header">
           {" "}
           {/* 

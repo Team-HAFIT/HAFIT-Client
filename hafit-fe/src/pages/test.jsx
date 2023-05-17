@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-import Header from "../components/Navbar";
+// import Header from "../components/Navbar";
 
 function Test() {
   const [user, setUser] = useState({
@@ -44,7 +44,7 @@ function Test() {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <form onSubmit={handleSubmit} method="post">
         <div>
           <label htmlFor="USER_ID">아이디</label>

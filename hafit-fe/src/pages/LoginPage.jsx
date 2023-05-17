@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, Row, Col } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 // import AxiosAPI from '../api/axios'
 
-import Header from "../components/Navbar";
+// import Header from "../components/Navbar";
 import MyFooter from "../components/Footer";
 
 import "../styles/pages/loginPage.css";
@@ -16,7 +16,7 @@ import naver from "../assets/img/sns-icons/naver-icon.png";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
-  const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
+  // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
 
   const onFinish = (values) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
@@ -34,7 +34,8 @@ const LoginPage = () => {
         const { userId } = response.data; // 엔드포인트의 return에서 userId 추출
         Cookies.set("userId", userId); // 쿠키에 userId 저장
 
-        navigate("/main"); // 로그인 성공 시 메인 페이지로 이동
+        // navigate("/main"); // 로그인 성공 시 메인 페이지로 이동
+        window.location.href = '/main';
       })
       .catch((error) => {
         console.error(error);
@@ -57,7 +58,7 @@ const LoginPage = () => {
 
   return (
     <div className="top-container">
-      <Header />
+      {/* <Header /> */}
       <div className="body-wrapper">
         <div className="header-login">
           <h1>로그인</h1>

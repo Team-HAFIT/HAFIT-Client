@@ -3,7 +3,7 @@ import { Form, InputNumber, Button, Card, Row, Col, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-import Header from "../../../components/MainNavbar";
+// import Header from "../../../components/MainNavbar";
 
 const { Title } = Typography;
 
@@ -45,7 +45,7 @@ const SqautSetting = () => {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <Row justify="center" style={{ height: "100vh", marginTop: "4rem" }}>
         <Col span={12} align="middle">
           <Title level={2} align="middle">스쿼트 테스트</Title>
