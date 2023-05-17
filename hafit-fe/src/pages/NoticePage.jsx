@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Table, Input, Button, Typography } from "antd";
 import "../styles/pages/noticePage.css";
 
-import Header from "../components/Navbar";
+// import Header from "../components/Navbar";
 
 const { Title } = Typography;
 
@@ -166,7 +166,7 @@ const NoticePage = () => {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <div className="notice-board">
         <div className="notice-board-header">
           <Title level={2}>공지사항</Title>

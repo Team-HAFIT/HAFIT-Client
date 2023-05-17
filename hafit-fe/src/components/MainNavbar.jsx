@@ -77,7 +77,7 @@ function MainHeader() {
       </React.Fragment>
 
       {/* 모바일에서는 '모바일 메뉴1'과 '모바일 메뉴2'가 소개와 공지사항을 대체합니다. */}
-      <React.Fragment>
+      {/* <React.Fragment>
         <Menu.Item key="mobile-menu-replace" className="group-menu mobile-only">
           <Link to="/main">모바일 메뉴1</Link>
         </Menu.Item>
@@ -87,7 +87,7 @@ function MainHeader() {
         >
           <Link to="/calendar">모바일 메뉴2</Link>
         </Menu.Item>
-      </React.Fragment>
+      </React.Fragment> */}
       <Menu.Item key="/exec/rest">
         <Link to="/exec/rest">...</Link>
       </Menu.Item>

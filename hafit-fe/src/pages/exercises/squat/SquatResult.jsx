@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import "../../../styles/pages/squatResult.css";
 
-import MainHeader from "../../../components/MainNavbar";
+// import MainHeader from "../../../components/MainNavbar";
 
 import SquatMuscle from "../../../assets/img/squat_muscle.png";
 
@@ -18,7 +18,7 @@ const SquatResult = () => {
 
   return (
     <div className="exec-result" style={{backgroundColor: "#360d57", height:"100vh"}}>
-      <MainHeader />
+      {/* <MainHeader /> */}
       <Row justify="center" style={{ marginTop: "24px" }}>
         <Col>
           <Title level={1} style={{ textAlign: "center", color:"white" }}>

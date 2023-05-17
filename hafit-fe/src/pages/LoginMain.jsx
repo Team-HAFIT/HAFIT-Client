@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Row, Col } from "antd";
 // import { Link } from "react-router-dom";
 
-import MainHeader from "../components/MainNavbar";
+// import MainHeader from "../components/MainNavbar";
 import MyFooter from "../components/Footer";
 import MainCarousel from "../components/carousel/MainCarousel";
 
@@ -32,7 +32,7 @@ const data = [
 function LoginMain() {
   return (
     <div className="top-container">
-      <MainHeader />
+      {/* <MainHeader /> */}
       <div className="body-wrapper">
         <MainCarousel />
         <div style={{marginTop: "16px"}}>
