@@ -1,5 +1,5 @@
-import React from "react";
-import { Menu } from "antd";
+import React, { useEffect, useState } from "react";
+import { Menu, Avatar, Dropdown } from "antd";
 import { Link, useLocation } from "react-router-dom";
 
 import "../styles/components/navbar.css";
@@ -29,14 +29,14 @@ function Header() {
       </React.Fragment>
 
       {/* 모바일에서는 '모바일 메뉴1'과 '모바일 메뉴2'가 소개와 공지사항을 대체합니다. */}
-      <React.Fragment>
+      {/* <React.Fragment>
         <Menu.Item key="mobile-menu-replace" className="group-menu mobile-only">
           <Link to="/intro">모바일 메뉴1</Link>
         </Menu.Item>
         <Menu.Item key="mobile-menu2-replace" className="group-menu mobile-only">
           <Link to="/notice">모바일 메뉴2</Link>
         </Menu.Item>
-      </React.Fragment>
+      </React.Fragment> */}
 
       <React.Fragment>
         <Menu.Item key="/login" style={{ marginLeft: "auto" }}>

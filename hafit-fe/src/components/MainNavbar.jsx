@@ -1,7 +1,7 @@
 import React from "react";
 import { Menu, Dropdown, Avatar } from "antd";
 import { UserOutlined, DownOutlined } from "@ant-design/icons";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Cookies from "js-cookie";
 
@@ -14,30 +14,12 @@ function MainHeader() {
   // 현재 페이지의 경로를 가져와, 해당 경로에 맞는 메뉴를 강조 표시해주기 위한 useLocation hook 추가
   // root 경로일 때, default로 /intro를 선택하도록 설정하였음. (16:62)
   const location = useLocation();
-
-  // const goToUserInfo = () => {
-  //   const userId = Cookies.get('userId');
-  //   if (userId) {
-  //     axios.get('/user/info', {
-  //       params: {
-  //         userId: userId,
-  //       },
-  //     })
-  //     .then(Response => {
-  //       console.log(Response.data);
-  //       window.location.href = "/user/info";
-  //       console.log(userId);
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-  //   }
-  // };
+  const navigate = useNavigate();
 
   const goToUserInfo = () => {
     const userId = Cookies.get("userId");
     if (userId) {
-      window.location.href = `/user/info?userId=${userId}`;
+      navigate(`/user/info?userId=${userId}`);
     }
   };
 

@@ -50,7 +50,7 @@ const JoinPage = () => {
     // const { email, name, password, phone } = values; // 필요한 필드들을 추출하여 객체에 저장
 
     axios
-      .post("/user/signup", values, {
+      .post("http://172.26.21.193:8080/user/signup", values, {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
