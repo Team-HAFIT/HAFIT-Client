@@ -1,7 +1,9 @@
 import React from "react";
 import { Menu, Dropdown, Avatar } from "antd";
 import { UserOutlined, DownOutlined } from "@ant-design/icons";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
+import Cookies from "js-cookie";
 
 import "../styles/components/navbar.css";
 
@@ -12,11 +14,21 @@ function MainHeader() {
   // 현재 페이지의 경로를 가져와, 해당 경로에 맞는 메뉴를 강조 표시해주기 위한 useLocation hook 추가
   // root 경로일 때, default로 /intro를 선택하도록 설정하였음. (16:62)
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const goToUserInfo = () => {
+    const userId = Cookies.get("userId");
+    if (userId) {
+      navigate(`/user/info?userId=${userId}`);
+    }
+  };
 
   const menu = (
     <Menu>
       <Menu.Item key="1">내 프로필</Menu.Item>
-      <Menu.Item key="2">내 정보 수정</Menu.Item>
+      <Menu.Item key="2" onClick={goToUserInfo}>
+        내 정보 수정
+      </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout">
         <Link to="/" className="nav-menu">
@@ -32,7 +44,7 @@ function MainHeader() {
       theme="light"
       className="navbar"
       selectedKeys={[location.pathname === "/" ? "/main" : location.pathname]}
-      style={{backgroundColor:"black"}}
+      style={{ backgroundColor: "black" }}
     >
       <div key="/main">
         <Link to="/main">
@@ -76,13 +88,11 @@ function MainHeader() {
           <Link to="/calendar">모바일 메뉴2</Link>
         </Menu.Item>
       </React.Fragment>
-      <Menu.Item key="/exec/rest" >
-          <Link to="/exec/rest">
-            ...
-          </Link>
-        </Menu.Item>
+      <Menu.Item key="/exec/rest">
+        <Link to="/exec/rest">...</Link>
+      </Menu.Item>
       <Menu.Item style={{ marginLeft: "auto", marginRight: "80px" }}>
-       <Dropdown overlay={menu} trigger={["click"]}>
+        <Dropdown overlay={menu} trigger={["click"]}>
           <a
             href="/#"
             className="ant-dropdown-link"
