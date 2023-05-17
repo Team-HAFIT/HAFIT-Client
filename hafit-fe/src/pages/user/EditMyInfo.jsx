@@ -54,7 +54,7 @@ const EditMyInfo = (userId) => {
           params: {
             userId: userId,
           },
-          timeout: 2000, // 요청 제한 시간 설정
+          timeout: 5000, // 요청 제한 시간 설정
         })
         .then((response) => {
           
@@ -107,7 +107,7 @@ const EditMyInfo = (userId) => {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
-        timeout: 1000, // 요청 제한 시간 설정
+        timeout: 5000, // 요청 제한 시간 설정
       })
       .then((response) => {
         console.log(response.data); // 응답 결과 출력
@@ -137,7 +137,7 @@ const EditMyInfo = (userId) => {
             headers: {
               "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
             },
-            timeout: 1000, // 요청 제한 시간 설정
+            timeout: 5000, // 요청 제한 시간 설정
           })
           .then(() => {
             navigate("/"); // 요청이 성공하면 '/' 랜딩 페이지로 이동

@@ -32,7 +32,7 @@ function Test() {
         headers: {
           "Content-Type": "application/json",
         },
-        timeout: 1000, // 요청 제한 시간 설정
+        timeout: 5000, // 요청 제한 시간 설정
       })
       .then((response) => {
         console.log(response.data);
