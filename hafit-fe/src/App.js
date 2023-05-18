@@ -3,26 +3,35 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 // import './App.css';
 
+// 공통
 import Header from './components/Navbar';
-
 import PreparingPage from "./pages/PreparingPage";
 
+// 비회원
 import LandingPage from "./pages/LandingPage";
 import NoticePage from "./pages/NoticePage";
 import LoginPage from "./pages/LoginPage";
 import JoinPage from "./pages/JoinPage";
 
+// 회원
 import LoginMain from "./pages/LoginMain";
 import EditMyInfo from "./pages/user/EditMyInfo";
 
+// 운동 : 공통
+import RestTimerPage from "./pages/exercises/RestTimerPage";
+
+// 운동 : 스쿼트
 import SquatSetting from "./pages/exercises/squat/SquatSetting";
 import SquatResult from "./pages/exercises/squat/SquatResult";
 
-import RestTimerPage from "./pages/exercises/RestTimerPage";
+// 커뮤니티
+import ViewPostsAll from "./pages/community/ViewPostsAll";
 
+// 테스트용
 import Test from "./pages/test";
 import Test2 from "./pages/Test2";
 
+// 임시 사용
 import ExecStatsPage from "./pages/exercises/ExecStatsPage";
 
 function App() {
@@ -30,33 +39,50 @@ function App() {
     <Router>
       <div>
         <Header />
-        {/* <NavbarTest /> */}
-        {/* <NavbarTest2 /> */}
         <Routes>
+          {/* 공통 */}
           <Route path="/prepare" element={<PreparingPage />} />
 
+          {/* 비회원 */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/intro" element={<LandingPage />} />
           <Route path="/notice" element={<NoticePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/join" element={<JoinPage />} />
 
+          {/* 회원 */}
           <Route path="/main" element={<LoginMain />} />
           <Route path="/mainpage" element={<LoginMain />} />
           <Route path="/user/info" element={<EditMyInfo />} />
 
+          {/* 운동 */}
           <Route path="/squat/setting" element={<SquatSetting />} />
-
           <Route path="/exec/result" element={<SquatResult />} />
           <Route path="/exec/rest" element={<RestTimerPage />} />
 
+          {/* 커뮤니티 */}
+          {/* <Route path="/community/main" element={<ViewPostsAll />} /> */}
+          <Route path="/community/*" element={<CommunityRoutes />} />
+
+          {/* 테스트용 */}
           <Route path="/test" element={<Test />} />
           <Route path="/test2" element={<Test2 />} />
 
+          {/* 임시 사용 */}
           <Route path="/stats" element={<ExecStatsPage />} />
         </Routes>
       </div>
     </Router>
+  );
+}
+
+function CommunityRoutes() {
+  return (
+    <Routes>
+      {/* /community 경로에 대한 중첩 라우트 */}
+      <Route path="/main" element={<ViewPostsAll />} />
+      {/* <Route path=":postId" element={<ViewPostDetails />} /> */}
+    </Routes>
   );
 }
 

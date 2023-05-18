@@ -1,6 +1,7 @@
 @font-face {
-  font-family: 'OAGothic-ExtraBold';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
+  font-family: "OAGothic-ExtraBold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2")
+    format("woff2");
   font-weight: 800;
   font-style: normal;
 }
@@ -31,7 +32,7 @@
 }
 
 .nav-menu {
-  font-size: 16px; 
+  font-size: 16px;
 }
 
 .menu-right {
@@ -45,26 +46,25 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .navbar {
   height: 100%;
   max-height: 60px;
-  min-height: 60px;
+  min-height: 20px;
   display: flex;
   align-items: center;
 }
 
 .logo {
-  font-family: 'OAGothic-ExtraBold';
+  font-family: "OAGothic-ExtraBold";
   color: white;
   font-size: 24px;
   margin: 0;
   margin-right: 16px;
   margin-left: 80px;
   width: 100px;
-  
 }
 
 @media (max-width: 768px) {
@@ -78,7 +78,3 @@ body {
     display: none;
   }
 }
-
-/* :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light.ant-menu-horizontal >.ant-menu-item-selected::after, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light>.ant-menu.ant-menu-horizontal >.ant-menu-item-selected::after, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light.ant-menu-horizontal >.ant-menu-submenu-selected::after, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light>.ant-menu.ant-menu-horizontal >.ant-menu-submenu-selected::after {
-    border-bottom: none;
-} */

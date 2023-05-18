@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 // import Header from "../components/Navbar";
+import MainHeader from "../components/MainNavbar";
 
 function Test() {
   const [user, setUser] = useState({
@@ -44,6 +45,7 @@ function Test() {
 
   return (
     <div>
+      <MainHeader />
       {/* <Header /> */}
       <form onSubmit={handleSubmit} method="post">
         <div>

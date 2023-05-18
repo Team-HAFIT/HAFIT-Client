@@ -1,0 +1,43 @@
+.testoffset {
+  margin-top: 0;
+  padding-top: 60px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.testnavbar {
+  position: fixed;
+  width: calc(100% - 400px);
+  height: 40px;
+  padding-right: 40px;
+  margin: 16px 60px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e7e7e7fa;
+  transition: 0.4s;
+  z-index: 1;
+
+  &.small {
+    height: 48px;
+    box-shadow: 0 0 5px rgba(black, 0.2);
+    background: #111111bc;
+
+    & ~ .testoffset {
+      padding-top: 140px;
+    }
+
+    .testlogo {
+      padding-top: 20px;
+      font-size: 0px;
+      text-shadow: none;
+    }
+  }
+}
+
+.ant-list-item-meta-title {
+    margin: 0 !important;
+}
