@@ -52,7 +52,7 @@ body {
 .navbar {
   height: 100%;
   max-height: 60px;
-  min-height: 20px;
+  min-height: 60px;
   display: flex;
   align-items: center;
 }
