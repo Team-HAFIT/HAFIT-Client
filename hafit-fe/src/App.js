@@ -3,8 +3,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 // import './App.css';
 
+// Main Layout
+import MainLayout from "./layout/MainLayout";
+
 // 공통
-import Header from './components/Navbar';
+//------ Header 예외 처리를 위한 MainLayout을 사용함에 따라 주석 처리 ------//
+//------ 2023. 05. 19 (금) 13:04 -------------//
+// import Header from "./components/Navbar";
 import PreparingPage from "./pages/PreparingPage";
 
 // 비회원
@@ -38,38 +43,42 @@ function App() {
   return (
     <Router>
       <div>
-        <Header />
+        {/* <Header /> */}
         <Routes>
-          {/* 공통 */}
-          <Route path="/prepare" element={<PreparingPage />} />
+          {/*공통 Header를 포함하는 컴포넌트 */}
+          <Route element={<MainLayout />}>
+            {/* 공통 */}
+            <Route path="/prepare" element={<PreparingPage />} />
 
-          {/* 비회원 */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/intro" element={<LandingPage />} />
-          <Route path="/notice" element={<NoticePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/join" element={<JoinPage />} />
+            {/* 비회원 */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/intro" element={<LandingPage />} />
+            <Route path="/notice" element={<NoticePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/join" element={<JoinPage />} />
 
-          {/* 회원 */}
-          <Route path="/main" element={<LoginMain />} />
-          <Route path="/mainpage" element={<LoginMain />} />
-          <Route path="/user/info" element={<EditMyInfo />} />
+            {/* 회원 */}
+            <Route path="/main" element={<LoginMain />} />
+            <Route path="/mainpage" element={<LoginMain />} />
+            <Route path="/user/info" element={<EditMyInfo />} />
 
-          {/* 운동 */}
-          <Route path="/squat/setting" element={<SquatSetting />} />
-          <Route path="/exec/result" element={<SquatResult />} />
-          <Route path="/exec/rest" element={<RestTimerPage />} />
+            {/* 운동 */}
+            <Route path="/squat/setting" element={<SquatSetting />} />
+            <Route path="/exec/result" element={<SquatResult />} />
+            <Route path="/exec/rest" element={<RestTimerPage />} />
+            
+            {/* 테스트용 */}
+            <Route path="/test" element={<Test />} />
+            <Route path="/test2" element={<Test2 />} />
 
+            {/* 임시 사용 */}
+            <Route path="/stats" element={<ExecStatsPage />} />
+          </Route>
+
+          {/* 공통 Header를 포함하지 않는 컴포넌트 */}
           {/* 커뮤니티 */}
           {/* <Route path="/community/main" element={<ViewPostsAll />} /> */}
           <Route path="/community/*" element={<CommunityRoutes />} />
-
-          {/* 테스트용 */}
-          <Route path="/test" element={<Test />} />
-          <Route path="/test2" element={<Test2 />} />
-
-          {/* 임시 사용 */}
-          <Route path="/stats" element={<ExecStatsPage />} />
         </Routes>
       </div>
     </Router>
