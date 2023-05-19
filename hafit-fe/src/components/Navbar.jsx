@@ -13,6 +13,8 @@ function Header() {
   // root 경로일 때, default로 /intro를 선택하도록 설정하였음. (16:62)
   const location = useLocation();
   const navigate = useNavigate();
+
+  // const isLoggedIn = true; // 테스트용
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 state
 
   useEffect(() => {
@@ -88,8 +90,8 @@ function Header() {
                 운동 통계
               </Link>
             </Menu.Item>
-            <Menu.Item key="/community" className="group-menu desktop-only">
-              <Link to="/prepare" className="nav-menu">
+            <Menu.Item key="/community/main" className="group-menu desktop-only">
+              <Link to="/community/main" className="nav-menu">
                 커뮤니티
               </Link>
             </Menu.Item>

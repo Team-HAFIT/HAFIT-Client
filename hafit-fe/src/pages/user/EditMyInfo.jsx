@@ -12,6 +12,8 @@ import {
   Radio,
   Typography,
   Modal,
+  Spin,
+  Divider,
 } from "antd";
 import DatePicker from "react-datepicker";
 import React, { useState, useEffect } from "react";
@@ -158,7 +160,16 @@ const EditMyInfo = (userId) => {
     <div className="top-container">
       {/* <Header /> */}
       {isLoading ? (
-        <div>로딩중...</div>
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          background: "rgba(0, 0, 0, 0.05)",
+          height: "calc(100vh - 50px)",
+        }}>
+          <Spin style={{paddingBottom: "96px",}}/>
+        </div>
       ) : (
         /* 로딩이 완료되면 아래의 내용을 랜더링 */
         <div className="body-wrapper">
@@ -235,6 +246,7 @@ const EditMyInfo = (userId) => {
                     defaultValue={userInfo.phone}
                   />
                 </Form.Item>
+                <Divider plain>추가 정보</Divider>
                 <Form.Item
                   label="생년월일"
                   name="birthday"
@@ -299,6 +311,7 @@ const EditMyInfo = (userId) => {
                 >
                   <Input placeholder="60" suffix="kg" value={userInfo.weight} />
                 </Form.Item>
+                <Divider />
                 <Form.Item>
                   <Button
                     className="btn-submit-join"

@@ -69,8 +69,8 @@ function MainHeader() {
             운동 통계
           </Link>
         </Menu.Item>
-        <Menu.Item key="/community" className="group-menu desktop-only">
-          <Link to="/prepare" className="nav-menu">
+        <Menu.Item key="/community/main" className="group-menu desktop-only">
+          <Link to="/community/main" className="nav-menu">
             커뮤니티
           </Link>
         </Menu.Item>
