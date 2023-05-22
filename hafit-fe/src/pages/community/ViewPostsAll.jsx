@@ -10,7 +10,9 @@ import {
   CommentOutlined,
 } from "@ant-design/icons";
 import { FiHeart } from "react-icons/fi";
-import { Layout, Menu, theme, Avatar, List } from "antd";
+import { GoSearch } from "react-icons/go";
+import { IoMdNotifications } from "react-icons/io";
+import { Layout, Menu, theme, Avatar, List, Badge } from "antd";
 import VirtualList from "rc-virtual-list";
 import React, { useEffect, useState, useCallback } from "react";
 
@@ -20,7 +22,7 @@ import "../../styles/pages/community/viewPostsAll.css";
 
 const fakeDataUrl =
   "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
-const ContainerHeight = 800;
+const ContainerHeight = 1200;
 
 const { Content, Footer, Sider } = Layout;
 const items = [
@@ -117,7 +119,49 @@ const ViewPostsAll = () => {
           }}
         >
           <div className="testnavbar">
-            {/* <h1 className="testlogo"></h1> */}
+            <Menu
+              mode="horizontal"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                width: "100%",
+                height: "100%",
+                maxHeight: "40px",
+                padding: "0",
+                margin: "0",
+                backgroundColor: "inherit",
+                borderRadius: "12px",
+              }}
+            >
+              <div style={{ display: "flex" }}>
+                <Menu.Item key="all-posts">전체 글 보기</Menu.Item>
+                <Menu.Item key="fotd">오운완</Menu.Item>
+                <Menu.Item key="feedback">자세 피드백</Menu.Item>
+                <Menu.Item key="qna">운동 Q&amp;A</Menu.Item>
+              </div>
+              <div
+                style={{
+                  marginLeft: "auto",
+                  display: "flex",
+                  height: "100%"
+                }}
+              >
+                <Menu.Item key="search">
+                  <GoSearch style={{ fontSize: "18px" }} />
+                </Menu.Item>
+                <Menu.Item key="notification">
+                  {/* <Badge count={99} overflowCount={10} size="small" style={{ display: "flex", padding: "0 4px", maxWidth: "28px", justifyContent: "center", }}> */}
+                  <Badge dot="true">
+                    <IoMdNotifications
+                      style={{ fontSize: "20px", color: "#d2d2d2" }}
+                    />
+                  </Badge>
+                </Menu.Item>
+                <Menu.Item key="write-post" style={{ display: "flex", alignItems: "center"}}>
+                  <span>글쓰기</span>
+                </Menu.Item>
+              </div>
+            </Menu>
           </div>
           {/* <div className="testoffset">
             <p>adfsasfdasfdfadssdfafsd adsfasdfasd adsfads.</p>
@@ -128,7 +172,7 @@ const ViewPostsAll = () => {
               overflow: "initial",
               width: "100%",
               maxWidth: "876px",
-              margin: "0 auto",
+              margin: "24px auto",
             }}
           >
             <div
