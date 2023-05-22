@@ -2,7 +2,7 @@ import React from "react";
 import { Menu, Dropdown, Avatar } from "antd";
 import { UserOutlined, DownOutlined } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import Cookies from "js-cookie";
 
 import "../styles/components/navbar.css";
@@ -23,6 +23,22 @@ function MainHeader() {
     }
   };
 
+  const handleLogout = () => {
+    axios
+      .post("http://172.26.21.193:8080/user/logout", { timeout: 1000 })
+      .then(() => {
+        Cookies.remove("userId"); // 쿠키에서 userId 삭제
+        // navigate("/"); // 새로고침을 해주어야 Header 컴포넌트가 다시 마운트되어 로그인 상태가 갱신됨 -> window.location.href로 변경
+        window.location.href = '/'; // 로그아웃 시 랜딩 페이지로 이동
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        window.location.href = '/';
+      });
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="1">내 프로필</Menu.Item>
@@ -30,10 +46,8 @@ function MainHeader() {
         내 정보 수정
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="logout">
-        <Link to="/" className="nav-menu">
+      <Menu.Item key="logout" onClick={handleLogout}>
           로그아웃
-        </Link>
       </Menu.Item>
     </Menu>
   );

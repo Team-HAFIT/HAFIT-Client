@@ -1,33 +1,34 @@
 .testoffset {
   margin-top: 0;
-  padding-top: 60px;
+  padding-top: 88px;
   text-align: center;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 .testnavbar {
   position: fixed;
-  width: calc(100% - 400px);
+  width: calc(100% - 548px);
   height: 40px;
-  padding-right: 40px;
-  margin: 16px 60px;
+  margin: 16px 134px;
   border-radius: 12px;
   font-weight: bold;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #e7e7e7fa;
+  background: #111111bc;
+  box-shadow: 0 0 5px rgba(black, 0.2);
   transition: 0.4s;
   z-index: 1;
+  top: 48px;
 
   &.small {
-    height: 48px;
+    height: 34px;
     box-shadow: 0 0 5px rgba(black, 0.2);
     background: #111111bc;
 
     & ~ .testoffset {
-      padding-top: 140px;
+      padding-top: 32px;
     }
 
     .testlogo {
@@ -40,4 +41,10 @@
 
 .ant-list-item-meta-title {
     margin: 0 !important;
+}
+
+:where(.css-dev-only-do-not-override-htwhyh).ant-menu-light .ant-menu-item-selected, :where(.css-dev-only-do-not-override-htwhyh).ant-menu-light>.ant-menu .ant-menu-item-selected {
+  background-color: inherit !important;
+  color: #d2d2d2 !important;
+  font-weight: 600 !important;
 }
