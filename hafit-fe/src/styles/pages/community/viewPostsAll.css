@@ -7,9 +7,9 @@
 
 .testnavbar {
   position: fixed;
-  width: calc(100% - 536px);
+  width: calc(100% - 548px);
   height: 40px;
-  margin: 16px 128px;
+  margin: 16px 134px;
   border-radius: 12px;
   font-weight: bold;
   text-align: center;
