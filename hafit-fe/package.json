@@ -9,6 +9,7 @@
     "@emotion/styled": "^11.10.8",
     "@fontsource/roboto": "^4.5.8",
     "@mui/material": "^5.12.2",
+    "@reduxjs/toolkit": "^1.9.5",
     "@tensorflow-models/pose-detection": "^2.1.0",
     "@tensorflow/tfjs": "^4.5.0",
     "@testing-library/jest-dom": "^5.16.5",
