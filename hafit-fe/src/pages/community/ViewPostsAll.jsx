@@ -1,19 +1,26 @@
-import {
-  UserOutlined,
-  CommentOutlined,
-  HomeOutlined,
-} from "@ant-design/icons";
-import { FiHeart, FiEdit3 } from "react-icons/fi";
+import { UserOutlined, CommentOutlined, HomeOutlined } from "@ant-design/icons";
+import { FiEdit3 } from "react-icons/fi";
 import { GoSearch } from "react-icons/go";
 import { IoMdNotifications } from "react-icons/io";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { Layout, Menu, theme, Avatar, List, Badge, Divider } from "antd";
+import {
+  Layout,
+  Menu,
+  theme,
+  Avatar,
+  List,
+  Badge,
+  Divider,
+  Button,
+} from "antd";
 import VirtualList from "rc-virtual-list";
 import React, { useEffect, useState, useCallback } from "react";
 
 import FixedHeader from "../../components/FixedNavbar";
-
 import "../../styles/pages/community/viewPostsAll.css";
+
+// 수정 시작 ~~~~~~~~
+import LikeButton from "../../components/buttons/LikeBtn";
 
 const fakeDataUrl =
   "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
@@ -112,7 +119,13 @@ const ViewPostsAll = () => {
               />
               <div style={{ paddingBottom: "4px" }}>
                 <div style={{ margin: "0 0 4px 16px", marginBottom: "18px" }}>
-                  <span style={{ fontSize: "18px", color: "white", fontWeight: "600" }}>
+                  <span
+                    style={{
+                      fontSize: "18px",
+                      color: "white",
+                      fontWeight: "600",
+                    }}
+                  >
                     김해핏
                   </span>{" "}
                   <FiEdit3 />
@@ -246,7 +259,10 @@ const ViewPostsAll = () => {
                     >
                       <div style={{ display: "block", margin: "0 24px" }}>
                         <div>
-                          <List.Item key={item.email} style={{ paddingBottom: "4px" }}>
+                          <List.Item
+                            key={item.email}
+                            style={{ paddingBottom: "4px" }}
+                          >
                             <List.Item.Meta
                               style={{ display: "flex", textAlign: "left" }}
                               avatar={
@@ -262,7 +278,13 @@ const ViewPostsAll = () => {
                               }
                               description="2023. 05. 18 - 20:24"
                             />
-                            <HiOutlineDotsHorizontal style={{ fontSize: "28px", color: "#999999", alignSelf: "self-start" }}/>
+                            <HiOutlineDotsHorizontal
+                              style={{
+                                fontSize: "28px",
+                                color: "#999999",
+                                alignSelf: "self-start",
+                              }}
+                            />
                           </List.Item>
                         </div>
                         <Divider style={{ margin: "0 0 16px 0" }} />
@@ -331,16 +353,16 @@ const ViewPostsAll = () => {
                             marginTop: "24px",
                           }}
                         >
-                          <div
+                          {/* <div
                             style={{
                               display: "flex",
                               alignItems: "center",
                               marginRight: "8px",
                             }}
                           >
-                            <FiHeart
+                            <HiOutlineHeart
                               style={{
-                                fontSize: "1.8em",
+                                fontSize: "2.1em",
                                 marginRight: "4px",
                                 color: "#999999",
                               }}
@@ -354,27 +376,39 @@ const ViewPostsAll = () => {
                             >
                               10
                             </span>
+                          </div> */}
+                          <div style={{ marginRight: "16px" }}>
+                            <LikeButton />
                           </div>
-                          <div
+
+                          <Button
+                            shape="round"
                             style={{
+                              height: "100%",
                               display: "flex",
+                              justifyContent: "center",
                               alignItems: "center",
-                              marginRight: "40px",
+                              padding: "4px 12px",
                             }}
+                            icon={
+                              <CommentOutlined
+                                style={{
+                                  fontSize: "1.8em",
+                                  color: "#999999",
+                                }}
+                              />
+                            }
                           >
-                            <CommentOutlined
+                            <span
                               style={{
-                                fontSize: "1.8em",
-                                marginRight: "6px",
+                                fontSize: "16px",
+                                fontWeight: "500",
                                 color: "#999999",
                               }}
-                            />
-                            <span
-                              style={{ fontSize: "16px", color: "#999999" }}
                             >
                               2
                             </span>
-                          </div>
+                          </Button>
                         </div>
                       </div>
                     </div>
