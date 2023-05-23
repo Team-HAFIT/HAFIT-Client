@@ -29,7 +29,7 @@ function LikeButton() {
       }}
       icon={
         isLiked ? (
-          <HeartFilled style={{ fontSize: "1.8em", color: "#6C00F0" }} />
+          <HeartFilled style={{ fontSize: "1.8em", color: "#EB4649" }} />
         ) : (
           <HeartOutlined style={{ fontSize: "1.8em", color: "#999999" }} />
         )

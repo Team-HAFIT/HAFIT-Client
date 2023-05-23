@@ -15,11 +15,21 @@ import {
 } from "antd";
 import VirtualList from "rc-virtual-list";
 import React, { useEffect, useState, useCallback } from "react";
+import axios from "axios";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+// import required modules
+import SwiperCore, { Navigation, Pagination } from "swiper";
+
+// Import Swiper styles
+import "swiper/swiper-bundle.css";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 import FixedHeader from "../../components/FixedNavbar";
 import "../../styles/pages/community/viewPostsAll.css";
 
-// 수정 시작 ~~~~~~~~
 import LikeButton from "../../components/buttons/LikeBtn";
 
 const fakeDataUrl =
@@ -53,6 +63,106 @@ const ViewPostsAll = () => {
     }
   };
   //   --------- END : 게시글 무한 스크롤 ---------- //
+
+  // 수정 시작 ~~~!!!
+  // --------- START : 게시글 정보 관련 ---------- //
+  const [posts, setPosts] = useState([]);
+
+  const getPosts = () => {
+    axios
+      .get("/api/posts", { timeout: 3000 })
+      .then((response) => {
+        setPosts(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        // 네트워크 오류로 인해 게시글을 불러오지 못했을 때, 임시 렌더링
+        setPosts([
+          {
+            userId: 1,
+            images: [
+              "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
+              "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
+              "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
+            ],
+            content:
+              "네트워크 오류로 인해 게시글을 불러오지 못했습니다. 다시 시도해주세요.",
+          },
+        ]);
+      });
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  // 각 게시글 이미지 개수에 따른 렌더링 함수
+  const renderImagesByPost = (post) => {
+    if (post.images.length === 1) {
+      return (
+        <img
+          style={{
+            minWidth: "26em",
+            width: "auto",
+            height: "100%",
+            margin: "4px 8px",
+            borderRadius: "8px",
+          }}
+          width={272}
+          alt="logo"
+          src={post.images[0]}
+        />
+      );
+    } else if (post.images.length === 2) {
+      return (
+        <>
+          <img
+            style={{
+              minWidth: "26em",
+              width: "auto",
+              height: "100%",
+              margin: "4px 8px",
+              borderRadius: "8px",
+            }}
+            width={272}
+            alt="logo"
+            src={post.images[0]}
+          />
+          <img
+            style={{
+              minWidth: "26em",
+              width: "auto",
+              height: "100%",
+              margin: "4px 8px",
+              borderRadius: "8px",
+            }}
+            width={272}
+            alt="logo"
+            src={post.images[1]}
+          />
+        </>
+      );
+    } else if (post.images.length >= 3) {
+      SwiperCore.use([Navigation, Pagination]);
+
+      return (
+        <Swiper
+          slidesPerView={2}
+          spaceBetween={30}
+          navigation={{ clickable: true }}
+          pagination={{ clickable: true }}
+          className="mySwiper"
+        >
+          {post.images.map((image, index) => (
+            <SwiperSlide key={index}>
+              <img width={272} alt="slide" src={image} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      );
+    }
+  };
+  // --------- END : 게시글 정보 관련 ---------- //
 
   const {
     token: { colorBgContainer },
@@ -254,7 +364,7 @@ const ViewPostsAll = () => {
                         marginBottom: "8px",
                         borderRadius: "8px",
                         padding: "8px 8px 24px 8px",
-                        minHeight: "16rem",
+                        minHeight: "12rem",
                       }}
                     >
                       <div style={{ display: "block", margin: "0 24px" }}>
@@ -312,15 +422,83 @@ const ViewPostsAll = () => {
                             #보전하세
                           </span>
                         </p>
-                        <article
+
+                        {/* 게시글 이미지 렌더링 */}
+                        <div>
+                          {posts.map((post, index) => (
+                            <article
+                              key={index}
+                              className="image-container"
+                              style={{
+                                height: "100%",
+                                maxHeight: "24rem",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                margin: "4px auto",
+                              }}
+                            >
+                              {renderImagesByPost(post)}
+                            </article>
+                          ))}
+                        </div>
+
+                        {/* 아래 주석 처리된 코드는 테스트 용도 */}
+                        {/* <article
+                          className="image-container"
                           style={{
-                            height: "18rem",
+                            height: "100%",
+                            maxHeight: "24rem",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
-                            margin: "8px auto",
+                            margin: "4px auto",
                           }}
                         >
+                          <Swiper
+                            slidesPerView={2}
+                            spaceBetween={30}
+                            navigation={true}
+                            pagination={{
+                              clickable: true,
+                            }}
+                            modules={[Navigation, Pagination]}
+                            className="mySwiper"
+                          >
+                            <SwiperSlide>
+                              <img
+                                width={272}
+                                alt="logo"
+                                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                              />
+                            </SwiperSlide>
+                            <SwiperSlide>
+                              <img
+                                width={272}
+                                alt="logo"
+                                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                              />
+                            </SwiperSlide>
+                            <SwiperSlide>
+                              <img
+                                width={272}
+                                alt="logo"
+                                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                              />
+                            </SwiperSlide>
+                          </Swiper>
+                          <img
+                            style={{
+                              minWidth: "26em",
+                              width: "auto",
+                              height: "100%",
+                              margin: "4px 8px",
+                              borderRadius: "8px",
+                            }}
+                            width={272}
+                            alt="logo"
+                            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                          />
                           <img
                             style={{
                               minWidth: "26em",
@@ -332,25 +510,13 @@ const ViewPostsAll = () => {
                             width={272}
                             alt="logo"
                             src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                          />
-                          {/* <img
-                            style={{
-                              minWidth: "26em",
-                              width: "auto",
-                              height: "100%",
-                              margin: "8px 8px",
-                              borderRadius: "8px",
-                            }}
-                            width={272}
-                            alt="logo"
-                            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                          /> */}
-                        </article>
+                          /> 
+                        </article> */}
                         <div
                           style={{
                             display: "flex",
                             textAlign: "left",
-                            marginTop: "24px",
+                            marginTop: "12px",
                           }}
                         >
                           {/* <div
