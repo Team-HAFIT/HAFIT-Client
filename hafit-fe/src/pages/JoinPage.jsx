@@ -44,6 +44,31 @@ const JoinPage = () => {
     navigate("/intro"); // 로그인 성공 시 메인 페이지로 이동
   };
 
+  // 이메일 중복체크
+  const checkEmail = (email) => {
+    return axios
+      .post(`http://172.26.21.193:8080/user/emailCheck?email=${email}`, {
+        params: {
+          email: email,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 3000,
+      })
+      .then((response) => {
+        console.log(response.data);
+        return Promise.resolve("사용 가능한 이메일입니다!") // resolve 메시지 반환
+      })
+      .catch(function (error) {
+        if (error.response) {
+          throw new Error(error.response.data);
+        } else {
+          throw new Error("서버와 연결이 끊겼습니다");
+        }
+      });
+  };
+
   const onFinish = (values) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
 
@@ -54,7 +79,7 @@ const JoinPage = () => {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
-        timeout: 5000, // 요청 제한 시간 설정
+        timeout: 3000, // 요청 제한 시간 설정
       })
       .then((response) => {
         console.log(response.data); // 응답 결과 출력
@@ -96,6 +121,29 @@ const JoinPage = () => {
                   {
                     type: "email",
                     message: "유효한 이메일을 입력해주세요",
+                  },
+                  {
+                    validator: async (_, email) => {
+                      if (!email) {
+                        return Promise.resolve();
+                      }
+                      try {
+                        const response = await checkEmail(email);
+                        if (response.data) {
+                          return Promise.reject(
+                            new Error("이미 사용중인 이메일입니다")
+                          );
+                        } else {
+                          // 성공 시
+                          return Promise.resolve("사용 가능한 이메일입니다!");
+                        }
+                      } catch (error) {
+                        console.error(error);
+                        return Promise.reject(
+                          new Error("서버와 연결이 끊겼습니다")
+                        );
+                      }
+                    },
                   },
                 ]}
               >
@@ -179,7 +227,7 @@ const JoinPage = () => {
             >
               <Input placeholder="010-1234-5678" />
             </Form.Item> */}
-            
+
               <Form.Item
                 label="전화번호"
                 name="phone"
@@ -190,7 +238,7 @@ const JoinPage = () => {
                   },
                 ]}
               >
-                <PhoneNumberInput onChange={handlePhoneChange} value={phone}/>
+                <PhoneNumberInput onChange={handlePhoneChange} value={phone} />
               </Form.Item>
 
               <Form.Item>
