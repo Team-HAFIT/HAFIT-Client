@@ -11,7 +11,7 @@ function Test() {
     USER_NAME: "",
     USER_NICKNAME: "",
     USER_TEL: "",
-  });
+  }); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
