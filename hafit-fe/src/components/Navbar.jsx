@@ -31,7 +31,7 @@ function Header() {
 
   const handleLogout = () => {
     axios
-      .post("http://172.26.21.193:8080/user/logout", { timeout: 3000 })
+      .post("/user/logout", { timeout: 3000 })
       .then(() => {
         Cookies.remove("userId"); // 쿠키에서 userId 삭제
         // navigate("/"); // 새로고침을 해주어야 Header 컴포넌트가 다시 마운트되어 로그인 상태가 갱신됨 -> window.location.href로 변경

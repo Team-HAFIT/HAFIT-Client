@@ -47,7 +47,7 @@ const JoinPage = () => {
   // 이메일 중복체크
   const checkEmail = (email) => {
     return axios
-      .post(`http://172.26.21.193:8080/user/emailCheck?email=${email}`, {
+      .post(`/user/emailCheck?email=${email}`, {
         params: {
           email: email,
         },
@@ -75,7 +75,7 @@ const JoinPage = () => {
     // const { email, name, password, phone } = values; // 필요한 필드들을 추출하여 객체에 저장
 
     axios
-      .post("http://172.26.21.193:8080/user/signup", values, {
+      .post("/user/signup", values, {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },

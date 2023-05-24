@@ -81,6 +81,7 @@ const ViewPostsAll = () => {
           {
             userId: 1,
             images: [
+              // "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
               "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
               "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
               "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
@@ -121,7 +122,7 @@ const ViewPostsAll = () => {
               minWidth: "26em",
               width: "auto",
               height: "100%",
-              margin: "4px 8px",
+              margin: "4px 4px",
               borderRadius: "8px",
             }}
             width={272}
@@ -133,7 +134,7 @@ const ViewPostsAll = () => {
               minWidth: "26em",
               width: "auto",
               height: "100%",
-              margin: "4px 8px",
+              margin: "4px 4px",
               borderRadius: "8px",
             }}
             width={272}

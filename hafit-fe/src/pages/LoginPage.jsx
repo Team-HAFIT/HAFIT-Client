@@ -22,7 +22,7 @@ const LoginPage = () => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
 
     axios
-      .post("http://172.26.21.193:8080/user/login", JSON.stringify(values), {
+      .post("/user/login", JSON.stringify(values), {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },

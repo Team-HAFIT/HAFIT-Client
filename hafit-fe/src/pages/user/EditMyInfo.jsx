@@ -52,7 +52,7 @@ const EditMyInfo = (userId) => {
 
     if (userId) {
       axios
-        .get("http://172.26.21.193:8080/user/info", {
+        .get("/user/info", {
           params: {
             userId: userId,
           },
@@ -105,7 +105,7 @@ const EditMyInfo = (userId) => {
     const updatedUserInfo = { ...userInfo, ...values };
 
     axios
-      .post("http://172.26.21.193:8080/user/update", updatedUserInfo, {
+      .post("/user/update", updatedUserInfo, {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
@@ -135,7 +135,7 @@ const EditMyInfo = (userId) => {
       title: "정말 탈퇴하시겠어요?",
       onOk: () => {
         axios
-          .post(`http://172.26.21.193:8080/user/delete?userId=${userId}`, { userId }, {
+          .post(`/user/delete?userId=${userId}`, { userId }, {
             headers: {
               "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
             },
