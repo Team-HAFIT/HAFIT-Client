@@ -1,3 +1,4 @@
+// 공지사항 페이지
 import React, { useState } from "react";
 import { Table, Input, Button, Typography } from "antd";
 import "../styles/pages/noticePage.css";
