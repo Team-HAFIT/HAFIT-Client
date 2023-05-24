@@ -58,7 +58,7 @@ const JoinPage = () => {
       })
       .then((response) => {
         console.log(response.data);
-        return Promise.resolve("사용 가능한 이메일입니다!") // resolve 메시지 반환
+        return response;
       })
       .catch(function (error) {
         if (error.response) {
@@ -118,8 +118,13 @@ const JoinPage = () => {
                     required: true,
                     message: "이메일을 입력해주세요",
                   },
+                  // {
+                  //   type: "email",
+                  //   message: "유효한 이메일을 입력해주세요",
+                  // },
                   {
-                    type: "email",
+                    // 이메일 정규식
+                    pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
                     message: "유효한 이메일을 입력해주세요",
                   },
                   {
@@ -134,8 +139,7 @@ const JoinPage = () => {
                             new Error("이미 사용중인 이메일입니다")
                           );
                         } else {
-                          // 성공 시
-                          return Promise.resolve("사용 가능한 이메일입니다!");
+                          return Promise.resolve();
                         }
                       } catch (error) {
                         console.error(error);
@@ -146,8 +150,9 @@ const JoinPage = () => {
                     },
                   },
                 ]}
+                hasFeedback
               >
-                <Input placeholder="example@gmail.com" />
+                <Input placeholder="example@gmail.com" maxLength={40} />
               </Form.Item>
               <Form.Item
                 label="이름"
@@ -157,25 +162,61 @@ const JoinPage = () => {
                     required: true,
                     message: "이름을 입력해주세요",
                   },
+                  {
+                    min: 2,
+                    message: "이름은 최소 2자리 이상이어야 합니다",
+                  },
                 ]}
+                hasFeedback
               >
-                <Input placeholder="홍길동" />
+                <Input placeholder="홍길동" maxLength={24} />
               </Form.Item>
               <Form.Item
                 label="비밀번호"
                 name="password"
                 rules={[
+                  // {
+                  //   required: true,
+                  //   message: "비밀번호를 입력해주세요",
+                  // },
+                  // {
+                  //   min: 8,
+                  //   message: "비밀번호는 최소 8자리 이상이어야 합니다",
+                  // },
+                  // {
+                  //   pattern: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/,
+                  //   message: "영문, 숫자, 특수문자를 포함해야 합니다",
+                  // },
                   {
-                    required: true,
-                    message: "비밀번호를 입력해주세요",
-                  },
-                  {
-                    min: 8,
-                    message: "비밀번호는 최소 8자리 이상이어야 합니다",
+                    validator: async (_, password) => {
+                      if (!password) {
+                        return Promise.reject(
+                          new Error("비밀번호를 입력해주세요")
+                        );
+                      }
+                      if (password.length < 8) {
+                        return Promise.reject(
+                          new Error("비밀번호는 최소 8자리 이상이어야 합니다")
+                        );
+                      }
+                      // 비밀번호 정규식 : 영문, 숫자, 특수문자 포함
+                      const pattern = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+
+                      if (!pattern.test(password)) {
+                        return Promise.reject(
+                          new Error("영문, 숫자, 특수문자를 포함해야합니다")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
                   },
                 ]}
+                hasFeedback
               >
-                <Input.Password placeholder="영문, 숫자, 특수문자 포함 8자 이상" />
+                <Input.Password
+                  placeholder="영문, 숫자, 특수문자 포함 8자 ~ 20자"
+                  maxLength={20}
+                />
               </Form.Item>
               <Form.Item
                 label="비밀번호 확인"
@@ -183,7 +224,7 @@ const JoinPage = () => {
                 rules={[
                   {
                     required: true,
-                    message: "비밀번호 확인을 입력해주세요",
+                    message: "비밀번호를 한번 더 입력해주세요",
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
@@ -196,8 +237,9 @@ const JoinPage = () => {
                     },
                   }),
                 ]}
+                hasFeedback
               >
-                <Input.Password />
+                <Input.Password maxLength={20} />
               </Form.Item>
               <Form.Item
                 label="통신사 선택"
@@ -237,6 +279,7 @@ const JoinPage = () => {
                     message: "전화번호를 입력해주세요",
                   },
                 ]}
+                hasFeedback
               >
                 <PhoneNumberInput onChange={handlePhoneChange} value={phone} />
               </Form.Item>
