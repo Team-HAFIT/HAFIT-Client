@@ -82,6 +82,8 @@ const ViewPostsAll = () => {
             userId: 1,
             images: [
               // "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+              // "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+              // "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
               "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
               "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
               "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
@@ -102,13 +104,7 @@ const ViewPostsAll = () => {
     if (post.images.length === 1) {
       return (
         <img
-          style={{
-            minWidth: "26em",
-            width: "auto",
-            height: "100%",
-            margin: "4px 8px",
-            borderRadius: "8px",
-          }}
+          className="post-image-only"
           width={272}
           alt="logo"
           src={post.images[0]}
@@ -118,25 +114,13 @@ const ViewPostsAll = () => {
       return (
         <>
           <img
-            style={{
-              minWidth: "26em",
-              width: "auto",
-              height: "100%",
-              margin: "4px 4px",
-              borderRadius: "8px",
-            }}
+            className="post-image"
             width={272}
             alt="logo"
             src={post.images[0]}
           />
           <img
-            style={{
-              minWidth: "26em",
-              width: "auto",
-              height: "100%",
-              margin: "4px 4px",
-              borderRadius: "8px",
-            }}
+            className="post-image"
             width={272}
             alt="logo"
             src={post.images[1]}
@@ -220,13 +204,10 @@ const ViewPostsAll = () => {
               }}
             >
               <Avatar
+                className="user-avatar"
                 size={64}
                 shape="circle"
                 icon={<UserOutlined />}
-                style={{
-                  backgroundColor: "rgb(108, 0, 240)",
-                  color: "#f56a00",
-                }}
               />
               <div style={{ paddingBottom: "4px" }}>
                 <div style={{ margin: "0 0 4px 16px", marginBottom: "18px" }}>
@@ -264,13 +245,11 @@ const ViewPostsAll = () => {
                 // dataSource={data}
                 // renderItem={(item) => <List.Item>{item}</List.Item>}
               >
-                <List.Item style={{ color: "#bcbcbc" }}>
+                <List.Item className="sider-sub-menu">
                   좋아요 표시한 글
                 </List.Item>
-                <List.Item style={{ color: "#bcbcbc" }}>
-                  내가 작성한 글
-                </List.Item>
-                <List.Item style={{ color: "#bcbcbc" }}>내 작성 댓글</List.Item>
+                <List.Item className="sider-sub-menu">내가 작성한 글</List.Item>
+                <List.Item className="sider-sub-menu">내 작성 댓글</List.Item>
               </List>
             </React.Fragment>
           </Menu>
@@ -332,15 +311,7 @@ const ViewPostsAll = () => {
           {/* <div className="testoffset">
             <p>adfsasfdasfdfadssdfafsd adsfasdfasd adsfads.</p>
         </div> */}
-          <Content
-            className="testoffset"
-            style={{
-              overflow: "initial",
-              width: "100%",
-              maxWidth: "876px",
-              margin: "24px auto",
-            }}
-          >
+          <Content className="testoffset">
             <div
               style={{
                 padding: 24,
@@ -399,26 +370,14 @@ const ViewPostsAll = () => {
                           </List.Item>
                         </div>
                         <Divider style={{ margin: "0 0 16px 0" }} />
-                        <p
-                          style={{
-                            textAlign: "left",
-                            margin: 0,
-                            padding: "2px 6px",
-                          }}
-                        >
-                          <span style={{ fontSize: "16px" }}>
+                        <p className="post-content-p">
+                          <span className="post-content-text">
                             동해물과 백두산이 마르고 닳도록 하느님이 보우하사
                             우리 나라 만세
                           </span>
                         </p>
-                        <p
-                          style={{
-                            textAlign: "left",
-                            margin: 0,
-                            padding: "2px 6px",
-                          }}
-                        >
-                          <span style={{ fontSize: "16px" }}>
+                        <p className="post-content-p">
+                          <span className="post-content-text">
                             #무궁화 #삼천리 #화려강산 #대한사람 #대한으로 #길이
                             #보전하세
                           </span>
@@ -427,18 +386,7 @@ const ViewPostsAll = () => {
                         {/* 게시글 이미지 렌더링 */}
                         <div>
                           {posts.map((post, index) => (
-                            <article
-                              key={index}
-                              className="image-container"
-                              style={{
-                                height: "100%",
-                                maxHeight: "24rem",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                margin: "4px auto",
-                              }}
-                            >
+                            <article key={index} className="image-container">
                               {renderImagesByPost(post)}
                             </article>
                           ))}
@@ -489,25 +437,13 @@ const ViewPostsAll = () => {
                             </SwiperSlide>
                           </Swiper>
                           <img
-                            style={{
-                              minWidth: "26em",
-                              width: "auto",
-                              height: "100%",
-                              margin: "4px 8px",
-                              borderRadius: "8px",
-                            }}
+                            className="post-image"
                             width={272}
                             alt="logo"
                             src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
                           />
                           <img
-                            style={{
-                              minWidth: "26em",
-                              width: "auto",
-                              height: "100%",
-                              margin: "8px 8px",
-                              borderRadius: "8px",
-                            }}
+                            className="post-image"
                             width={272}
                             alt="logo"
                             src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
