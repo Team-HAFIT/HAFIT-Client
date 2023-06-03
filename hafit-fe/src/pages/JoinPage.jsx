@@ -54,7 +54,7 @@ const JoinPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        timeout: 3000,
+        timeout: 5000,
       })
       .then((response) => {
         console.log(response.data);
@@ -79,7 +79,7 @@ const JoinPage = () => {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
-        timeout: 3000, // 요청 제한 시간 설정
+        timeout: 5000, // 요청 제한 시간 설정
       })
       .then((response) => {
         console.log(response.data); // 응답 결과 출력
@@ -124,10 +124,12 @@ const JoinPage = () => {
                   // },
                   {
                     // 이메일 정규식
-                    pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                    pattern:
+                      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
                     message: "유효한 이메일을 입력해주세요",
                   },
                   {
+                    // 실시간 이메일 중복검사
                     validator: async (_, email) => {
                       if (!email) {
                         return Promise.resolve();
@@ -200,7 +202,8 @@ const JoinPage = () => {
                         );
                       }
                       // 비밀번호 정규식 : 영문, 숫자, 특수문자 포함
-                      const pattern = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
+                      const pattern =
+                        /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/;
 
                       if (!pattern.test(password)) {
                         return Promise.reject(

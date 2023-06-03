@@ -21,6 +21,7 @@ import JoinPage from "./pages/JoinPage";
 // 회원
 import LoginMain from "./pages/LoginMain";
 import EditMyInfo from "./pages/user/EditMyInfo";
+import EditPwd from "./pages/user/EditPwd";
 
 // 운동 : 공통
 import RestTimerPage from "./pages/exercises/RestTimerPage";
@@ -35,6 +36,7 @@ import ViewPostsAll from "./pages/community/ViewPostsAll";
 // 테스트용
 import Test from "./pages/test";
 import Test2 from "./pages/Test2";
+import OAuthTest from "./pages/OAuthTest";
 
 // 임시 사용
 import ExecStatsPage from "./pages/exercises/ExecStatsPage";
@@ -61,6 +63,7 @@ function App() {
             <Route path="/main" element={<LoginMain />} />
             <Route path="/mainpage" element={<LoginMain />} />
             <Route path="/user/info" element={<EditMyInfo />} />
+            <Route path="/user/editpwd" element={<EditPwd />} />
 
             {/* 운동 */}
             <Route path="/squat/setting" element={<SquatSetting />} />
@@ -70,6 +73,7 @@ function App() {
             {/* 테스트용 */}
             <Route path="/test" element={<Test />} />
             <Route path="/test2" element={<Test2 />} />
+            <Route path="/oauth" element={<OAuthTest />} />
 
             {/* 임시 사용 */}
             <Route path="/stats" element={<ExecStatsPage />} />

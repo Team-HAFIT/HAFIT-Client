@@ -95,7 +95,10 @@ const EditMyInfo = (userId) => {
   };
 
   const handleChangePassword = () => {
-    navigate("/change-password");
+    const userId = Cookies.get("userId");
+    if(userId) {;
+      navigate(`/user/editPwd?userId=${userId}`);
+    }
   };
 
   const onFinish = (values) => {
@@ -146,8 +149,8 @@ const EditMyInfo = (userId) => {
           })
           .catch((error) => {
             console.error(error);
-            console.log(userId);
-            console.log(typeof(userId));
+            // console.log(userId);
+            // console.log(typeof(userId));
           });
       },
       onCancel: () => {
