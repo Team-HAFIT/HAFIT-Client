@@ -1,6 +1,6 @@
-// 성별 전달 안됨
-// 생년월일 수정 불가능
-// 고치기
+// 2023/06/04 - 12:05
+// name, carrier 수정 값으로 넘어가긴 하는데, 수정된 값이 저장되지 않고있음
+// 백엔드와 테스트 필요
 
 import {
   Button,
@@ -14,8 +14,14 @@ import {
   Modal,
   Spin,
   Divider,
+  DatePicker,
+  ConfigProvider,
 } from "antd";
-import DatePicker from "react-datepicker";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+import locale from "antd/locale/ko_KR";
+// import moment from 'moment';
+// import DatePicker from "react-datepicker";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -24,8 +30,8 @@ import Cookies from "js-cookie";
 import PhoneNumberInput from "../../components/inputs/PhoneNumberInput";
 // import Header from "../../components/Navbar";
 
-import "react-datepicker/dist/react-datepicker.css";
-import { ko } from "date-fns/esm/locale";
+// import "react-datepicker/dist/react-datepicker.css";
+// import { ko } from "date-fns/esm/locale";
 
 import "../../styles/pages/joinPage.css";
 
@@ -36,9 +42,10 @@ const EditMyInfo = (userId) => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
+    carrier: "",
     phone: "",
     birthday: "",
-    gender: "",
+    sex: "",
     height: "",
     weight: "",
   });
@@ -59,12 +66,11 @@ const EditMyInfo = (userId) => {
           timeout: 5000, // 요청 제한 시간 설정
         })
         .then((response) => {
-          
-          const birthday = new Date(response.data.birthday);
+          // const birthday = new Date(response.data.birthday);
           setUserInfo(response.data);
           setUserInfo({
             ...response.data,
-            birthday,
+            // birthday,
           });
           console.log(response.data);
           setIsLoading(false);
@@ -83,20 +89,19 @@ const EditMyInfo = (userId) => {
   const [phone, setPhone] = useState(""); // 전화번호 입력값 상태 저장
   const [modalVisible, setModalVisible] = useState(false); // 모달 표시 여부 상태값
 
-  const [birth, setBirth] = useState(new Date());
-
   const handlePhoneChange = (value) => {
     setPhone(value); // 전화번호 입력값 상태 업데이트
   };
 
   const handleOk = () => {
+    const userId = Cookies.get("userId");
     setModalVisible(false);
-    navigate("/intro"); // 수정 성공 시 메인 페이지로 이동
+    window.location.href = `/user/info?userId=${userId}`;
   };
 
   const handleChangePassword = () => {
     const userId = Cookies.get("userId");
-    if(userId) {;
+    if (userId) {
       navigate(`/user/editPwd?userId=${userId}`);
     }
   };
@@ -106,6 +111,15 @@ const EditMyInfo = (userId) => {
 
     // 기존 userInfo 상태값을 복사한 후 수정된 값만 업데이트합니다.
     const updatedUserInfo = { ...userInfo, ...values };
+
+    // 'birthday' 값을 'YYYY-MM-DD' 형식으로 변경
+    if (values.birthday && typeof values.birthday.format === "function") {
+      updatedUserInfo.birthday = values.birthday.format("YYYY-MM-DD");
+    }
+
+    console.log(updatedUserInfo);
+    console.log("생년월일: " + updatedUserInfo.birthday);
+    console.log("통신사: " + updatedUserInfo.carrier);
 
     axios
       .post("/user/update", updatedUserInfo, {
@@ -138,12 +152,16 @@ const EditMyInfo = (userId) => {
       title: "정말 탈퇴하시겠어요?",
       onOk: () => {
         axios
-          .post(`/user/delete?userId=${userId}`, { userId }, {
-            headers: {
-              "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
-            },
-            timeout: 5000, // 요청 제한 시간 설정
-          })
+          .post(
+            `/user/delete?userId=${userId}`,
+            { userId },
+            {
+              headers: {
+                "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+              },
+              timeout: 5000, // 요청 제한 시간 설정
+            }
+          )
           .then(() => {
             navigate("/"); // 요청이 성공하면 '/' 랜딩 페이지로 이동
           })
@@ -163,15 +181,17 @@ const EditMyInfo = (userId) => {
     <div className="top-container">
       {/* <Header /> */}
       {isLoading ? (
-        <div style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          background: "rgba(0, 0, 0, 0.05)",
-          height: "calc(100vh - 50px)",
-        }}>
-          <Spin style={{paddingBottom: "96px",}}/>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            background: "rgba(0, 0, 0, 0.05)",
+            height: "calc(100vh - 50px)",
+          }}
+        >
+          <Spin style={{ paddingBottom: "96px" }} />
         </div>
       ) : (
         /* 로딩이 완료되면 아래의 내용을 랜더링 */
@@ -186,7 +206,7 @@ const EditMyInfo = (userId) => {
                 layout="vertical"
               >
                 <Form.Item
-                  label="이름"
+                  label="닉네임"
                   name="name"
                   initialValue={userInfo.name}
                   rules={[
@@ -197,8 +217,8 @@ const EditMyInfo = (userId) => {
                   ]}
                 >
                   <Input
-                    placeholder={userInfo.name}
-                    defaultValue={userInfo.name}
+                    placeholder="김해핏"
+                    value={userInfo.name}
                     readOnly={false}
                   />
                 </Form.Item>
@@ -208,9 +228,14 @@ const EditMyInfo = (userId) => {
                   initialValue={userInfo.email}
                 >
                   <Input
-                    placeholder={userInfo.email}
-                    defaultValue={userInfo.email}
-                    readOnly={false}
+                    placeholder="example@hafit.net"
+                    readOnly={true}
+                    style={{
+                      border: "none",
+                      fontSize: "16px",
+                      textAlign: "center",
+                      fontWeight: "500",
+                    }}
                   />
                 </Form.Item>
                 <Form.Item label="비밀번호">
@@ -219,6 +244,7 @@ const EditMyInfo = (userId) => {
                 <Form.Item
                   label="통신사 선택"
                   name="carrier"
+                  initialValue={userInfo.carrier}
                   rules={[
                     {
                       required: false,
@@ -226,7 +252,11 @@ const EditMyInfo = (userId) => {
                     },
                   ]}
                 >
-                  <Select placeholder="통신사 선택">
+                  <Select
+                    placeholder="통신사 선택"
+                    name="carrier"
+                    defaultValue={userInfo.carrier}
+                  >
                     <Option value="SKT">SKT</Option>
                     <Option value="KT">KT</Option>
                     <Option value="LG">LG U+</Option>
@@ -253,6 +283,7 @@ const EditMyInfo = (userId) => {
                 <Form.Item
                   label="생년월일"
                   name="birthday"
+                  initialValue={userInfo.birthday}
                   rules={[
                     {
                       required: false,
@@ -260,19 +291,42 @@ const EditMyInfo = (userId) => {
                     },
                   ]}
                 >
-                  <DatePicker
+                  {/* <DatePicker
                     locale={ko}
                     selected={userInfo.birthday || birth}
                     onChange={(date) => setBirth(date)}
                     dateFormat="yyyy년 MM월 dd일"
                     minDate={new Date("1900-01-01")}
                     maxDate={new Date()}
-                  />
+                  /> */}
+                  <ConfigProvider locale={locale}>
+                    <DatePicker
+                      // onChange={(date) => setBirth(date)}
+                      onChange={(date) =>
+                        form.setFieldsValue({ birthday: date })
+                      }
+                      format="YYYY년 M월 D일"
+                      defaultValue={
+                        userInfo.birthday !== null
+                          ? dayjs(userInfo.birthday, "YYYY-MM-DD")
+                          : null
+                      }
+                      disabledDate={(current) => {
+                        return (
+                          // 현재 날짜 이후를 제한합니다.
+                          (current && current > dayjs().endOf("day")) ||
+                          // 1900년 1월 1일 이전을 비활성화합니다.
+                          (current &&
+                            current < dayjs("1900-01-01").startOf("day"))
+                        );
+                      }}
+                    />
+                  </ConfigProvider>
                 </Form.Item>
                 <Form.Item
                   label="성별"
-                  name="gender"
-                  initialValue={userInfo.gender}
+                  name="sex"
+                  initialValue={userInfo.sex}
                   rules={[
                     {
                       required: false,
@@ -280,7 +334,7 @@ const EditMyInfo = (userId) => {
                     },
                   ]}
                 >
-                  <Radio.Group defaultValue={userInfo.gender}>
+                  <Radio.Group>
                     <Radio value="m">남자</Radio>
                     <Radio value="f">여자</Radio>
                     <Radio value="null">선택안함</Radio>
@@ -289,6 +343,7 @@ const EditMyInfo = (userId) => {
                 <Form.Item
                   label="키(cm)"
                   name="height"
+                  initialValue={userInfo.height}
                   rules={[
                     {
                       required: false,
@@ -296,15 +351,12 @@ const EditMyInfo = (userId) => {
                     },
                   ]}
                 >
-                  <Input
-                    placeholder="160"
-                    suffix="cm"
-                    value={userInfo.height}
-                  />
+                  <Input suffix="cm" value={userInfo.height} />
                 </Form.Item>
                 <Form.Item
                   label="몸무게(kg)"
                   name="weight"
+                  initialValue={userInfo.weight}
                   rules={[
                     {
                       required: false,
@@ -312,7 +364,7 @@ const EditMyInfo = (userId) => {
                     },
                   ]}
                 >
-                  <Input placeholder="60" suffix="kg" value={userInfo.weight} />
+                  <Input suffix="kg" value={userInfo.weight} />
                 </Form.Item>
                 <Divider />
                 <Form.Item>
