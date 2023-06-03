@@ -143,13 +143,13 @@ const LoginPage = () => {
         </div>
         <div className="sns-login">
           {/* 카카오톡, 구글, 네이버 아이콘이 나란히 있는 SNS 간편 로그인 구현 */}
-          <Link to="/" className="kakao-login">
+          <Link to="http://172.26.21.193:8080/oauth2/authorization/kakao" className="kakao-login">
             <img src={kakao} alt="카카오 로그인" style={{ width: "80%" }} />
           </Link>
-          <Link to="/" className="google-login">
+          <Link to="http://172.26.21.193:8080/oauth2/authorization/google" className="google-login">
             <img src={google} alt="구글 로그인" style={{ width: "80%" }} />
           </Link>
-          <Link to="/" className="naver-login">
+          <Link to="http://172.26.21.193:8080/oauth2/authorization/google" className="naver-login">
             <img src={naver} alt="네이버 로그인" style={{ width: "80%" }} />
           </Link>
         </div>
