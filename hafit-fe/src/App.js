@@ -11,6 +11,7 @@ import MainLayout from "./layout/MainLayout";
 //------ 2023. 05. 19 (금) 13:04 -------------//
 // import Header from "./components/Navbar";
 import PreparingPage from "./pages/PreparingPage";
+import KakaoRedirectHandler from "./components/oauth/kakao/KakaoRedirectHandler";
 
 // 비회원
 import LandingPage from "./pages/LandingPage";
@@ -51,6 +52,7 @@ function App() {
           <Route element={<MainLayout />}>
             {/* 공통 */}
             <Route path="/prepare" element={<PreparingPage />} />
+            <Route path="/oauth/callback/kakao" element={<KakaoRedirectHandler />} />
 
             {/* 비회원 */}
             <Route path="/" element={<LandingPage />} />
