@@ -10,6 +10,8 @@ import MyFooter from "../components/Footer";
 
 import "../styles/pages/loginPage.css";
 
+import { KAKAO_AUTH_URL } from "../components/oauth/kakao/OAuthKakao";
+
 import kakao from "../assets/img/sns-icons/kakao-icon.png";
 import google from "../assets/img/sns-icons/google-icon.png";
 import naver from "../assets/img/sns-icons/naver-icon.png";
@@ -143,7 +145,7 @@ const LoginPage = () => {
         </div>
         <div className="sns-login">
           {/* 카카오톡, 구글, 네이버 아이콘이 나란히 있는 SNS 간편 로그인 구현 */}
-          <Link to="http://172.26.21.193:8080/oauth2/authorization/kakao" className="kakao-login">
+          <Link to={KAKAO_AUTH_URL} className="kakao-login">
             <img src={kakao} alt="카카오 로그인" style={{ width: "80%" }} />
           </Link>
           <Link to="http://172.26.21.193:8080/oauth2/authorization/google" className="google-login">

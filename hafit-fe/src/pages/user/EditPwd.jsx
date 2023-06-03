@@ -15,8 +15,6 @@ const EditPwd = () => {
   // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
   const [form] = Form.useForm();
 
-  // 수정 시작 ~
-
   const { userId } = useParams(); // URL 파라미터에서 userId 가져오기
 
   // useEffect(() => {
