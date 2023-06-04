@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, Row, Col } from "antd";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
+//수정 시작 ~~~ JWT 관련 06/05
+import { useDispatch } from "react-redux";
+import { loginUser } from "../api/Users";
+import { setRefreshToken } from "../storage/Cookie";
+import { SET_TOKEN } from "../store/Auth";
+
+// import axios from "axios";
+// import Cookies from "js-cookie";
 // import AxiosAPI from '../api/axios'
 
 // import Header from "../components/Navbar";
@@ -19,40 +25,58 @@ import naver from "../assets/img/sns-icons/naver-icon.png";
 const LoginPage = () => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
   // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
+  const dispatch = useDispatch();
 
-  const onFinish = (values) => {
+  const onFinish = async ({ email, password }) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
 
-    axios
-      .post("/user/login", JSON.stringify(values), {
-        headers: {
-          "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
-        },
-        timeout: 5000, // 요청 제한 시간 설정
-      })
-      .then((response) => {
-        console.log(response.data); // 응답 결과 출력
+    const res = await loginUser({ email, password });
 
-        const { userId } = response.data; // 엔드포인트의 return에서 userId 추출
-        Cookies.set("userId", userId); // 쿠키에 userId 저장
+    if(res.status) {
+      // 쿠키에 Refresh Token, store에 Access Token 저장
+      setRefreshToken(res.json.refresh_token);
+      dispatch(SET_TOKEN(res.json.access_token));
 
-        // navigate("/main"); // 로그인 성공 시 메인 페이지로 이동
-        window.location.href = '/main';
-      })
-      .catch((error) => {
-        console.error(error);
-        if (error.response && error.response.status === 400) {
-          alert("이메일 또는 비밀번호를 확인해주세요.");
-        } else {
-          alert("로그인 실패"); // 기타 에러 발생 시 에러 메시지 띄우기
-        }
-      })
-      .finally(() => {
-        setLoading(false); // 요청 종료 시 로딩 중 상태 해제
-        const userId = Cookies.get("userId");
-        console.log("쿠키: " + userId);
-      });
+      return window.location.href = '/main';
+    } else {
+      console.log(res.json);
+      setLoading(false);
+    }
   };
+
+  // const onFinish = (values) => {
+  //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
+
+  //   axios
+  //     .post("/user/login", JSON.stringify(values), {
+  //       headers: {
+  //         "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+  //       },
+  //       timeout: 5000, // 요청 제한 시간 설정
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data); // 응답 결과 출력
+
+  //       const { userId } = response.data; // 엔드포인트의 return에서 userId 추출
+  //       Cookies.set("userId", userId); // 쿠키에 userId 저장
+
+  //       // navigate("/main"); // 로그인 성공 시 메인 페이지로 이동
+  //       window.location.href = '/main';
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       if (error.response && error.response.status === 400) {
+  //         alert("이메일 또는 비밀번호를 확인해주세요.");
+  //       } else {
+  //         alert("로그인 실패"); // 기타 에러 발생 시 에러 메시지 띄우기
+  //       }
+  //     })
+  //     .finally(() => {
+  //       setLoading(false); // 요청 종료 시 로딩 중 상태 해제
+  //       const userId = Cookies.get("userId");
+  //       console.log("쿠키: " + userId);
+  //     });
+  // };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

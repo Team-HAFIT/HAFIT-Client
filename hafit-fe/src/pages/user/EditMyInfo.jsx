@@ -119,7 +119,9 @@ const EditMyInfo = (userId) => {
 
     console.log(updatedUserInfo);
     console.log("생년월일: " + updatedUserInfo.birthday);
+    console.log("이름: " + updatedUserInfo.name);
     console.log("통신사: " + updatedUserInfo.carrier);
+    console.log("통신사: " + typeof updatedUserInfo.carrier);
 
     axios
       .post("/user/update", updatedUserInfo, {
@@ -239,8 +241,23 @@ const EditMyInfo = (userId) => {
                   />
                 </Form.Item>
                 <Form.Item label="비밀번호">
-                  <Button onClick={handleChangePassword}>비밀번호 변경</Button>
+                  <Button
+                    onClick={handleChangePassword}
+                    style={{
+                      width: "50%",
+                      height: "40px",
+                      backgroundColor: "#111111",
+                      border: "none",
+                      borderRadius: "8px",
+                      color: "white",
+                      fontSize: "1rem",
+                      fontWeight: "550",
+                    }}
+                  >
+                    비밀번호 변경
+                  </Button>
                 </Form.Item>
+                <Divider plain>추가 정보</Divider>
                 <Form.Item
                   label="통신사 선택"
                   name="carrier"
@@ -279,7 +296,6 @@ const EditMyInfo = (userId) => {
                     defaultValue={userInfo.phone}
                   />
                 </Form.Item>
-                <Divider plain>추가 정보</Divider>
                 <Form.Item
                   label="생년월일"
                   name="birthday"
@@ -320,6 +336,7 @@ const EditMyInfo = (userId) => {
                             current < dayjs("1900-01-01").startOf("day"))
                         );
                       }}
+                      style={{ width: "100%" }}
                     />
                   </ConfigProvider>
                 </Form.Item>
