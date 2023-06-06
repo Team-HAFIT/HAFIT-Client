@@ -10,6 +10,7 @@
     "@fontsource/roboto": "^4.5.8",
     "@hookform/error-message": "^2.0.1",
     "@mui/material": "^5.12.2",
+    "@redux-devtools/extension": "^3.2.5",
     "@reduxjs/toolkit": "^1.9.5",
     "@tensorflow-models/pose-detection": "^2.1.0",
     "@tensorflow/tfjs": "^4.5.0",

@@ -27,68 +27,6 @@ const LoginPage = () => {
   // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
   const dispatch = useDispatch();
 
-  const onFinish = (values) => {
-    setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
-
-    axios
-      .post("/login", JSON.stringify(values), {
-        headers: {
-          "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
-        },
-        timeout: 5000, // 요청 제한 시간 설정
-      })
-      .then((response) => {
-        console.log(response.headers); // 응답 결과 출력
-
-        // const cookies = response.headers.get("Set-Cookie");
-        const accessToken = response.headers.get("authorization");
-        const refreshToken = response.headers.get("authorization-refresh");
-
-        if (accessToken === null) {
-          console.log("accessToken을 가져오지 못했습니다.");
-          return;
-        } else if (refreshToken === null) {
-          console.log("refreshToken을 가져오지 못했습니다.");
-          return;
-        }
-        localStorage.setItem("accessToken", accessToken); // 로컬스토리지에 accessToken 저장
-        localStorage.setItem("refreshToken", refreshToken); // 로컬스토리지에 refreshToken 저장
-
-        console.log("성공!!!");
-        console.log("accessToken: " + localStorage.getItem("accessToken"));
-        console.log("refreshToken: " + localStorage.getItem("refreshToken"));
-      })
-      .catch((error) => {
-        console.error(error);
-        if (error.response && error.response.status === 400) {
-          alert("이메일 또는 비밀번호를 확인해주세요.");
-        } else {
-          alert("로그인 실패"); // 기타 에러 발생 시 에러 메시지 띄우기
-        }
-      })
-      .finally(() => {
-        setLoading(false); // 요청 종료 시 로딩 중 상태 해제
-      });
-  };
-
-  // const onFinish = async ({ email, password }) => {
-  //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
-
-  //   const res = await loginUser({ email, password });
-
-  //   if(res.status) {
-  //     // 쿠키에 Refresh Token, store에 Access Token 저장
-  //     setRefreshToken(res.json.RefreshToken);
-  //     dispatch(SET_TOKEN(res.json.AccessToken));
-  //     alert('리프레시토큰: ' + res.json.RefreshToken + ' / 액세스토큰: ' + res.json.AccessToken);
-
-  //     return window.location.href = '/main';
-  //   } else {
-  //     console.log(res.json);
-  //     setLoading(false);
-  //   }
-  // };
-
   // const onFinish = (values) => {
   //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
 
@@ -122,6 +60,75 @@ const LoginPage = () => {
   //       console.log("쿠키: " + userId);
   //     });
   // };
+
+  // JWT 토큰 테스트 용
+  // const onFinish = (values) => {
+  //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
+
+  //   axios
+  //     .post("/login", JSON.stringify(values), {
+  //       headers: {
+  //         "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+  //       },
+  //       timeout: 5000, // 요청 제한 시간 설정
+  //     })
+  //     .then((response) => {
+  //       console.log(response.headers); // 응답 결과 출력
+
+  //       // const cookies = response.headers.get("Set-Cookie");
+  //       const accessToken = response.headers.get("authorization");
+  //       const refreshToken = response.headers.get("authorization-refresh");
+
+  //       if (accessToken === null) {
+  //         console.log("accessToken을 가져오지 못했습니다.");
+  //         return;
+  //       } else if (refreshToken === null) {
+  //         console.log("refreshToken을 가져오지 못했습니다.");
+  //         return;
+  //       }
+  //       localStorage.setItem("accessToken", accessToken); // 로컬스토리지에 accessToken 저장
+  //       localStorage.setItem("refreshToken", refreshToken); // 로컬스토리지에 refreshToken 저장
+
+  //       console.log("성공!!!");
+  //       console.log("accessToken: " + localStorage.getItem("accessToken"));
+  //       console.log("refreshToken: " + localStorage.getItem("refreshToken"));
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       if (error.response && error.response.status === 400) {
+  //         alert("이메일 또는 비밀번호를 확인해주세요.");
+  //       } else {
+  //         alert("로그인 실패"); // 기타 에러 발생 시 에러 메시지 띄우기
+  //       }
+  //     })
+  //     .finally(() => {
+  //       setLoading(false); // 요청 종료 시 로딩 중 상태 해제
+  //     });
+  // };
+
+  const onFinish = async ({ email, password }) => {
+    setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
+
+    const res = await loginUser({ email, password });
+
+    if (res.status) {
+      // const accessToken = res.headers.get("authorization");
+      // const refreshToken = res.headers.get("authorization-refresh");
+      const accessToken = res.accessToken;
+      const refreshToken = res.refreshToken;
+
+      // 쿠키에 Refresh Token, store에 Access Token 저장
+      setRefreshToken(refreshToken);
+      dispatch(SET_TOKEN(accessToken));
+
+      alert("AT: " + accessToken + "\nRT: " + refreshToken);
+
+      // return (window.location.href = "/main");
+    } else {
+      console.log(res.json);
+      setLoading(false);
+    }
+  };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

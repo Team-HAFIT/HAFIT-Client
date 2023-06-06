@@ -14,7 +14,7 @@ import { logoutUser } from "../api/Users";
 
 function Logout() {
   // store에 저장된 Access Token 정보를 받아 온다
-  const { accessToken } = useSelector((state) => state.token);
+  const { accessToken } = useSelector((state) => state.authToken);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,9 +27,11 @@ function Logout() {
 
     if (data.status) {
       dispatch(DELETE_TOKEN());
+      console.log('성공');
       removeCookieToken();
       navigate("/login");
     } else {
+      console.log('로그아웃 실패');
       window.location.reload();
     }
   }, [accessToken, dispatch, navigate, refreshToken]);

@@ -6,7 +6,7 @@ import { DELETE_TOKEN, SET_TOKEN } from "../store/Auth";
 
 export function CheckToken(key) {
   const [isAuth, setIsAuth] = useState("Loaded");
-  const { authenticated, expireTime } = useSelector((state) => state.token);
+  const { authenticated, expireTime } = useSelector((state) => state.authToken);
   const refreshToken = getCookieToken();
   const dispatch = useDispatch();
 
@@ -22,7 +22,8 @@ export function CheckToken(key) {
           const response = await requestToken(refreshToken);
 
           if (response.status) {
-            const token = response.json.access_token;
+            // const token = response.json.access_token;
+            const token = response.headers.get('authorization')
             dispatch(SET_TOKEN(token));
             setIsAuth("Success");
           } else {

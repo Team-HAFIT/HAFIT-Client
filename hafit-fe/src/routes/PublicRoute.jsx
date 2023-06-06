@@ -9,7 +9,7 @@ export default function PublicRoute({ children }) {
   const { isAuth } = CheckToken(location.key);
 
   if (isAuth === "Success") {
-    return <Navigate to="/" state={{ from: location }} />;
+    return <Navigate to="/main" state={{ from: location }} />;
   } else if (isAuth === "Loading") {
     return (
       <div

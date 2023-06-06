@@ -42,8 +42,8 @@ export const loginUser = async (credentials) => {
         const json = text.length ? JSON.parse(text) : "";
 
         // 서버에서 받은 accessToken, refreshToken을 추출
-        const accessToken = data.headers.get('accessToken');
-        const refreshToken = data.headers.get('refreshToken');
+        const accessToken = data.headers.get('authorization');
+        const refreshToken = data.headers.get('authorization-refresh');
 
         return {
             status,
@@ -62,7 +62,7 @@ export const logoutUser = async (credentials, accessToken) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'accessToken': accessToken,
+            // 'accessToken': accessToken,
         },
         body: JSON.stringify(credentials)
     };
@@ -92,9 +92,9 @@ export const requestToken = async (refreshToken) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'refreshToken': refreshToken,
+            // 'refreshToken': refreshToken,
         },
-        body: JSON.stringify({ refreshToken: refreshToken })
+        body: JSON.stringify({ refresh_token: refreshToken })
     }
 
     const data = await getPromise('/login', option).catch(() => {
@@ -108,15 +108,15 @@ export const requestToken = async (refreshToken) => {
         const json = text.length ? JSON.parse(text) : "";
 
         // 토큰 갱신 요청에서 새로 발급받은 accessToken, refreshToekn을 추출
-        const newAccessToken = data.headers.get('accessToken');
-        const newRefreshToken = data.headers.get('refreshToken');
+        // const newAccessToken = data.headers.get('accessToken');
+        // const newRefreshToken = data.headers.get('refreshToken');
 
         return {
             status,
             code,
             json,
-            newAccessToken,
-            newRefreshToken,
+            // newAccessToken,
+            // newRefreshToken,
         };
     } else {
         return statusError;

@@ -14,7 +14,7 @@ import KakaoRedirectHandler from "./components/oauth/kakao/KakaoRedirectHandler"
 
 // JWT
 // import Login from './pages/Login';
-import Logout from './pages/Logout';
+import Logout from "./pages/Logout";
 
 // 비회원
 import LandingPage from "./pages/LandingPage";
@@ -46,8 +46,8 @@ import OAuthTest from "./pages/OAuthTest";
 import ExecStatsPage from "./pages/exercises/ExecStatsPage";
 
 //라우트
-// import PrivateRoute from './routes/PrivateRoute';
-// import PublicRoute from './routes/PublicRoute';
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
 
 function App() {
   return (
@@ -55,47 +55,76 @@ function App() {
       <div>
         {/* <Header /> */}
         <Routes>
-          {/*공통 Header를 포함하는 컴포넌트 */}
-          <Route element={<MainLayout />}>
-            {/* 공통 */}
-            <Route path="/prepare" element={<PreparingPage />} />
-            <Route path="/oauth/callback/kakao" element={<KakaoRedirectHandler />} />
+          {/* PublicRoute: 모든 사용자가 접근 가능 */}
+          <Route path="/login"
+            element={
+              <PublicRoute element={<MainLayout />}>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
 
-            {/* JWT */}
-            {/* <Route path="/login" element={<Login />} /> */}
-            <Route path="/logout" element={<Logout />} />
+          {/* PrivateRoute: 로그인한 사용자만 접근 가능 */}
+          <Route element={<PrivateRoute element={<MainLayout />} />}>
+            <Route>
+              {/* JWT 로그아웃 테스트용 */}
+              <Route path="/logout" element={<Logout />} />
 
-            {/* 비회원 */}
-            <Route path="/" element={<LandingPage />} />
+              {/* 회원 */}
+              <Route path="/main" element={<LoginMain />} />
+              <Route path="/mainpage" element={<LoginMain />} />
+              <Route path="/user/info" element={<EditMyInfo />} />
+              <Route path="/user/editpwd" element={<EditPwd />} />
+
+              {/* 운동 */}
+              <Route path="/squat/setting" element={<SquatSetting />} />
+              <Route path="/exec/result" element={<SquatResult />} />
+              <Route path="/exec/rest" element={<RestTimerPage />} />
+            </Route>
+          </Route>
+
+          {/* 공통 Header를 포함하는 컴포넌트 */}
+          {/* <Route element={<MainLayout />}> */}
+          {/* 공통 */}
+          {/* <Route path="/prepare" element={<PreparingPage />} />
+            <Route path="/oauth/callback/kakao" element={<KakaoRedirectHandler />} /> */}
+
+          {/* JWT 로그아웃 테스트용 */}
+          {/* <Route path="/logout" element={<Logout />} /> */}
+
+          {/* 비회원 */}
+          {/* <Route path="/" element={<LandingPage />} />
             <Route path="/intro" element={<LandingPage />} />
             <Route path="/notice" element={<NoticePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/join" element={<JoinPage />} />
+            <Route path="/join" element={<JoinPage />} /> */}
 
-            {/* 회원 */}
-            <Route path="/main" element={<LoginMain />} />
+          {/* 회원 */}
+          {/* <Route path="/main" element={<LoginMain />} />
             <Route path="/mainpage" element={<LoginMain />} />
             <Route path="/user/info" element={<EditMyInfo />} />
-            <Route path="/user/editpwd" element={<EditPwd />} />
+            <Route path="/user/editpwd" element={<EditPwd />} /> */}
 
-            {/* 운동 */}
-            <Route path="/squat/setting" element={<SquatSetting />} />
+          {/* 운동 */}
+          {/* <Route path="/squat/setting" element={<SquatSetting />} />
             <Route path="/exec/result" element={<SquatResult />} />
-            <Route path="/exec/rest" element={<RestTimerPage />} />
-            
-            {/* 테스트용 */}
-            <Route path="/test" element={<Test />} />
+            <Route path="/exec/rest" element={<RestTimerPage />} /> */}
+
+          {/* 테스트용 */}
+          {/* <Route path="/test" element={<Test />} />
             <Route path="/test2" element={<Test2 />} />
-            <Route path="/oauth" element={<OAuthTest />} />
+            <Route path="/oauth" element={<OAuthTest />} /> */}
 
-            {/* 임시 사용 */}
-            <Route path="/stats" element={<ExecStatsPage />} />
+          {/* 임시 사용 */}
+          {/* <Route path="/stats" element={<ExecStatsPage />} />
+          </Route> */}
+
+          {/* 공통 Header를 포함하지 않는 컴포넌트 :: 로그인 사용자만 접근 가능 */}
+          <Route element={<PrivateRoute />}>
+            {/* 커뮤니티 */}
+            {/* <Route path="/community/main" element={<ViewPostsAll />} /> */}
+            <Route path="/community/*" element={<CommunityRoutes />} />
           </Route>
-
-          {/* 공통 Header를 포함하지 않는 컴포넌트 */}
-          {/* 커뮤니티 */}
-          {/* <Route path="/community/main" element={<ViewPostsAll />} /> */}
-          <Route path="/community/*" element={<CommunityRoutes />} />
         </Routes>
       </div>
     </Router>
