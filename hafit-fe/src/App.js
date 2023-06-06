@@ -45,6 +45,10 @@ import OAuthTest from "./pages/OAuthTest";
 // 임시 사용
 import ExecStatsPage from "./pages/exercises/ExecStatsPage";
 
+//라우트
+// import PrivateRoute from './routes/PrivateRoute';
+// import PublicRoute from './routes/PublicRoute';
+
 function App() {
   return (
     <Router>

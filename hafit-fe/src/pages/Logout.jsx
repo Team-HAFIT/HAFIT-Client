@@ -13,24 +13,14 @@ import { DELETE_TOKEN } from "../store/Auth";
 import { logoutUser } from "../api/Users";
 
 function Logout() {
+  // store에 저장된 Access Token 정보를 받아 온다
   const { accessToken } = useSelector((state) => state.token);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Cookie에 저장된 Refresh Token 정보를 받아 온다
   const refreshToken = getCookieToken();
-
-  //   async function logout() {
-  //     const data = await logoutUser({ refresh_token: refreshToken }, accessToken);
-
-  //     if (data.status) {
-  //       dispatch(DELETE_TOKEN());
-  //       removeCookieToken();
-  //       return navigate("/user/login");
-  //     } else {
-  //       window.location.reload();
-  //     }
-  //   }
 
   const logout = useCallback(async () => {
     const data = await logoutUser({ refresh_token: refreshToken }, accessToken);
@@ -38,12 +28,13 @@ function Logout() {
     if (data.status) {
       dispatch(DELETE_TOKEN());
       removeCookieToken();
-      return navigate("/user/login");
+      navigate("/login");
     } else {
       window.location.reload();
     }
-  }, [refreshToken, accessToken, dispatch, navigate]);
+  }, [accessToken, dispatch, navigate, refreshToken]);
 
+  // 해당 컴포넌트가 요청된 후 한 번만 실행되면 되기 때문에 useEffect 훅을 사용
   useEffect(() => {
     logout();
   }, [logout]);

@@ -7,8 +7,8 @@ import { loginUser } from "../api/Users";
 import { setRefreshToken } from "../storage/Cookie";
 import { SET_TOKEN } from "../store/Auth";
 
-// import axios from "axios";
-// import Cookies from "js-cookie";
+import axios from "axios";
+import Cookies from "js-cookie";
 // import AxiosAPI from '../api/axios'
 
 // import Header from "../components/Navbar";
@@ -27,22 +27,67 @@ const LoginPage = () => {
   // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
   const dispatch = useDispatch();
 
-  const onFinish = async ({ email, password }) => {
+  const onFinish = (values) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
 
-    const res = await loginUser({ email, password });
+    axios
+      .post("/login", JSON.stringify(values), {
+        headers: {
+          "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+        },
+        timeout: 5000, // 요청 제한 시간 설정
+      })
+      .then((response) => {
+        console.log(response.headers); // 응답 결과 출력
 
-    if(res.status) {
-      // 쿠키에 Refresh Token, store에 Access Token 저장
-      setRefreshToken(res.json.refresh_token);
-      dispatch(SET_TOKEN(res.json.access_token));
+        // const cookies = response.headers.get("Set-Cookie");
+        const accessToken = response.headers.get("authorization");
+        const refreshToken = response.headers.get("authorization-refresh");
 
-      return window.location.href = '/main';
-    } else {
-      console.log(res.json);
-      setLoading(false);
-    }
+        if (accessToken === null) {
+          console.log("accessToken을 가져오지 못했습니다.");
+          return;
+        } else if (refreshToken === null) {
+          console.log("refreshToken을 가져오지 못했습니다.");
+          return;
+        }
+        localStorage.setItem("accessToken", accessToken); // 로컬스토리지에 accessToken 저장
+        localStorage.setItem("refreshToken", refreshToken); // 로컬스토리지에 refreshToken 저장
+
+        console.log("성공!!!");
+        console.log("accessToken: " + localStorage.getItem("accessToken"));
+        console.log("refreshToken: " + localStorage.getItem("refreshToken"));
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error.response && error.response.status === 400) {
+          alert("이메일 또는 비밀번호를 확인해주세요.");
+        } else {
+          alert("로그인 실패"); // 기타 에러 발생 시 에러 메시지 띄우기
+        }
+      })
+      .finally(() => {
+        setLoading(false); // 요청 종료 시 로딩 중 상태 해제
+      });
   };
+
+  // const onFinish = async ({ email, password }) => {
+  //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
+
+  //   const res = await loginUser({ email, password });
+
+  //   if(res.status) {
+  //     // 쿠키에 Refresh Token, store에 Access Token 저장
+  //     setRefreshToken(res.json.RefreshToken);
+  //     dispatch(SET_TOKEN(res.json.AccessToken));
+  //     alert('리프레시토큰: ' + res.json.RefreshToken + ' / 액세스토큰: ' + res.json.AccessToken);
+
+  //     return window.location.href = '/main';
+  //   } else {
+  //     console.log(res.json);
+  //     setLoading(false);
+  //   }
+  // };
 
   // const onFinish = (values) => {
   //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
@@ -172,10 +217,16 @@ const LoginPage = () => {
           <Link to={KAKAO_AUTH_URL} className="kakao-login">
             <img src={kakao} alt="카카오 로그인" style={{ width: "80%" }} />
           </Link>
-          <Link to="http://172.26.21.193:8080/oauth2/authorization/google" className="google-login">
+          <Link
+            to="http://172.26.21.193:8080/oauth2/authorization/google"
+            className="google-login"
+          >
             <img src={google} alt="구글 로그인" style={{ width: "80%" }} />
           </Link>
-          <Link to="http://172.26.21.193:8080/oauth2/authorization/google" className="naver-login">
+          <Link
+            to="http://172.26.21.193:8080/oauth2/authorization/google"
+            className="naver-login"
+          >
             <img src={naver} alt="네이버 로그인" style={{ width: "80%" }} />
           </Link>
         </div>
