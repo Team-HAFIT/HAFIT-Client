@@ -8,10 +8,13 @@ import MainLayout from "./layout/MainLayout";
 
 // 공통
 //------ Header 예외 처리를 위한 MainLayout을 사용함에 따라 주석 처리 ------//
-//------ 2023. 05. 19 (금) 13:04 -------------//
 // import Header from "./components/Navbar";
 import PreparingPage from "./pages/PreparingPage";
 import KakaoRedirectHandler from "./components/oauth/kakao/KakaoRedirectHandler";
+
+// JWT
+// import Login from './pages/Login';
+import Logout from './pages/Logout';
 
 // 비회원
 import LandingPage from "./pages/LandingPage";
@@ -53,6 +56,10 @@ function App() {
             {/* 공통 */}
             <Route path="/prepare" element={<PreparingPage />} />
             <Route path="/oauth/callback/kakao" element={<KakaoRedirectHandler />} />
+
+            {/* JWT */}
+            {/* <Route path="/login" element={<Login />} /> */}
+            <Route path="/logout" element={<Logout />} />
 
             {/* 비회원 */}
             <Route path="/" element={<LandingPage />} />

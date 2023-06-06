@@ -8,6 +8,7 @@ import {
   Select,
   Typography,
   Modal,
+  Divider,
 } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -244,12 +245,13 @@ const JoinPage = () => {
               >
                 <Input.Password maxLength={20} />
               </Form.Item>
+              <Divider plain>추가 정보</Divider>
               <Form.Item
                 label="통신사 선택"
                 name="carrier"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "통신사를 선택해주세요",
                   },
                 ]}
@@ -278,7 +280,7 @@ const JoinPage = () => {
                 name="phone"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "전화번호를 입력해주세요",
                   },
                 ]}
