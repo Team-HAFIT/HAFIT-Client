@@ -42,8 +42,10 @@ import Test from "./pages/test";
 import Test2 from "./pages/Test2";
 import OAuthTest from "./pages/OAuthTest";
 
+
 // 임시 사용
 import ExecStatsPage from "./pages/exercises/ExecStatsPage";
+import CalendarPage from "./pages/CalendarPage";
 
 function App() {
   return (
@@ -82,7 +84,11 @@ function App() {
             {/* 테스트용 */}
             <Route path="/test" element={<Test />} />
             <Route path="/test2" element={<Test2 />} />
+<<<<<<< Updated upstream
             <Route path="/oauth" element={<OAuthTest />} />
+=======
+            <Route path="/calendar" element={<CalendarPage />} />
+>>>>>>> Stashed changes
 
             {/* 임시 사용 */}
             <Route path="/stats" element={<ExecStatsPage />} />
