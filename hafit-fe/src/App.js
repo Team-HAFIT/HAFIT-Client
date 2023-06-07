@@ -84,11 +84,8 @@ function App() {
             {/* 테스트용 */}
             <Route path="/test" element={<Test />} />
             <Route path="/test2" element={<Test2 />} />
-<<<<<<< Updated upstream
             <Route path="/oauth" element={<OAuthTest />} />
-=======
             <Route path="/calendar" element={<CalendarPage />} />
->>>>>>> Stashed changes
 
             {/* 임시 사용 */}
             <Route path="/stats" element={<ExecStatsPage />} />

@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-import { Calendar, Modal, Form, Input, Button, Checkbox, Select } from "antd";
-
-import "../styles/pages/calendarPage.css";
+import React, { useState } from 'react';
+import { Calendar, Modal, Form, Input, Button, Checkbox, Select } from 'antd';
+import moment from 'moment';
+import '../styles/pages/calendarPage.css';
 
 const { Option } = Select;
 
 const CalendarPage = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [mainExercise, setMainExercise] = useState("");
-  const [targetReps, setTargetReps] = useState("");
-  const [targetSets, setTargetSets] = useState("");
-  const [targetWeight, setTargetWeight] = useState("");
+  const [mainExercise, setMainExercise] = useState('');
+  const [targetReps, setTargetReps] = useState('');
+  const [targetSets, setTargetSets] = useState('');
+  const [targetWeight, setTargetWeight] = useState('');
   const [repeatDays, setRepeatDays] = useState([]);
+  const [exerciseSchedules, setExerciseSchedules] = useState([]);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -24,16 +25,25 @@ const CalendarPage = () => {
   };
 
   const handleModalSubmit = (values) => {
-    console.log("Submitted values:", values);
+    const newSchedule = {
+      date: selectedDate.format('YYYY-MM-DD'),
+      exercise: values.subExercise,
+      reps: values.targetReps,
+      sets: values.targetSets,
+      weight: values.targetWeight,
+      repeatDays: values.repeatDays,
+      memo: values.memo,
+    };
+    setExerciseSchedules([...exerciseSchedules, newSchedule]);
     setModalVisible(false);
   };
 
   const exerciseOptions = {
-    등: ["Exercise 1", "Exercise 2", "Exercise 3"],
-    가슴: ["Exercise 4", "Exercise 5", "Exercise 6"],
-    어깨: ["Exercise 7", "Exercise 8", "Exercise 9"],
-    하체: ["Exercise 10", "Exercise 11", "Exercise 12"],
-    팔: ["Exercise 13", "Exercise 14", "Exercise 15"],
+    등: ['턱걸이', '데드리프트', '로우'],
+    가슴: ['벤치프레스', '푸쉬업', '체스트플라이'],
+    어깨: ['숄더프레스', '사이드 레터럴 레이즈', '프론트 레터럴 레이즈'],
+    하체: ['스쿼트', '런지', '레그프레스'],
+    팔: ['바이셉 컬', '트라이셉 딥스', '해머 컬'],
   };
 
   const handleExerciseSelect = (value) => {
@@ -56,115 +66,194 @@ const CalendarPage = () => {
     setRepeatDays(checkedValues);
   };
 
+  const disabledDate = (current) => {
+    // Disable past dates
+    return current && current < moment().endOf('day');
+  };
+
+  const dateCellRender = (value) => {
+    const schedules = exerciseSchedules.filter(
+      (schedule) => schedule.date === value.format('YYYY-MM-DD')
+    );
+
+    const formatExerciseSummary = (schedule) => {
+      return `${schedule.exercise} (${schedule.reps}회, ${schedule.sets}세트, ${schedule.weight}kg)`;
+    };
+
+    return (
+      <ul className="date-cell-schedules">
+        {schedules.map((schedule, index) => (
+          <li key={index}>
+            <p>{schedule.exercise}</p>
+            <p>횟수: {schedule.reps}</p>
+            <p>세트 수: {schedule.sets}</p>
+            <p>중량: {schedule.weight}kg</p>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  const addExercise = (daysToAdd) => {
+    const date = moment().add(daysToAdd, 'days');
+    setSelectedDate(date);
+    setModalVisible(true);
+  };
+
+  const renderExerciseSection = (title, daysToAdd) => {
+    const date = moment().add(daysToAdd, 'days');
+    const currentDayExercise = getCurrentDayExercise(date);
+
+    return (
+      <div className="exercise-section">
+        <h2>{title}</h2>
+        <div className="exercise-schedule">
+          <Button onClick={() => addExercise(daysToAdd)}>추가</Button>
+          {currentDayExercise}
+        </div>
+      </div>
+    );
+  };
+
+  const findExerciseScheduleByDate = (date) => {
+    return exerciseSchedules.find(
+      (schedule) => schedule.date === date.format('YYYY-MM-DD')
+    );
+  };
+
+  const getCurrentDayExercise = (date) => {
+    const todaySchedule = findExerciseScheduleByDate(date);
+    if (todaySchedule) {
+      return (
+        <div>
+          <p>{todaySchedule.exercise}</p>
+          <p>횟수: {todaySchedule.reps}</p>
+          <p>세트 수: {todaySchedule.sets}</p>
+          <p>중량: {todaySchedule.weight}kg</p>
+        </div>
+      );
+    } else {
+      return <p>일정이 없습니다.</p>;
+    }
+  };
+
+  const renderCurrentDayExercise = (date) => {
+    const todaySchedule = getCurrentDayExercise(date);
+    return (
+      <div className="exercise-schedules">
+        <h2>{date.format('YYYY-MM-DD')} 운동 일정</h2>
+        {todaySchedule}
+      </div>
+    );
+  };
+
   return (
     <div className="container">
       <h1>운동 일정</h1>
-      <div className="calendar">
-        <Calendar onSelect={handleDateSelect} />
+      <div className="exercise-sections">
+        {renderExerciseSection('오늘', 0)}
+        {renderExerciseSection('내일', 1)}
+        {renderExerciseSection('모레', 2)}
       </div>
-
+      <div className="calendar">
+        <Calendar
+          onSelect={handleDateSelect}
+          // disabledDate={disabledDate}
+          dateCellRender={dateCellRender}
+        />
+      </div>
       <Modal
-        title={`운동 일정 - ${selectedDate?.format("YYYY-MM-DD")}`}
+        title={`운동 일정 - ${selectedDate?.format('YYYY-MM-DD')}`}
         visible={modalVisible}
         onCancel={handleModalCancel}
         footer={null}
       >
         <Form onFinish={handleModalSubmit} layout="vertical">
           <Form.Item label="운동 선택">
-            <Form.Item
-              name="mainExercise"
-              noStyle
-              rules={[{ required: true, message: "운동을 선택해주세요" }]}
-            >
-              <Select placeholder="주 운동 선택" onChange={handleExerciseSelect}>
-                {Object.keys(exerciseOptions).map((mainExercise) => (
-                  <Option key={mainExercise} value={mainExercise}>
-                    {mainExercise}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="subExercise"
-              noStyle
-              rules={[{ required: true, message: "운동을 선택해주세요" }]}
-            >
-              <Select placeholder="부 운동 선택">
-                {exerciseOptions[mainExercise]?.map((subExercise) => (
-                  <Option key={subExercise} value={subExercise}>
-                    {subExercise}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
+            <Input.Group compact>
+              <Form.Item
+                name="mainExercise"
+                noStyle
+                rules={[{ required: true, message: '운동을 선택해주세요' }]}
+              >
+                <Select
+                  placeholder="주 운동 선택"
+                  onChange={handleExerciseSelect}
+                  style={{ width: '50%' }}
+                >
+                  {Object.keys(exerciseOptions).map((mainExercise) => (
+                    <Option key={mainExercise} value={mainExercise}>
+                      {mainExercise}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="subExercise"
+                noStyle
+                rules={[{ required: true, message: '운동을 선택해주세요' }]}
+              >
+                <Select placeholder="부 운동 선택" style={{ width: '50%' }}>
+                  {exerciseOptions[mainExercise]?.map((subExercise) => (
+                    <Option key={subExercise} value={subExercise}>
+                      {subExercise}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Input.Group>
           </Form.Item>
           <Form.Item label="목표 개수">
             <Input.Group compact>
               <Form.Item
                 name="targetReps"
                 noStyle
-                rules={[{ required: true, message: "목표 개수를 입력해주세요" }]}
+                rules={[{ required: true, message: '목표 개수를 입력해주세요' }]}
               >
                 <Input
-                  style={{ width: "50%" }}
-                  placeholder="목표 개수"
+                  style={{ width: '50%' }}
+                  placeholder="개"
                   type="number"
                   min={1}
+                  onChange={handleTargetRepsChange}
                 />
               </Form.Item>
               <Form.Item
                 name="targetSets"
                 noStyle
-                rules={[{ required: true, message: "목표 세트 수를 입력해주세요" }]}
+                rules={[{ required: true, message: '목표 세트 수를 입력해주세요' }]}
               >
                 <Input
-                  style={{ width: "50%" }}
-                  placeholder="목표 세트 수"
+                  style={{ width: '50%' }}
+                  placeholder="세트"
                   type="number"
                   min={1}
+                  onChange={handleTargetSetsChange}
                 />
               </Form.Item>
             </Input.Group>
           </Form.Item>
-          <Form.Item label="목표 중량 (kg)">
-            <Form.Item
-              name="targetWeight"
-              noStyle
-              rules={[{ required: true, message: "목표 중량을 입력해주세요" }]}
-            >
-              <Input
-                placeholder="목표 중량"
-                type="number"
-                min={0}
-                addonAfter="kg"
-              />
-            </Form.Item>
+          <Form.Item label="목표 중량">
+            <Input
+              placeholder="kg"
+              type="number"
+              min={1}
+              onChange={handleTargetWeightChange}
+            />
           </Form.Item>
           <Form.Item label="반복 요일">
-            <Form.Item
-              name="repeatDays"
-              noStyle
-              rules={[{ required: true, message: "반복 요일을 선택해주세요" }]}
-            >
-              <Checkbox.Group onChange={handleRepeatDaysChange}>
-                <Checkbox value="월">월</Checkbox>
-                <Checkbox value="화">화</Checkbox>
-                <Checkbox value="수">수</Checkbox>
-                <Checkbox value="목">목</Checkbox>
-                <Checkbox value="금">금</Checkbox>
-                <Checkbox value="토">토</Checkbox>
-                <Checkbox value="일">일</Checkbox>
-              </Checkbox.Group>
-            </Form.Item>
+            <Checkbox.Group onChange={handleRepeatDaysChange}>
+              <Checkbox value="월">월</Checkbox>
+              <Checkbox value="화">화</Checkbox>
+              <Checkbox value="수">수</Checkbox>
+              <Checkbox value="목">목</Checkbox>
+              <Checkbox value="금">금</Checkbox>
+              <Checkbox value="토">토</Checkbox>
+              <Checkbox value="일">일</Checkbox>
+            </Checkbox.Group>
           </Form.Item>
           <Form.Item label="메모">
-            <Form.Item
-              name="memo"
-              noStyle
-              rules={[{ required: true, message: "메모를 입력해주세요" }]}
-            >
-              <Input.TextArea placeholder="메모 입력" />
-            </Form.Item>
+            <Input.TextArea rows={3} name="memo" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
@@ -178,4 +267,3 @@ const CalendarPage = () => {
 };
 
 export default CalendarPage;
-
