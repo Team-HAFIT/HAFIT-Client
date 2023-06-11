@@ -3,6 +3,11 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import jwt_decode from "jwt-decode";
+
+import { removeCookieToken } from "../../storage/Cookie";
+import { DELETE_TOKEN } from "../../store/Auth";
 
 import MyFooter from "../../components/Footer";
 
@@ -15,7 +20,14 @@ const EditPwd = () => {
   // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
   const [form] = Form.useForm();
 
-  const { userId } = useParams(); // URL 파라미터에서 userId 가져오기
+  const accessToken = useSelector((state) => state.authToken.accessToken);
+  let decodedToken = null; // 토큰 값이 없을 경우 에러 방지용
+  if(accessToken) {
+    decodedToken = jwt_decode(accessToken);
+  }
+  const userEmail = decodedToken.email;
+
+  const dispatch = useDispatch();
 
   // useEffect(() => {
   //   if (userId) {
@@ -55,9 +67,10 @@ const EditPwd = () => {
 
       onOk: () => {
         axios
-          .post(`/user/changePassword?userId=${userId}`, values, {
+          .put(`/api/my/${userEmail}/password`, values, {
             headers: {
               "Content-Type": "application/json",
+              authorization: `Bearer ${accessToken}`,
             },
             timeout: 5000,
           })
@@ -66,7 +79,8 @@ const EditPwd = () => {
             console.log(response.data); // 응답 결과 출력
             if(response.data === true) {
               message.success("비밀번호가 변경되었습니다. 다시 로그인해주세요", 2, () => {
-                Cookies.remove("userId");
+                dispatch(DELETE_TOKEN());
+                removeCookieToken();
                 window.location.href = "/login";
                 // navigate("/user/info"); // 성공 시 회원 정보 페이지로 이동
               });   

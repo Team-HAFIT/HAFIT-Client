@@ -13,37 +13,37 @@ import { DELETE_TOKEN } from "../store/Auth";
 import { logoutUser } from "../api/Users";
 
 function Logout() {
-  const { accessToken } = useSelector((state) => state.token);
+  // store에 저장된 Access Token 정보를 받아 온다
+  const { accessToken } = useSelector((state) => state.authToken);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Cookie에 저장된 Refresh Token 정보를 받아 온다
   const refreshToken = getCookieToken();
 
-  //   async function logout() {
-  //     const data = await logoutUser({ refresh_token: refreshToken }, accessToken);
+  // const logout = useCallback(async () => {
+  //   const data = await logoutUser(refreshToken, accessToken);
 
-  //     if (data.status) {
-  //       dispatch(DELETE_TOKEN());
-  //       removeCookieToken();
-  //       return navigate("/user/login");
-  //     } else {
-  //       window.location.reload();
-  //     }
+  //   if (data.status) {
+  //     dispatch(DELETE_TOKEN());
+  //     console.log('로그아웃 성공');
+  //     removeCookieToken();
+  //     navigate("/login");
+  //   } else {
+  //     console.log('로그아웃 실패');
+  //     window.location.reload();
   //   }
+  // }, [accessToken, dispatch, navigate, refreshToken]);
 
+  // 테스트용 임시 로그아웃 함수
   const logout = useCallback(async () => {
-    const data = await logoutUser({ refresh_token: refreshToken }, accessToken);
+    dispatch(DELETE_TOKEN());
+    removeCookieToken();
+    return navigate("/login");
+  }, [dispatch, navigate]);
 
-    if (data.status) {
-      dispatch(DELETE_TOKEN());
-      removeCookieToken();
-      return navigate("/user/login");
-    } else {
-      window.location.reload();
-    }
-  }, [refreshToken, accessToken, dispatch, navigate]);
-
+  // 해당 컴포넌트가 요청된 후 한 번만 실행되면 되기 때문에 useEffect 훅을 사용
   useEffect(() => {
     logout();
   }, [logout]);

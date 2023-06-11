@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, Row, Col } from "antd";
 import { Link } from "react-router-dom";
-//수정 시작 ~~~ JWT 관련 06/05
+
 import { useDispatch } from "react-redux";
 import { loginUser } from "../api/Users";
 import { setRefreshToken } from "../storage/Cookie";
 import { SET_TOKEN } from "../store/Auth";
 
-// import axios from "axios";
-// import Cookies from "js-cookie";
+import axios from "axios";
+import Cookies from "js-cookie";
 // import AxiosAPI from '../api/axios'
 
 // import Header from "../components/Navbar";
@@ -24,25 +24,9 @@ import naver from "../assets/img/sns-icons/naver-icon.png";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
+  const [form] = Form.useForm();
   // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
   const dispatch = useDispatch();
-
-  const onFinish = async ({ email, password }) => {
-    setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
-
-    const res = await loginUser({ email, password });
-
-    if(res.status) {
-      // 쿠키에 Refresh Token, store에 Access Token 저장
-      setRefreshToken(res.json.refresh_token);
-      dispatch(SET_TOKEN(res.json.access_token));
-
-      return window.location.href = '/main';
-    } else {
-      console.log(res.json);
-      setLoading(false);
-    }
-  };
 
   // const onFinish = (values) => {
   //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
@@ -78,6 +62,79 @@ const LoginPage = () => {
   //     });
   // };
 
+  // JWT 토큰 테스트 용
+  // const onFinish = (values) => {
+  //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
+
+  //   axios
+  //     .post("/login", JSON.stringify(values), {
+  //       headers: {
+  //         "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+  //       },
+  //       timeout: 5000, // 요청 제한 시간 설정
+  //     })
+  //     .then((response) => {
+  //       console.log(response.headers); // 응답 결과 출력
+
+  //       // const cookies = response.headers.get("Set-Cookie");
+  //       const accessToken = response.headers.get("authorization");
+  //       const refreshToken = response.headers.get("authorization-refresh");
+
+  //       if (accessToken === null) {
+  //         console.log("accessToken을 가져오지 못했습니다.");
+  //         return;
+  //       } else if (refreshToken === null) {
+  //         console.log("refreshToken을 가져오지 못했습니다.");
+  //         return;
+  //       }
+  //       localStorage.setItem("accessToken", accessToken); // 로컬스토리지에 accessToken 저장
+  //       localStorage.setItem("refreshToken", refreshToken); // 로컬스토리지에 refreshToken 저장
+
+  //       console.log("성공!!!");
+  //       console.log("accessToken: " + localStorage.getItem("accessToken"));
+  //       console.log("refreshToken: " + localStorage.getItem("refreshToken"));
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       if (error.response && error.response.status === 400) {
+  //         alert("이메일 또는 비밀번호를 확인해주세요.");
+  //       } else {
+  //         alert("로그인 실패"); // 기타 에러 발생 시 에러 메시지 띄우기
+  //       }
+  //     })
+  //     .finally(() => {
+  //       setLoading(false); // 요청 종료 시 로딩 중 상태 해제
+  //     });
+  // };
+
+  const onFinish = async ({ email, password }) => {
+    setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
+
+    const res = await loginUser({ email, password });
+
+    if (res.status) {
+      const accessToken = res.accessToken;
+      const refreshToken = res.refreshToken;
+      // 쿠키에 Refresh Token, store에 Access Token 저장
+      // 2023. 06. 11 - 백엔드에서 토큰 발급 시 쿠키에 저장하여 발급하도록 변경
+      // setRefreshToken(refreshToken);
+      dispatch(SET_TOKEN(accessToken));
+
+      // alert("AT: " + accessToken + "\nRT: " + refreshToken); // 토큰 확인용
+      setLoading(false);
+      // return window.location.href = "/main";
+    } else {
+      form.setFields([
+        {
+          name: "password",
+          errors: ["이메일 또는 비밀번호를 확인해주세요"],
+        },
+      ]);
+      console.log(res.json);
+      setLoading(false);
+    }
+  };
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -93,6 +150,7 @@ const LoginPage = () => {
           <Row justify="center" align="middle">
             <Col xs={24} sm={16} md={12} lg={8} align="middle">
               <Form
+                form={form}
                 className="login-form"
                 name="basic"
                 layout="vertical"
@@ -172,10 +230,16 @@ const LoginPage = () => {
           <Link to={KAKAO_AUTH_URL} className="kakao-login">
             <img src={kakao} alt="카카오 로그인" style={{ width: "80%" }} />
           </Link>
-          <Link to="http://172.26.21.193:8080/oauth2/authorization/google" className="google-login">
+          <Link
+            to="http://172.26.21.193:8080/oauth2/authorization/google"
+            className="google-login"
+          >
             <img src={google} alt="구글 로그인" style={{ width: "80%" }} />
           </Link>
-          <Link to="http://172.26.21.193:8080/oauth2/authorization/google" className="naver-login">
+          <Link
+            to="http://172.26.21.193:8080/oauth2/authorization/google"
+            className="naver-login"
+          >
             <img src={naver} alt="네이버 로그인" style={{ width: "80%" }} />
           </Link>
         </div>
