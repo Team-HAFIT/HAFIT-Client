@@ -1,6 +1,7 @@
-// 2023/06/04 - 12:05
-// name, carrier 수정 값으로 넘어가긴 하는데, 수정된 값이 저장되지 않고있음
-// 백엔드와 테스트 필요
+/* 2023/06/12
+ * carrier 값이 변경되지 않는 문제 발생, 원인 파악 필요
+ * 휴대폰 인증 구현 전까지 'carrier' 주석 처리
+ * */
 
 import {
   Button,
@@ -8,7 +9,7 @@ import {
   Form,
   Input,
   Row,
-  Select,
+  // Select,
   Radio,
   Typography,
   Modal,
@@ -20,35 +21,28 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import locale from "antd/locale/ko_KR";
-// import moment from 'moment';
-// import DatePicker from "react-datepicker";
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import jwt_decode from "jwt-decode";
 
 import { removeCookieToken } from "../../storage/Cookie";
 import { DELETE_TOKEN } from "../../store/Auth";
 
-
 import PhoneNumberInput from "../../components/inputs/PhoneNumberInput";
-// import Header from "../../components/Navbar";
-
-// import "react-datepicker/dist/react-datepicker.css";
-// import { ko } from "date-fns/esm/locale";
 
 import "../../styles/pages/joinPage.css";
 
-const { Option } = Select;
+// const { Option } = Select;
 const { Title } = Typography;
 
 const EditMyInfo = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
-    carrier: "",
+    // carrier: "",
     phone: "",
     birthday: "",
     sex: "",
@@ -58,11 +52,11 @@ const EditMyInfo = () => {
 
   const accessToken = useSelector((state) => state.authToken.accessToken);
   let decodedToken = null; // 토큰 값이 없을 경우 에러 방지용
-  if(accessToken) {
+  if (accessToken) {
     decodedToken = jwt_decode(accessToken);
   }
   const userEmail = decodedToken.email;
-  
+
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
@@ -79,11 +73,9 @@ const EditMyInfo = () => {
           timeout: 5000, // 요청 제한 시간 설정
         })
         .then((response) => {
-          // const birthday = new Date(response.data.birthday);
           setUserInfo(response.data);
           setUserInfo({
             ...response.data,
-            // birthday,
           });
           console.log(response.data);
           setIsLoading(false);
@@ -135,7 +127,7 @@ const EditMyInfo = () => {
     axios
       .put(`/api/my/${userEmail}`, updatedUserInfo, {
         headers: {
-          "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+          "Content-Type": "application/json",
           authorization: `Bearer ${accessToken}`,
         },
         timeout: 5000, // 요청 제한 시간 설정
@@ -158,8 +150,6 @@ const EditMyInfo = () => {
   };
 
   const handleDelete = () => {
-    const userId = Cookies.get("userId");
-
     Modal.confirm({
       title: "정말 탈퇴하시겠어요?",
       onOk: () => {
@@ -178,8 +168,6 @@ const EditMyInfo = () => {
           })
           .catch((error) => {
             console.error(error);
-            // console.log(userId);
-            // console.log(typeof(userId));
           });
       },
       onCancel: () => {
@@ -190,7 +178,6 @@ const EditMyInfo = () => {
 
   return (
     <div className="top-container">
-      {/* <Header /> */}
       {isLoading ? (
         <div
           style={{
@@ -316,17 +303,8 @@ const EditMyInfo = () => {
                     },
                   ]}
                 >
-                  {/* <DatePicker
-                    locale={ko}
-                    selected={userInfo.birthday || birth}
-                    onChange={(date) => setBirth(date)}
-                    dateFormat="yyyy년 MM월 dd일"
-                    minDate={new Date("1900-01-01")}
-                    maxDate={new Date()}
-                  /> */}
                   <ConfigProvider locale={locale}>
                     <DatePicker
-                      // onChange={(date) => setBirth(date)}
                       onChange={(date) =>
                         form.setFieldsValue({ birthday: date })
                       }

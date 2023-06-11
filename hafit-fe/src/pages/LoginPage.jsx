@@ -1,17 +1,11 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, Row, Col } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import { loginUser } from "../api/Users";
-import { setRefreshToken } from "../storage/Cookie";
 import { SET_TOKEN } from "../store/Auth";
 
-import axios from "axios";
-import Cookies from "js-cookie";
-// import AxiosAPI from '../api/axios'
-
-// import Header from "../components/Navbar";
 import MyFooter from "../components/Footer";
 
 import "../styles/pages/loginPage.css";
@@ -25,87 +19,9 @@ import naver from "../assets/img/sns-icons/naver-icon.png";
 const LoginPage = () => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
   const [form] = Form.useForm();
-  // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // const onFinish = (values) => {
-  //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
-
-  //   axios
-  //     .post("/user/login", JSON.stringify(values), {
-  //       headers: {
-  //         "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
-  //       },
-  //       timeout: 5000, // 요청 제한 시간 설정
-  //     })
-  //     .then((response) => {
-  //       console.log(response.data); // 응답 결과 출력
-
-  //       const { userId } = response.data; // 엔드포인트의 return에서 userId 추출
-  //       Cookies.set("userId", userId); // 쿠키에 userId 저장
-
-  //       // navigate("/main"); // 로그인 성공 시 메인 페이지로 이동
-  //       window.location.href = '/main';
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       if (error.response && error.response.status === 400) {
-  //         alert("이메일 또는 비밀번호를 확인해주세요.");
-  //       } else {
-  //         alert("로그인 실패"); // 기타 에러 발생 시 에러 메시지 띄우기
-  //       }
-  //     })
-  //     .finally(() => {
-  //       setLoading(false); // 요청 종료 시 로딩 중 상태 해제
-  //       const userId = Cookies.get("userId");
-  //       console.log("쿠키: " + userId);
-  //     });
-  // };
-
-  // JWT 토큰 테스트 용
-  // const onFinish = (values) => {
-  //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
-
-  //   axios
-  //     .post("/login", JSON.stringify(values), {
-  //       headers: {
-  //         "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
-  //       },
-  //       timeout: 5000, // 요청 제한 시간 설정
-  //     })
-  //     .then((response) => {
-  //       console.log(response.headers); // 응답 결과 출력
-
-  //       // const cookies = response.headers.get("Set-Cookie");
-  //       const accessToken = response.headers.get("authorization");
-  //       const refreshToken = response.headers.get("authorization-refresh");
-
-  //       if (accessToken === null) {
-  //         console.log("accessToken을 가져오지 못했습니다.");
-  //         return;
-  //       } else if (refreshToken === null) {
-  //         console.log("refreshToken을 가져오지 못했습니다.");
-  //         return;
-  //       }
-  //       localStorage.setItem("accessToken", accessToken); // 로컬스토리지에 accessToken 저장
-  //       localStorage.setItem("refreshToken", refreshToken); // 로컬스토리지에 refreshToken 저장
-
-  //       console.log("성공!!!");
-  //       console.log("accessToken: " + localStorage.getItem("accessToken"));
-  //       console.log("refreshToken: " + localStorage.getItem("refreshToken"));
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       if (error.response && error.response.status === 400) {
-  //         alert("이메일 또는 비밀번호를 확인해주세요.");
-  //       } else {
-  //         alert("로그인 실패"); // 기타 에러 발생 시 에러 메시지 띄우기
-  //       }
-  //     })
-  //     .finally(() => {
-  //       setLoading(false); // 요청 종료 시 로딩 중 상태 해제
-  //     });
-  // };
 
   const onFinish = async ({ email, password }) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
@@ -113,16 +29,16 @@ const LoginPage = () => {
     const res = await loginUser({ email, password });
 
     if (res.status) {
-      const accessToken = res.accessToken;
-      const refreshToken = res.refreshToken;
-      // 쿠키에 Refresh Token, store에 Access Token 저장
       // 2023. 06. 11 - 백엔드에서 토큰 발급 시 쿠키에 저장하여 발급하도록 변경
+      // const refreshToken = res.refreshToken; 
       // setRefreshToken(refreshToken);
+
+      const accessToken = res.accessToken;
+      // store에 Access Token 저장
       dispatch(SET_TOKEN(accessToken));
 
-      // alert("AT: " + accessToken + "\nRT: " + refreshToken); // 토큰 확인용
       setLoading(false);
-      // return window.location.href = "/main";
+      return navigate("/main");
     } else {
       form.setFields([
         {
@@ -141,7 +57,6 @@ const LoginPage = () => {
 
   return (
     <div className="top-container">
-      {/* <Header /> */}
       <div className="body-wrapper">
         <div className="header-login">
           <h1>로그인</h1>

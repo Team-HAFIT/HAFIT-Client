@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Menu, Avatar, Dropdown } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserOutlined, DownOutlined } from "@ant-design/icons";
-import axios from "axios";
-import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 
 import { removeCookieToken } from "../storage/Cookie";
@@ -12,7 +10,6 @@ import { DELETE_TOKEN } from "../store/Auth";
 import "../styles/components/navbar.css";
 
 function Header() {
-  // 2023. 5. 4. 화요일 - 12:50
   // 현재 페이지의 경로를 가져와, 해당 경로에 맞는 메뉴를 강조 표시해주기 위한 useLocation hook 추가
   // root 경로일 때, default로 /intro를 선택하도록 설정하였음. (16:62)
   const location = useLocation();
@@ -31,19 +28,6 @@ function Header() {
   const goToUserInfo = () => {
     navigate(`/user/info`);
   };
-
-  // const handleLogout = () => {
-  //   axios
-  //     .post("/user/logout", { timeout: 3000 })
-  //     .then(() => {
-  //       Cookies.remove("userId"); // 쿠키에서 userId 삭제
-  //       // navigate("/"); // 새로고침을 해주어야 Header 컴포넌트가 다시 마운트되어 로그인 상태가 갱신됨 -> window.location.href로 변경
-  //       window.location.href = '/'; // 로그아웃 시 랜딩 페이지로 이동
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
 
   const handleLogout = () => {
     dispatch(DELETE_TOKEN());
