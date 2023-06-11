@@ -26,6 +26,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import jwt_decode from "jwt-decode";
+
+import { removeCookieToken } from "../../storage/Cookie";
+import { DELETE_TOKEN } from "../../store/Auth";
+
 
 import PhoneNumberInput from "../../components/inputs/PhoneNumberInput";
 // import Header from "../../components/Navbar";
@@ -38,7 +44,7 @@ import "../../styles/pages/joinPage.css";
 const { Option } = Select;
 const { Title } = Typography;
 
-const EditMyInfo = (userId) => {
+const EditMyInfo = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -50,18 +56,25 @@ const EditMyInfo = (userId) => {
     weight: "",
   });
 
+  const accessToken = useSelector((state) => state.authToken.accessToken);
+  let decodedToken = null; // 토큰 값이 없을 경우 에러 방지용
+  if(accessToken) {
+    decodedToken = jwt_decode(accessToken);
+  }
+  const userEmail = decodedToken.email;
+  
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get("userId");
-
-    if (userId) {
+    if (userEmail) {
       axios
-        .get("/user/info", {
-          params: {
-            userId: userId,
+        .get(`/api/my/${userEmail}`, {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${accessToken}`,
           },
           timeout: 5000, // 요청 제한 시간 설정
         })
@@ -82,7 +95,7 @@ const EditMyInfo = (userId) => {
           setIsLoading(false);
         });
     }
-  }, [userId]);
+  }, [accessToken, userEmail]);
 
   const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
   const [form] = Form.useForm();
@@ -94,16 +107,12 @@ const EditMyInfo = (userId) => {
   };
 
   const handleOk = () => {
-    const userId = Cookies.get("userId");
     setModalVisible(false);
-    window.location.href = `/user/info?userId=${userId}`;
+    window.location.href = `/user/info`;
   };
 
   const handleChangePassword = () => {
-    const userId = Cookies.get("userId");
-    if (userId) {
-      navigate(`/user/editPwd?userId=${userId}`);
-    }
+    navigate(`/user/editPwd`);
   };
 
   const onFinish = (values) => {
@@ -124,9 +133,10 @@ const EditMyInfo = (userId) => {
     console.log("통신사: " + typeof updatedUserInfo.carrier);
 
     axios
-      .post("/user/update", updatedUserInfo, {
+      .put(`/api/my/${userEmail}`, updatedUserInfo, {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+          authorization: `Bearer ${accessToken}`,
         },
         timeout: 5000, // 요청 제한 시간 설정
       })
@@ -154,18 +164,17 @@ const EditMyInfo = (userId) => {
       title: "정말 탈퇴하시겠어요?",
       onOk: () => {
         axios
-          .post(
-            `/user/delete?userId=${userId}`,
-            { userId },
-            {
-              headers: {
-                "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
-              },
-              timeout: 5000, // 요청 제한 시간 설정
-            }
-          )
+          .delete(`/api/my/${userEmail}`, {
+            headers: {
+              "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+              authorization: `Bearer ${accessToken}`,
+            },
+            timeout: 5000, // 요청 제한 시간 설정
+          })
           .then(() => {
-            navigate("/"); // 요청이 성공하면 '/' 랜딩 페이지로 이동
+            dispatch(DELETE_TOKEN());
+            removeCookieToken();
+            window.location.href = "/"; // 요청이 성공하면 '/' 랜딩 페이지로 이동
           })
           .catch((error) => {
             console.error(error);
@@ -258,7 +267,7 @@ const EditMyInfo = (userId) => {
                   </Button>
                 </Form.Item>
                 <Divider plain>추가 정보</Divider>
-                <Form.Item
+                {/* <Form.Item
                   label="통신사 선택"
                   name="carrier"
                   initialValue={userInfo.carrier}
@@ -278,7 +287,7 @@ const EditMyInfo = (userId) => {
                     <Option value="KT">KT</Option>
                     <Option value="LG">LG U+</Option>
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item
                   label="전화번호"
                   name="phone"

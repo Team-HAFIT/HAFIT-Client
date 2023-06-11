@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, Row, Col } from "antd";
 import { Link } from "react-router-dom";
-//수정 시작 ~~~ JWT 관련 06/05
+
 import { useDispatch } from "react-redux";
 import { loginUser } from "../api/Users";
 import { setRefreshToken } from "../storage/Cookie";
@@ -24,6 +24,7 @@ import naver from "../assets/img/sns-icons/naver-icon.png";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
+  const [form] = Form.useForm();
   // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
   const dispatch = useDispatch();
 
@@ -112,19 +113,23 @@ const LoginPage = () => {
     const res = await loginUser({ email, password });
 
     if (res.status) {
-      // const accessToken = res.headers.get("authorization");
-      // const refreshToken = res.headers.get("authorization-refresh");
       const accessToken = res.accessToken;
       const refreshToken = res.refreshToken;
-
       // 쿠키에 Refresh Token, store에 Access Token 저장
-      setRefreshToken(refreshToken);
+      // 2023. 06. 11 - 백엔드에서 토큰 발급 시 쿠키에 저장하여 발급하도록 변경
+      // setRefreshToken(refreshToken);
       dispatch(SET_TOKEN(accessToken));
 
-      alert("AT: " + accessToken + "\nRT: " + refreshToken);
-
-      // return (window.location.href = "/main");
+      // alert("AT: " + accessToken + "\nRT: " + refreshToken); // 토큰 확인용
+      setLoading(false);
+      // return window.location.href = "/main";
     } else {
+      form.setFields([
+        {
+          name: "password",
+          errors: ["이메일 또는 비밀번호를 확인해주세요"],
+        },
+      ]);
       console.log(res.json);
       setLoading(false);
     }
@@ -145,6 +150,7 @@ const LoginPage = () => {
           <Row justify="center" align="middle">
             <Col xs={24} sm={16} md={12} lg={8} align="middle">
               <Form
+                form={form}
                 className="login-form"
                 name="basic"
                 layout="vertical"

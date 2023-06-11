@@ -7,10 +7,10 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 
-export const TOKEN_TIME_OUT = 600 * 1000;
+export const TOKEN_TIME_OUT = 3600000; // 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
 
 export const tokenSlice = createSlice({
-  name: "token",
+  name: "authToken",
   initialState: {
     authenticated: false,
     accessToken: null,

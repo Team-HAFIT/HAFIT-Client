@@ -17,6 +17,12 @@ import VirtualList from "rc-virtual-list";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
+import { useDispatch, useSelector } from "react-redux";
+import jwt_decode from "jwt-decode";
+
+import { removeCookieToken } from "../../storage/Cookie";
+import { DELETE_TOKEN } from "../../store/Auth";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 // import required modules
 import SwiperCore, { Navigation, Pagination } from "swiper";
@@ -39,6 +45,9 @@ const ContainerHeight = 1200;
 const { Content, Footer, Sider } = Layout;
 
 const ViewPostsAll = () => {
+  const accessToken = useSelector((state) => state.authToken.accessToken);
+  const dispatch = useDispatch();
+
   //   --------- START : 게시글 무한 스크롤 ---------- //
   const [data, setData] = useState([]);
   const appendData = useCallback(() => {
@@ -70,7 +79,13 @@ const ViewPostsAll = () => {
 
   const getPosts = () => {
     axios
-      .get("/api/posts", { timeout: 3000 })
+      .get("/api/posts", {
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      })
       .then((response) => {
         setPosts(response.data);
       })

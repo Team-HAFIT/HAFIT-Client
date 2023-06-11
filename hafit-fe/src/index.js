@@ -9,13 +9,20 @@ import store from "./store";
 import { Provider } from "react-redux";
 import { CookiesProvider } from "react-cookie";
 
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
+
+export let persistor = persistStore(store);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <CookiesProvider>
     <Provider store={store}>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
+      <PersistGate loading={null} persistor={persistor}>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </PersistGate>
     </Provider>
   </CookiesProvider>
 );

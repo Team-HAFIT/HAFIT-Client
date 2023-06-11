@@ -14,7 +14,7 @@ import KakaoRedirectHandler from "./components/oauth/kakao/KakaoRedirectHandler"
 
 // JWT
 // import Login from './pages/Login';
-import Logout from "./pages/Logout";
+import Logout from "./components/Logout";
 
 // 비회원
 import LandingPage from "./pages/LandingPage";
@@ -40,7 +40,6 @@ import ViewPostsAll from "./pages/community/ViewPostsAll";
 // 테스트용
 import Test from "./pages/test";
 import Test2 from "./pages/Test2";
-import OAuthTest from "./pages/OAuthTest";
 
 // 임시 사용
 import ExecStatsPage from "./pages/exercises/ExecStatsPage";
@@ -55,18 +54,39 @@ function App() {
       <div>
         {/* <Header /> */}
         <Routes>
-          {/* PublicRoute: 모든 사용자가 접근 가능 */}
-          <Route path="/login"
+          {/* PublicRoute: 토큰이 없어도 접근 가능 */}
+          <Route element={<PublicRoute />}>
+            <Route element={<MainLayout />}>
+              준비 중인 페이지
+              <Route path="/prepare" element={<PreparingPage />} />
+
+              SNS 로그인
+              <Route
+                path="/oauth/callback/kakao"
+                element={<KakaoRedirectHandler />}
+              />
+
+              비회원
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/intro" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/join" element={<JoinPage />} />
+              <Route path="/notice" element={<NoticePage />} />
+            </Route>
+          </Route>
+
+          {/* <Route
+            path="/login"
             element={
               <PublicRoute element={<MainLayout />}>
                 <LoginPage />
               </PublicRoute>
             }
-          />
+          /> */}
 
-          {/* PrivateRoute: 로그인한 사용자만 접근 가능 */}
-          <Route element={<PrivateRoute element={<MainLayout />} />}>
-            <Route>
+          {/* PrivateRoute: 토큰을 가진 사용자만 접근 가능 */}
+          <Route element={<PrivateRoute />}>
+            <Route element={<MainLayout />}>
               {/* JWT 로그아웃 테스트용 */}
               <Route path="/logout" element={<Logout />} />
 
@@ -112,8 +132,7 @@ function App() {
 
           {/* 테스트용 */}
           {/* <Route path="/test" element={<Test />} />
-            <Route path="/test2" element={<Test2 />} />
-            <Route path="/oauth" element={<OAuthTest />} /> */}
+            <Route path="/test2" element={<Test2 />} /> */}
 
           {/* 임시 사용 */}
           {/* <Route path="/stats" element={<ExecStatsPage />} />

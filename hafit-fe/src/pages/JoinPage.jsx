@@ -48,13 +48,13 @@ const JoinPage = () => {
   // 이메일 중복체크
   const checkEmail = (email) => {
     return axios
-      .post(`/user/emailCheck?email=${email}`, {
-        params: {
-          email: email,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
+      .get(`/api/my/email/${email}`, {
+        // params: {
+        //   email: email,
+        // },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         timeout: 5000,
       })
       .then((response) => {
@@ -76,7 +76,7 @@ const JoinPage = () => {
     // const { email, name, password, phone } = values; // 필요한 필드들을 추출하여 객체에 저장
 
     axios
-      .post("/user/signup", values, {
+      .post("/api/auth/signup", values, {
         headers: {
           "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
         },
@@ -246,7 +246,7 @@ const JoinPage = () => {
                 <Input.Password maxLength={20} />
               </Form.Item>
               <Divider plain>추가 정보</Divider>
-              <Form.Item
+              {/* <Form.Item
                 label="통신사 선택"
                 name="carrier"
                 rules={[
@@ -261,7 +261,7 @@ const JoinPage = () => {
                   <Option value="KT">KT</Option>
                   <Option value="LG">LG U+</Option>
                 </Select>
-              </Form.Item>
+              </Form.Item> */}
               {/* <Form.Item
               label="전화번호"
               name="phone"

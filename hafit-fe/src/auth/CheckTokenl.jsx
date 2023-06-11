@@ -22,11 +22,12 @@ export function CheckToken(key) {
           const response = await requestToken(refreshToken);
 
           if (response.status) {
-            // const token = response.json.access_token;
-            const token = response.headers.get('authorization')
+            const token = response.accessToken;
             dispatch(SET_TOKEN(token));
             setIsAuth("Success");
           } else {
+            // alert("실패!\n" +"status: " + JSON.stringify(response.status) + "\ncode: " + JSON.stringify(response.code) + "\njson: "+ JSON.stringify(response.json));
+            
             dispatch(DELETE_TOKEN());
             removeCookieToken();
             setIsAuth("Failed");
@@ -35,7 +36,7 @@ export function CheckToken(key) {
       }
     };
     checkAuthToken();
-  }, [refreshToken, dispatch, key]);
+  }, [dispatch, refreshToken, authenticated, expireTime]);
 
   return {
     isAuth,
