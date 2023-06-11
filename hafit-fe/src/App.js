@@ -1,16 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-// import './App.css';
-
 // Main Layout
 import MainLayout from "./layout/MainLayout";
 
 // 공통
-//------ Header 예외 처리를 위한 MainLayout을 사용함에 따라 주석 처리 ------//
-// import Header from "./components/Navbar";
 import PreparingPage from "./pages/PreparingPage";
 import KakaoRedirectHandler from "./components/oauth/kakao/KakaoRedirectHandler";
+//------ Header 예외 처리를 위한 MainLayout을 사용함에 따라 주석 처리 ------//
+// import Header from "./components/Navbar";
 
 // JWT
 // import Login from './pages/Login';
@@ -54,37 +52,30 @@ function App() {
       <div>
         {/* <Header /> */}
         <Routes>
-          {/* PublicRoute: 토큰이 없어도 접근 가능 */}
+          {/* 공용 컴포넌트 :: 회원, 비회원 모두 접근 가능 */}
+          <Route element={<MainLayout />}>
+            <Route path="/prepare" element={<PreparingPage />} /> {/* 준비 중인 페이지 */}
+            <Route path="/notice" element={<NoticePage />} /> {/* 공지사항 */}
+          </Route>
+
+          {/* PublicRoute: 토큰이 없는 사용자만 접근 가능 (로그인 X) */}
           <Route element={<PublicRoute />}>
             <Route element={<MainLayout />}>
-              준비 중인 페이지
-              <Route path="/prepare" element={<PreparingPage />} />
-
-              SNS 로그인
+              {/* SNS 로그인 */}
               <Route
                 path="/oauth/callback/kakao"
                 element={<KakaoRedirectHandler />}
               />
 
-              비회원
+              {/* 비회원 */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/intro" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/join" element={<JoinPage />} />
-              <Route path="/notice" element={<NoticePage />} />
             </Route>
           </Route>
 
-          {/* <Route
-            path="/login"
-            element={
-              <PublicRoute element={<MainLayout />}>
-                <LoginPage />
-              </PublicRoute>
-            }
-          /> */}
-
-          {/* PrivateRoute: 토큰을 가진 사용자만 접근 가능 */}
+          {/* PrivateRoute: 토큰을 가진 사용자만 접근 가능 (로그인 O) */}
           <Route element={<PrivateRoute />}>
             <Route element={<MainLayout />}>
               {/* JWT 로그아웃 테스트용 */}
@@ -103,47 +94,19 @@ function App() {
             </Route>
           </Route>
 
-          {/* 공통 Header를 포함하는 컴포넌트 */}
-          {/* <Route element={<MainLayout />}> */}
-          {/* 공통 */}
-          {/* <Route path="/prepare" element={<PreparingPage />} />
-            <Route path="/oauth/callback/kakao" element={<KakaoRedirectHandler />} /> */}
-
-          {/* JWT 로그아웃 테스트용 */}
-          {/* <Route path="/logout" element={<Logout />} /> */}
-
-          {/* 비회원 */}
-          {/* <Route path="/" element={<LandingPage />} />
-            <Route path="/intro" element={<LandingPage />} />
-            <Route path="/notice" element={<NoticePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/join" element={<JoinPage />} /> */}
-
-          {/* 회원 */}
-          {/* <Route path="/main" element={<LoginMain />} />
-            <Route path="/mainpage" element={<LoginMain />} />
-            <Route path="/user/info" element={<EditMyInfo />} />
-            <Route path="/user/editpwd" element={<EditPwd />} /> */}
-
-          {/* 운동 */}
-          {/* <Route path="/squat/setting" element={<SquatSetting />} />
-            <Route path="/exec/result" element={<SquatResult />} />
-            <Route path="/exec/rest" element={<RestTimerPage />} /> */}
-
-          {/* 테스트용 */}
-          {/* <Route path="/test" element={<Test />} />
-            <Route path="/test2" element={<Test2 />} /> */}
-
-          {/* 임시 사용 */}
-          {/* <Route path="/stats" element={<ExecStatsPage />} />
-          </Route> */}
-
           {/* 공통 Header를 포함하지 않는 컴포넌트 :: 로그인 사용자만 접근 가능 */}
           <Route element={<PrivateRoute />}>
             {/* 커뮤니티 */}
             {/* <Route path="/community/main" element={<ViewPostsAll />} /> */}
             <Route path="/community/*" element={<CommunityRoutes />} />
           </Route>
+
+          {/* 테스트용 */}
+          <Route path="/test" element={<Test />} />
+          <Route path="/test2" element={<Test2 />} />
+
+          {/* 임시 사용 */}
+          <Route path="/stats" element={<ExecStatsPage />} />
         </Routes>
       </div>
     </Router>
@@ -159,34 +122,5 @@ function CommunityRoutes() {
     </Routes>
   );
 }
-
-/* 초기 연동 테스트
- * 추후 삭제 !
-function App() {
-  const [message, setMessage] = useState([]);
-
-  useEffect(() => {
-    fetch("/hello")
-        .then((response) => {
-            return response.json();
-        })
-        .then(function (data) {
-            setMessage(data);
-        });
-  }, []);
-  
-  return (
-    <div className="App">
-      <header className="App-header">
-        <ul>
-          {message.map((text, index) => <li key={`${index}-${text}`}>{text}</li>)}
-        </ul>
-        <p>Git 테스트 (정훈)</p>
-        <p>Git 테스트 (준규)</p>
-      </header>
-    </div>
-  );
-}
-*/
 
 export default App;

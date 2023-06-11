@@ -1,8 +1,7 @@
 import { Button, Col, Form, Input, Row, Typography, Modal, message } from "antd";
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
-import Cookies from "js-cookie";
+
 import { useDispatch, useSelector } from "react-redux";
 import jwt_decode from "jwt-decode";
 
@@ -17,7 +16,7 @@ const { Title } = Typography;
 
 const EditPwd = () => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
-  // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
+  // const navigate = useNavigate();
   const [form] = Form.useForm();
 
   const accessToken = useSelector((state) => state.authToken.accessToken);
@@ -29,35 +28,8 @@ const EditPwd = () => {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (userId) {
-  //     axios
-  //       .get("/user/info", {
-  //         params: {
-  //           userId: userId,
-  //         },
-  //         timeout: 5000, // 요청 제한 시간 설정
-  //       })
-  //       .then((response) => {
-  //         setUserInfo(response.data);
-  //         setUserInfo({
-  //           ...response.data,
-  //         });
-  //         console.log(response.data);
-  //         setLoading(false); // 요청 종료 시 로딩 중 상태 해제
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //         setLoading(false); // 요청 종료 시 로딩 중 상태 해제
-  //       });
-  //   } else {
-  //     console.log("userId 값이 없습니다.");
-  //   }
-  // }, [userId]);
-
   const onFinish = (values) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
-    // const userId = Cookies.get("userId");
 
     Modal.confirm({
       title: "비밀번호를 변경하시겠어요?",

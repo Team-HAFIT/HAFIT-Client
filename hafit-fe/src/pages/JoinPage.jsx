@@ -5,7 +5,7 @@ import {
   Form,
   Input,
   Row,
-  Select,
+  // Select,
   Typography,
   Modal,
   Divider,
@@ -13,15 +13,13 @@ import {
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-// import AxiosAPI from '../api/axios'
 
 import PhoneNumberInput from "../components/inputs/PhoneNumberInput";
-// import Header from "../components/Navbar";
 import MyFooter from "../components/Footer";
 
 import "../styles/pages/joinPage.css";
 
-const { Option } = Select;
+// const { Option } = Select;
 const { Title } = Typography;
 
 const JoinPage = () => {
@@ -49,12 +47,6 @@ const JoinPage = () => {
   const checkEmail = (email) => {
     return axios
       .get(`/api/my/email/${email}`, {
-        // params: {
-        //   email: email,
-        // },
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
         timeout: 5000,
       })
       .then((response) => {
@@ -72,8 +64,6 @@ const JoinPage = () => {
 
   const onFinish = (values) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
-
-    // const { email, name, password, phone } = values; // 필요한 필드들을 추출하여 객체에 저장
 
     axios
       .post("/api/auth/signup", values, {
@@ -100,7 +90,6 @@ const JoinPage = () => {
 
   return (
     <div className="top-container">
-      {/* <Header /> */}
       <div className="body-wrapper">
         <Row justify="center" align="middle" style={{ height: "100vh" }}>
           <Col span={12} align="middle">
@@ -246,6 +235,7 @@ const JoinPage = () => {
                 <Input.Password maxLength={20} />
               </Form.Item>
               <Divider plain>추가 정보</Divider>
+              {/* 전화번호 인증 구현 전까지 'carrier' 주석 처리 */}
               {/* <Form.Item
                 label="통신사 선택"
                 name="carrier"
@@ -262,19 +252,6 @@ const JoinPage = () => {
                   <Option value="LG">LG U+</Option>
                 </Select>
               </Form.Item> */}
-              {/* <Form.Item
-              label="전화번호"
-              name="phone"
-              rules={[
-                {
-                  required: true,
-                  message: "전화번호를 입력해주세요",
-                },
-              ]}
-            >
-              <Input placeholder="010-1234-5678" />
-            </Form.Item> */}
-
               <Form.Item
                 label="전화번호"
                 name="phone"
