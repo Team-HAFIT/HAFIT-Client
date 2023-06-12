@@ -46,6 +46,7 @@ import OAuthTest from "./pages/OAuthTest";
 // 임시 사용
 import ExecStatsPage from "./pages/exercises/ExecStatsPage";
 import CalendarPage from "./pages/CalendarPage";
+import StatsPage from "./pages/StatsPage";
 
 function App() {
   return (
@@ -86,6 +87,8 @@ function App() {
             <Route path="/test2" element={<Test2 />} />
             <Route path="/oauth" element={<OAuthTest />} />
             <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/stats" element={<StatsPage />} />
+            
 
             {/* 임시 사용 */}
             <Route path="/stats" element={<ExecStatsPage />} />

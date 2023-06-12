@@ -30,8 +30,8 @@ const CalendarPage = () => {
       exercise: values.subExercise,
       reps: values.targetReps,
       sets: values.targetSets,
-      weight: values.targetWeight,
-      repeatDays: values.repeatDays,
+      weight: targetWeight, // Use targetWeight state instead of values.targetWeight
+      repeatDays: values.repeatDays || [], // Set default value if no repeat days are selected
       memo: values.memo,
     };
     setExerciseSchedules([...exerciseSchedules, newSchedule]);
@@ -83,12 +83,9 @@ const CalendarPage = () => {
     return (
       <ul className="date-cell-schedules">
         {schedules.map((schedule, index) => (
-          <li key={index}>
-            <p>{schedule.exercise}</p>
-            <p>횟수: {schedule.reps}</p>
-            <p>세트 수: {schedule.sets}</p>
-            <p>중량: {schedule.weight}kg</p>
-          </li>
+          <p key={index}>
+              {schedule.exercise}  {schedule.reps}개 X {schedule.sets} 세트 ({schedule.weight}kg)
+            </p>
         ))}
       </ul>
     );
@@ -108,7 +105,7 @@ const CalendarPage = () => {
       <div className="exercise-section">
         <h2>{title}</h2>
         <div className="exercise-schedule">
-          <Button onClick={() => addExercise(daysToAdd)}>추가</Button>
+          <Button onClick={() => addExercise(daysToAdd)}>+</Button>
           {currentDayExercise}
         </div>
       </div>
@@ -122,14 +119,18 @@ const CalendarPage = () => {
   };
 
   const getCurrentDayExercise = (date) => {
-    const todaySchedule = findExerciseScheduleByDate(date);
-    if (todaySchedule) {
+    const todaySchedules = exerciseSchedules.filter(
+      (schedule) => schedule.date === date.format('YYYY-MM-DD')
+    );
+  
+    if (todaySchedules.length > 0) {
       return (
         <div>
-          <p>{todaySchedule.exercise}</p>
-          <p>횟수: {todaySchedule.reps}</p>
-          <p>세트 수: {todaySchedule.sets}</p>
-          <p>중량: {todaySchedule.weight}kg</p>
+          {todaySchedules.map((schedule, index) => (
+            <p key={index}>
+              {schedule.exercise}  {schedule.reps}개 X {schedule.sets} 세트 ({schedule.weight}kg)
+            </p>
+          ))}
         </div>
       );
     } else {
@@ -155,6 +156,7 @@ const CalendarPage = () => {
         {renderExerciseSection('내일', 1)}
         {renderExerciseSection('모레', 2)}
       </div>
+      
       <div className="calendar">
         <Calendar
           onSelect={handleDateSelect}
