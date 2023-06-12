@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Modal, Form, Input, Button, Checkbox, Select } from 'antd';
 import moment from 'moment';
-import '../styles/pages/calendarPage.css';
+import '../../../styles/pages/calendarPage.css';
 
 const { Option } = Select;
 

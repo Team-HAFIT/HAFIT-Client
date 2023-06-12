@@ -2,44 +2,37 @@ import React, { useEffect, useState } from "react";
 import { Menu, Avatar, Dropdown } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserOutlined, DownOutlined } from "@ant-design/icons";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+
+import { removeCookieToken } from "../storage/Cookie";
+import { DELETE_TOKEN } from "../store/Auth";
 
 import "../styles/components/navbar.css";
 
 function Header() {
-  // 2023. 5. 4. 화요일 - 12:50
   // 현재 페이지의 경로를 가져와, 해당 경로에 맞는 메뉴를 강조 표시해주기 위한 useLocation hook 추가
   // root 경로일 때, default로 /intro를 선택하도록 설정하였음. (16:62)
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const authenticated = useSelector((state) => state.authToken.authenticated);
 
   // const isLoggedIn = true; // 테스트용
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 state
+  const [isLoggedIn, setIsLoggedIn] = useState(authenticated); // 로그인 상태를 저장하는 state
 
   useEffect(() => {
-    const userId = Cookies.get("userId"); // 쿠키에서 userId 값을 가져옴
-    setIsLoggedIn(!!userId); // 가져온 값으로 isLoggedIn을 설정함
-  }, []); // mount 시 한 번 실행
+    setIsLoggedIn(authenticated); // 가져온 값으로 isLoggedIn을 설정함
+  }, [authenticated]); // mount 시 한 번 실행
 
   const goToUserInfo = () => {
-    const userId = Cookies.get("userId");
-    if (userId) {
-      navigate(`/user/info?userId=${userId}`);
-    }
+    navigate(`/user/info`);
   };
 
   const handleLogout = () => {
-    axios
-      .post("/user/logout", { timeout: 3000 })
-      .then(() => {
-        Cookies.remove("userId"); // 쿠키에서 userId 삭제
-        // navigate("/"); // 새로고침을 해주어야 Header 컴포넌트가 다시 마운트되어 로그인 상태가 갱신됨 -> window.location.href로 변경
-        window.location.href = '/'; // 로그아웃 시 랜딩 페이지로 이동
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    dispatch(DELETE_TOKEN());
+    removeCookieToken();
+    return navigate("/");
   };
 
   const menu = (
@@ -50,7 +43,7 @@ function Header() {
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" onClick={handleLogout}>
-          로그아웃
+        로그아웃
       </Menu.Item>
     </Menu>
   );
@@ -90,7 +83,10 @@ function Header() {
                 운동 통계
               </Link>
             </Menu.Item>
-            <Menu.Item key="/community/main" className="group-menu desktop-only">
+            <Menu.Item
+              key="/community/main"
+              className="group-menu desktop-only"
+            >
               <Link to="/community/main" className="nav-menu">
                 커뮤니티
               </Link>
@@ -113,7 +109,7 @@ function Header() {
             <Link to="/exec/rest">...</Link>
           </Menu.Item>
           <Menu.Item style={{ marginLeft: "auto", marginRight: "80px" }}>
-            <Dropdown overlay={menu} trigger={["click"]}>
+            <Dropdown overlay={menu} trigger={["hover"]}>
               <a
                 href="/#"
                 className="ant-dropdown-link"

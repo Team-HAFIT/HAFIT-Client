@@ -17,8 +17,10 @@ import VirtualList from "rc-virtual-list";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
+import { useSelector } from "react-redux";
+// import jwt_decode from "jwt-decode";
+
 import { Swiper, SwiperSlide } from "swiper/react";
-// import required modules
 import SwiperCore, { Navigation, Pagination } from "swiper";
 
 // Import Swiper styles
@@ -39,6 +41,8 @@ const ContainerHeight = 1200;
 const { Content, Footer, Sider } = Layout;
 
 const ViewPostsAll = () => {
+  const accessToken = useSelector((state) => state.authToken.accessToken);
+
   //   --------- START : 게시글 무한 스크롤 ---------- //
   const [data, setData] = useState([]);
   const appendData = useCallback(() => {
@@ -64,13 +68,18 @@ const ViewPostsAll = () => {
   };
   //   --------- END : 게시글 무한 스크롤 ---------- //
 
-  // 수정 시작 ~~~!!!
   // --------- START : 게시글 정보 관련 ---------- //
   const [posts, setPosts] = useState([]);
 
-  const getPosts = () => {
+  const getPosts = useCallback(() => {
     axios
-      .get("/api/posts", { timeout: 3000 })
+      .get("/api/posts", {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      })
       .then((response) => {
         setPosts(response.data);
       })
@@ -94,11 +103,11 @@ const ViewPostsAll = () => {
           },
         ]);
       });
-  };
+  }, [accessToken, setPosts]);
 
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [getPosts]);
 
   // 각 게시글 이미지 개수에 따른 렌더링 함수
   const renderImagesByPost = (post) => {

@@ -1,17 +1,11 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, Row, Col } from "antd";
-import { Link } from "react-router-dom";
-//수정 시작 ~~~ JWT 관련 06/05
+import { Link, useNavigate } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
 import { loginUser } from "../api/Users";
-import { setRefreshToken } from "../storage/Cookie";
 import { SET_TOKEN } from "../store/Auth";
 
-// import axios from "axios";
-// import Cookies from "js-cookie";
-// import AxiosAPI from '../api/axios'
-
-// import Header from "../components/Navbar";
 import MyFooter from "../components/Footer";
 
 import "../styles/pages/loginPage.css";
@@ -24,7 +18,9 @@ import naver from "../assets/img/sns-icons/naver-icon.png";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
-  // const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
+  const [form] = Form.useForm();
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const onFinish = async ({ email, password }) => {
@@ -32,51 +28,28 @@ const LoginPage = () => {
 
     const res = await loginUser({ email, password });
 
-    if(res.status) {
-      // 쿠키에 Refresh Token, store에 Access Token 저장
-      setRefreshToken(res.json.refresh_token);
-      dispatch(SET_TOKEN(res.json.access_token));
+    if (res.status) {
+      // 2023. 06. 11 - 백엔드에서 토큰 발급 시 쿠키에 저장하여 발급하도록 변경
+      // const refreshToken = res.refreshToken; 
+      // setRefreshToken(refreshToken);
 
-      return window.location.href = '/main';
+      const accessToken = res.accessToken;
+      // store에 Access Token 저장
+      dispatch(SET_TOKEN(accessToken));
+
+      setLoading(false);
+      return navigate("/main");
     } else {
+      form.setFields([
+        {
+          name: "password",
+          errors: ["이메일 또는 비밀번호를 확인해주세요"],
+        },
+      ]);
       console.log(res.json);
       setLoading(false);
     }
   };
-
-  // const onFinish = (values) => {
-  //   setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
-
-  //   axios
-  //     .post("/user/login", JSON.stringify(values), {
-  //       headers: {
-  //         "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
-  //       },
-  //       timeout: 5000, // 요청 제한 시간 설정
-  //     })
-  //     .then((response) => {
-  //       console.log(response.data); // 응답 결과 출력
-
-  //       const { userId } = response.data; // 엔드포인트의 return에서 userId 추출
-  //       Cookies.set("userId", userId); // 쿠키에 userId 저장
-
-  //       // navigate("/main"); // 로그인 성공 시 메인 페이지로 이동
-  //       window.location.href = '/main';
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       if (error.response && error.response.status === 400) {
-  //         alert("이메일 또는 비밀번호를 확인해주세요.");
-  //       } else {
-  //         alert("로그인 실패"); // 기타 에러 발생 시 에러 메시지 띄우기
-  //       }
-  //     })
-  //     .finally(() => {
-  //       setLoading(false); // 요청 종료 시 로딩 중 상태 해제
-  //       const userId = Cookies.get("userId");
-  //       console.log("쿠키: " + userId);
-  //     });
-  // };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -84,7 +57,6 @@ const LoginPage = () => {
 
   return (
     <div className="top-container">
-      {/* <Header /> */}
       <div className="body-wrapper">
         <div className="header-login">
           <h1>로그인</h1>
@@ -93,6 +65,7 @@ const LoginPage = () => {
           <Row justify="center" align="middle">
             <Col xs={24} sm={16} md={12} lg={8} align="middle">
               <Form
+                form={form}
                 className="login-form"
                 name="basic"
                 layout="vertical"
@@ -172,10 +145,16 @@ const LoginPage = () => {
           <Link to={KAKAO_AUTH_URL} className="kakao-login">
             <img src={kakao} alt="카카오 로그인" style={{ width: "80%" }} />
           </Link>
-          <Link to="http://172.26.21.193:8080/oauth2/authorization/google" className="google-login">
+          <Link
+            to="http://172.26.21.193:8080/oauth2/authorization/google"
+            className="google-login"
+          >
             <img src={google} alt="구글 로그인" style={{ width: "80%" }} />
           </Link>
-          <Link to="http://172.26.21.193:8080/oauth2/authorization/google" className="naver-login">
+          <Link
+            to="http://172.26.21.193:8080/oauth2/authorization/google"
+            className="naver-login"
+          >
             <img src={naver} alt="네이버 로그인" style={{ width: "80%" }} />
           </Link>
         </div>
