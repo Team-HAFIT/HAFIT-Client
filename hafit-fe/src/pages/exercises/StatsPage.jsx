@@ -3,6 +3,7 @@ import { Layout, Typography, Radio, Space, Select, Button } from 'antd';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Rectangle } from 'recharts';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
+
 const { Content } = Layout;
 const { Title } = Typography;
 const { Option } = Select;
@@ -16,6 +17,11 @@ const StatsPage = () => {
 
   const handleTimeRangeChange = (e) => {
     setTimeRange(e.target.value);
+    const currentDate = new Date(startDate);
+    if (e.target.value === 'monthly') {
+      currentDate.setDate(1);
+    }
+    setStartDate(currentDate);
   };
 
   const handleContentChange = (value) => {
@@ -106,12 +112,14 @@ const StatsPage = () => {
           <Option value="count">횟수</Option>
           <Option value="sets">세트 수</Option>
         </Select>
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={data} barSize={20}>
+        <ResponsiveContainer width="100%" height={400} >
+          <BarChart data={data} barSize={20} className="recharts-wrapper" style={{ height: '430px' }}>
             <XAxis dataKey="date" interval={0} tick={<CustomizedXAxisTick />} />
             <YAxis />
             <Tooltip />
-            <Legend />
+            <Legend>
+                wrapperStyle={{ marginTop: '20px' , bottom: '5px' }}
+            </Legend>
             <Bar
               dataKey={selectedContent}
               fill="#8884d8"
