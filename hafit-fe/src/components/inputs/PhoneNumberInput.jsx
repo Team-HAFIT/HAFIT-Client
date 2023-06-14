@@ -6,7 +6,7 @@ const PhoneNumberInput = (props) => {
     if (!phoneNumber) return phoneNumber;
 
     phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
-    let res = "";
+    let res = ""; 
 
     if (phoneNumber.length < 3) {
       res = phoneNumber;
