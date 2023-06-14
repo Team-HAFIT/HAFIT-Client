@@ -1,16 +1,7 @@
-import {
-  UserOutlined,
-  CommentOutlined,
-  HomeOutlined,
-  PlusOutlined,
-  PictureOutlined,
-  LeftOutlined,
-  RightOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, CommentOutlined, HomeOutlined } from "@ant-design/icons";
 import { FiEdit3 } from "react-icons/fi";
 import { GoSearch } from "react-icons/go";
 import { IoMdNotifications } from "react-icons/io";
-import { IoCreateOutline, IoArrowBack } from "react-icons/io5";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import {
   Layout,
@@ -21,16 +12,6 @@ import {
   Badge,
   Divider,
   Button,
-  Col,
-  Row,
-  Typography,
-  message,
-  Upload,
-  Modal,
-  Select,
-  Input,
-  Space,
-  Carousel,
 } from "antd";
 import VirtualList from "rc-virtual-list";
 import React, { useEffect, useState, useCallback } from "react";
@@ -52,66 +33,33 @@ import FixedHeader from "../../components/FixedNavbar";
 import "../../styles/pages/community/viewPostsAll.css";
 
 import LikeButton from "../../components/buttons/LikeBtn";
-import PostModal from "../../components/modal/PostModal";
 
-SwiperCore.use([Navigation, Pagination]);
-
-const fakeDataUrl =
-  "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
 const ContainerHeight = 1200;
 
 const { Content, Footer, Sider } = Layout;
-const { Title } = Typography;
-const { TextArea } = Input;
-const { Dragger } = Upload;
 
-// 파일 업로드 시, base64로 변환하는 함수
-const getBase64 = (file) => {
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (err) => reject(err);
-  });
-  console.log(file);
-};
-
-// 파일 업로드 시, 드래그 앤 드롭 기능을 위한 props
-const props = {
-  name: "file",
-  multiple: true,
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
-
-const ViewPostsAll = () => {
+const TestViewPostsAll = () => {
   const accessToken = useSelector((state) => state.authToken.accessToken);
-
-  const [modalVisible, setModalVisible] = useState(false); // 모달 표시 여부 상태값
 
   //   --------- START : 게시글 무한 스크롤 ---------- //
   const [data, setData] = useState([]);
   const appendData = useCallback(() => {
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((body) => {
-        setData((prevData) => prevData.concat(body.results));
-        // message.success(`${body.results.length} more items loaded!`);
-      });
-  }, []);
+    axios.get("/api/posts", {
+        headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+    })
+    .then((response) => {
+        setData((prevData) => prevData.concat(response.data));
+        // message.success("게시글을 불러왔습니다", 1);
+    })
+    .catch((error) => {
+        console.log(error);
+        // message.error("게시글을 불러오지 못했습니다", 1);
+    })
+  }, [accessToken]);
 
   useEffect(() => {
     appendData();
@@ -132,7 +80,7 @@ const ViewPostsAll = () => {
 
   const getPosts = useCallback(() => {
     axios
-      .get("/api/post", {
+      .get("/api/posts", {
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${accessToken}`,
@@ -170,37 +118,37 @@ const ViewPostsAll = () => {
 
   // 각 게시글 이미지 개수에 따른 렌더링 함수
   const renderImagesByPost = (post) => {
-    if (!post?.images || post.images.length === 0) {
+    if (!post?.files || post.files.length === 0) {
       return null;
     }
-    if (post.images.length === 1) {
+    if (post.files.length === 1) {
       return (
         <img
           className="post-image-only"
           width={272}
           alt="logo"
-          src={post.images[0]}
+          src={post.files[0].fileName}
         />
       );
-    } else if (post.images.length === 2) {
+    } else if (post.files.length === 2) {
       return (
         <>
           <img
             className="post-image"
             width={272}
             alt="logo"
-            src={post.images[0]}
+            src={post.files[0].fileName}
           />
           <img
             className="post-image"
             width={272}
             alt="logo"
-            src={post.images[1]}
+            src={post.files[1].fileName}
           />
         </>
       );
     } else if (post.images.length >= 3) {
-      // SwiperCore.use([Navigation, Pagination]);
+      SwiperCore.use([Navigation, Pagination]);
 
       return (
         <Swiper
@@ -210,9 +158,9 @@ const ViewPostsAll = () => {
           pagination={{ clickable: true }}
           className="mySwiper"
         >
-          {post.images.map((image, index) => (
+          {post.files.map((file, index) => (
             <SwiperSlide key={index}>
-              <img width={272} alt="slide" src={image} />
+              <img width={272} alt="slide" src={file.fileName} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -220,64 +168,6 @@ const ViewPostsAll = () => {
     }
   };
   // --------- END : 게시글 정보 관련 ---------- //
-
-  // --------- START : 파일 업로드 관련 ---------- //
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-2",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ]);
-
-  const handleCancel = () => setPreviewOpen(false);
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(
-      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-    );
-  };
-  const onUploadChange = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </div>
-  );
-  // --------- END : 파일 업로드 관련 ---------- //
-
-  // --------- START : 캐러셀 prev, next 관련 ---------- //
-  const [carouselRef, setCarouselRef] = useState(null);
-
-  const next = () => {
-    carouselRef.next();
-  };
-
-  const previous = () => {
-    carouselRef.prev();
-  };
-  // --------- END : 캐러셀 prev, next 관련 ---------- //
 
   const {
     token: { colorBgContainer },
@@ -433,254 +323,7 @@ const ViewPostsAll = () => {
                   key="write-post"
                   style={{ display: "flex", alignItems: "center" }}
                 >
-                  <Button
-                    className="write-post-btn"
-                    onClick={() => {
-                      setModalVisible(true);
-                    }}
-                    icon={
-                      <IoCreateOutline
-                        style={{
-                          fontSize: "1.4em",
-                          color: "white",
-                          marginRight: "2px",
-                        }}
-                      />
-                    }
-                  >
-                    <span className="write-post-btn-text">글쓰기</span>
-                  </Button>
-                  <PostModal
-                    visible={modalVisible}
-                    // onCancel={() => setModalVisible(false)}
-                  >
-                    <Row>
-                      <Col className="modal-header" span={24}>
-                        <Button
-                          className="modal-back-btn"
-                          icon={<IoArrowBack style={{ fontSize: "1.4em" }} />}
-                          onClick={() => setModalVisible(false)}
-                        ></Button>
-                        <Title
-                          level={5}
-                          style={{
-                            display: "flex",
-                            margin: 0,
-                            marginLeft: "auto",
-                            marginRight: "auto",
-                            paddingLeft: "40px",
-                          }}
-                        >
-                          새 게시물 작성하기
-                        </Title>
-                        <Button className="post-submit-btn">
-                          <span>완료</span>
-                        </Button>
-                      </Col>
-                    </Row>
-                    <Divider className="divider" />
-                    <Row>
-                      <Col span={13} style={{ minHeight: "480px" }}>
-                        {fileList.length === 0 ? (
-                          <Dragger
-                            {...props}
-                            multiple={true}
-                            maxCount={6}
-                            style={{ width: "96%" }}
-                            accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
-                            showUploadList={false}
-                            onChange={onUploadChange}
-                            beforeUpload={(file) => {
-                              const isLt10Mb = file.size / 1024 / 1024 < 10;
-                              if (!isLt10Mb) {
-                                message.error(
-                                  "파일 크기는 10MB 미만이어야 합니다."
-                                );
-                              }
-                              return isLt10Mb;
-                            }}
-                          >
-                            <p className="ant-upload-drag-icon">
-                              <PictureOutlined />
-                            </p>
-                            <p className="ant-upload-text">
-                              이곳에 사진을 드래그하거나 클릭해서 첨부할 수
-                              있습니다 :&#41;
-                            </p>
-                            <p className="ant-upload-hint">
-                              최대 6장까지 업로드 가능합니다! <br />
-                              사진 업로드 시, 다음의 주의사항을 숙지해주세요:{" "}
-                              <br />
-                              <br />
-                              1. 각 사진 파일 크기는 10MB 이하로 제한됩니다.
-                              <br />
-                              <br />
-                              2. 지원되는 파일 형식은 JPG, PNG, GIF, MP4, AVI
-                              입니다.
-                              <br />
-                              <br />
-                              3. 저작권이 있는 사진은 업로드를 피해주세요.
-                            </p>
-                          </Dragger>
-                        ) : (
-                          <div className="carousel-wrapper">
-                            <Button
-                              className="carousel-button carousel-prev-button"
-                              type="circle"
-                              onClick={previous}
-                              icon={
-                                <LeftOutlined
-                                  style={{ color: "white", fontSize: "32px" }}
-                                />
-                              }
-                            />
-                            <Carousel
-                              ref={setCarouselRef}
-                              slidesToShow={1} // Use slidesToShow instead of slidesPerView
-                              dots // Enable pagination dots
-                              infinite={true}
-                              slidesToScroll={1}
-                            >
-                              {fileList.map((file, index) => (
-                                <div key={index}>
-                                  <img
-                                    width={272}
-                                    alt="slide"
-                                    src={file.url}
-                                    style={{ width: "100%", minHeight: "504px", maxHeight: "504px"  }}
-                                  />
-                                </div>
-                              ))}
-                              {/* <RightOutlined /> */}
-                            </Carousel>
-                            <Button
-                              className="carousel-button carousel-next-button"
-                              type="circle"
-                              onClick={next}
-                              icon={
-                                <RightOutlined
-                                  style={{ color: "white", fontSize: "32px" }}
-                                />
-                              }
-                            />
-                          </div>
-                        )}
-                      </Col>
-                      <Col span={11}>
-                        <Row style={{ marginLeft: "16px" }}>
-                          <Col span={24} className="content-header">
-                            <Space className="writer-info">
-                              <Avatar
-                                style={{
-                                  width: "48px",
-                                  height: "48px",
-                                  marginRight: "2px",
-                                }}
-                              />
-                              <Space direction="vertical" size={0}>
-                                <span
-                                  style={{
-                                    fontSize: "15px",
-                                    fontWeight: "600",
-                                  }}
-                                >
-                                  김해핏
-                                </span>
-                                <span style={{ color: "#999999" }}>
-                                  2023. 04. 27
-                                </span>
-                              </Space>
-                            </Space>
-                            <Space className="select-category">
-                              <Select
-                                defaultValue="게시판 선택"
-                                style={{
-                                  width: 120,
-                                }}
-                                // onChange={handleChange}
-                                options={[
-                                  {
-                                    value: "오운완",
-                                    label: "오운완",
-                                  },
-                                  {
-                                    value: "자세 피드백",
-                                    label: "자세 피드백",
-                                  },
-                                  {
-                                    value: "운동 Q&A",
-                                    label: "운동 Q&A",
-                                  },
-                                ]}
-                              />
-                            </Space>
-                          </Col>
-                          <Col span={24} className="content-body">
-                            <TextArea
-                              showCount
-                              maxLength={500}
-                              bordered={false}
-                              style={{
-                                height: 160,
-                                resize: "none",
-                                fontSize: "16px",
-                                marginBottom: "8px",
-                              }}
-                              placeholder="내용 입력 ..."
-                            />
-                            <Divider />
-                          </Col>
-                          <Col span={24} className="content-files">
-                            <Title
-                              level={5}
-                              style={{
-                                margin: 0,
-                                marginBottom: "8px",
-                              }}
-                            >
-                              사진/동영상
-                            </Title>
-                            <Upload
-                              className="upload-lists"
-                              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                              listType="picture-card"
-                              fileList={fileList}
-                              onPreview={handlePreview}
-                              onChange={onUploadChange}
-                              maxCount={6}
-                              style={{ display: "flex", width: "100%" }}
-                              accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
-                              beforeUpload={(file) => {
-                                const isLt10Mb = file.size / 1024 / 1024 < 10;
-                                if (!isLt10Mb) {
-                                  message.error(
-                                    "파일 크기는 10MB 미만이어야 합니다."
-                                  );
-                                }
-                                return isLt10Mb;
-                              }}
-                            >
-                              {fileList.length >= 6 ? null : uploadButton}
-                            </Upload>
-                            <Modal
-                              open={previewOpen}
-                              title={previewTitle}
-                              footer={null}
-                              onCancel={handleCancel}
-                            >
-                              <img
-                                alt="example"
-                                style={{
-                                  width: "100%",
-                                }}
-                                src={previewImage}
-                              />
-                            </Modal>
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </PostModal>
+                  <span>글쓰기</span>
                 </Menu.Item>
               </div>
             </Menu>
@@ -916,5 +559,4 @@ const ViewPostsAll = () => {
     </Layout>
   );
 };
-
-export default ViewPostsAll;
+export default TestViewPostsAll;
