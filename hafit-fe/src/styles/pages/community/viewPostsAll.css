@@ -190,6 +190,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 10px;
 }
 
 .write-post-btn-text {
@@ -203,6 +204,7 @@
 .write-post-btn:hover {
   font-size: 16px;
   background-color: rgb(108, 0, 240);
+  border-color: white !important;
 }
 
 .write-post-btn:hover .write-post-btn-text {
