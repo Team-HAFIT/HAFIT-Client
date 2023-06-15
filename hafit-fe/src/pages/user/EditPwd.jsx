@@ -1,4 +1,12 @@
-import { Button, Col, Form, Input, Row, Typography, Modal, message } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Row,
+  Typography,
+  Modal,
+} from "antd";
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -11,17 +19,18 @@ import { DELETE_TOKEN } from "../../store/Auth";
 import MyFooter from "../../components/Footer";
 
 import "../../styles/pages/joinPage.css";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
 const EditPwd = () => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [form] = Form.useForm();
 
   const accessToken = useSelector((state) => state.authToken.accessToken);
   let decodedToken = null; // 토큰 값이 없을 경우 에러 방지용
-  if(accessToken) {
+  if (accessToken) {
     decodedToken = jwt_decode(accessToken);
   }
   const userEmail = decodedToken.email;
@@ -49,18 +58,22 @@ const EditPwd = () => {
           .then((response) => {
             console.log("비밀번호 변경 요청");
             console.log(response.data); // 응답 결과 출력
-            if(response.data === true) {
-              message.success("비밀번호가 변경되었습니다. 다시 로그인해주세요", 2, () => {
-                dispatch(DELETE_TOKEN());
-                removeCookieToken();
-                window.location.href = "/login";
-                // navigate("/user/info"); // 성공 시 회원 정보 페이지로 이동
-              });   
+            if (response.data === true) {
+              Modal.success({
+                title: "비밀번호가 변경되었습니다. 다시 로그인해주세요",
+                onOk: () => {
+                  dispatch(DELETE_TOKEN());
+                  removeCookieToken();
+                  navigate("/login");
+                },
+              });
             } else {
-              form.setFields([{
-                name: "oldPassword",
-                errors: ["현재 사용 중인 비밀번호와 일치하지 않습니다"],
-              }]);
+              form.setFields([
+                {
+                  name: "oldPassword",
+                  errors: ["현재 사용 중인 비밀번호와 일치하지 않습니다"],
+                },
+              ]);
             }
           })
           .catch((error) => {
@@ -68,7 +81,7 @@ const EditPwd = () => {
           })
           .finally(() => {
             setLoading(false);
-          })
+          });
       },
       onCancel: () => {
         setLoading(false);

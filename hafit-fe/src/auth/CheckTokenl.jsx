@@ -27,7 +27,7 @@ export function CheckToken(key) {
             setIsAuth("Success");
           } else {
             // alert("실패!\n" +"status: " + JSON.stringify(response.status) + "\ncode: " + JSON.stringify(response.code) + "\njson: "+ JSON.stringify(response.json));
-            
+
             dispatch(DELETE_TOKEN());
             removeCookieToken();
             setIsAuth("Failed");
