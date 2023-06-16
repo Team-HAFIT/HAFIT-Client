@@ -81,6 +81,24 @@ const StatsPage = () => {
     setData(newData);
   }, [timeRange, startDate]);
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get('/api/data'); // API 엔드포인트에 맞게 수정해야 함
+  //       const newData = response.data;
+  //       setData(newData);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);     이 부분은 실제 스프링에서 데이터를 받아와서 사용할 수 있는 코드
+
+
+
+
+
   const getFormattedDate = (date) => {
     if (timeRange === 'monthly') {
       const year = date.getFullYear();
