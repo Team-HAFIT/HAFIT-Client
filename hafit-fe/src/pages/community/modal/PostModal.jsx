@@ -62,7 +62,6 @@ const getBase64 = (file) => {
 // };
 
 const PostModal = (props) => {
-
   // --------- START : 파일 업로드 관련 ---------- //
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -83,6 +82,7 @@ const PostModal = (props) => {
   ]);
 
   const handleCancel = () => setPreviewOpen(false);
+
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
