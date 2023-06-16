@@ -182,3 +182,140 @@
 .post-content-text {
   font-size: 16px;
 }
+
+.write-post-btn {
+  border-color: #dfdfdf9a;
+  padding: 0px 10px;
+  background-color: rgb(50, 0, 111);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.write-post-btn-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: white;
+  padding-top: 2px;
+  transition: 0.2s;
+}
+
+.write-post-btn:hover {
+  font-size: 16px;
+  background-color: rgb(108, 0, 240);
+  border-color: white !important;
+}
+
+.write-post-btn:hover .write-post-btn-text {
+  font-size: 15px;
+}
+
+.modal-header {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.modal-back-btn {
+  display: flex;
+  border: none !important;
+  box-shadow: none;
+  margin-right: auto;
+  font-size: 19px;
+  top: -3px;
+}
+
+.post-submit-btn {
+  border: none !important;
+  background-color: rgb(108, 0, 240);
+  color: white;
+  display: flex;
+  margin-left: auto;
+  font-size: 15px;
+  font-weight: 600;
+  top: -3px;
+  transition: 0.2s;
+}
+
+.post-submit-btn:hover {
+  background-color: #2cac63;
+  color: white;
+}
+
+.post-submit-btn > span {
+  transition: 0.2s;
+}
+
+.post-submit-btn:hover > span {
+  color: white;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.divider {
+  margin: 0;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.ant-upload-list.ant-upload-list-picture-card {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: center;
+  justify-content: left;
+  margin: 0 auto;
+}
+
+.ant-upload-select {
+  margin: 0 !important;
+  width: 120px !important;
+  height: 120px !important;
+}
+
+.ant-upload-list-item-container {
+  width: 120px !important;
+  height: 120px !important;
+  margin: 0 !important;
+  margin-right: 16px !important;
+  margin-bottom: 8px !important;
+}
+
+.ant-upload-list-item-container:nth-child(3n) {
+  margin-right: 0 !important;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: 8px;
+}
+.writer-info {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  margin-right: 18px;
+}
+
+.carousel-button {
+  height: 48px !important;
+  width: 48px !important;
+  position: absolute;
+  background-color: #11111111;
+  top: 46%;
+  transform: translateY(-46%);
+  z-index: 1;
+}
+
+.carousel-prev-button {
+  left: 10px;
+}
+
+.carousel-next-button {
+  right: 10px;
+}

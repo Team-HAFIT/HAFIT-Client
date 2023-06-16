@@ -38,6 +38,7 @@ import ViewPostsAll from "./pages/community/ViewPostsAll";
 // 테스트용
 import Test from "./pages/test";
 import Test2 from "./pages/Test2";
+import TestViewPostsAll from "./pages/community/TestViewPostsAll";
 
 
 // 임시 사용
@@ -61,6 +62,8 @@ function App() {
             <Route path="/notice" element={<NoticePage />} /> {/* 공지사항 */}
             <Route path="/calendar" element={<CalendarPage />} /> 
             <Route path="/stats" element={<StatsPage />} /> 
+
+            <Route path="/testview" element={<TestViewPostsAll />} />
           </Route>
 
           {/* PublicRoute: 토큰이 없는 사용자만 접근 가능 (로그인 X) */}
