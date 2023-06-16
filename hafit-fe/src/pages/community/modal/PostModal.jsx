@@ -131,7 +131,7 @@ const PostModal = (props) => {
       style={{ top: "10vh" }}
     >
       <Row>
-        <Col className="modal-header" span={24}>
+        <Col className="post-modal-header" span={24}>
           <Button
             className="modal-back-btn"
             icon={<IoArrowBack style={{ fontSize: "1.4em" }} />}

@@ -211,7 +211,7 @@
   font-size: 15px;
 }
 
-.modal-header {
+.post-modal-header {
   display: flex;
   flex-wrap: wrap;
 }
