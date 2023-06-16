@@ -40,8 +40,11 @@ import Test from "./pages/test";
 import Test2 from "./pages/Test2";
 import TestViewPostsAll from "./pages/community/TestViewPostsAll";
 
+
 // 임시 사용
 import ExecStatsPage from "./pages/exercises/ExecStatsPage";
+import CalendarPage from "./pages/exercises/calendar/CalendarPage";
+import StatsPage from "./pages/exercises/StatsPage";
 
 //라우트
 import PrivateRoute from "./routes/PrivateRoute";
@@ -57,6 +60,8 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path="/prepare" element={<PreparingPage />} /> {/* 준비 중인 페이지 */}
             <Route path="/notice" element={<NoticePage />} /> {/* 공지사항 */}
+            <Route path="/calendar" element={<CalendarPage />} /> 
+            <Route path="/stats" element={<StatsPage />} /> 
 
             <Route path="/testview" element={<TestViewPostsAll />} />
           </Route>
