@@ -167,11 +167,11 @@ const PostModal = (props) => {
               showUploadList={false}
               onChange={onUploadChange}
               beforeUpload={(file) => {
-                const isLt10Mb = file.size / 1024 / 1024 < 10;
-                if (!isLt10Mb) {
+                const isLt20Mb = file.size / 1024 / 1024 < 20;
+                if (!isLt20Mb) {
                   message.error("파일 크기는 10MB 미만이어야 합니다.");
                 }
-                return isLt10Mb;
+                return isLt20Mb;
               }}
             >
               <p className="ant-upload-drag-icon">
@@ -184,7 +184,7 @@ const PostModal = (props) => {
                 최대 6장까지 업로드 가능합니다! <br />
                 사진 업로드 시, 다음의 주의사항을 숙지해주세요: <br />
                 <br />
-                1. 각 사진 파일 크기는 10MB 이하로 제한됩니다.
+                1. 각 사진 파일 크기는 20MB 이하로 제한됩니다.
                 <br />
                 <br />
                 2. 지원되는 파일 형식은 JPG, PNG, GIF, MP4, AVI 입니다.
@@ -321,11 +321,11 @@ const PostModal = (props) => {
                 style={{ display: "flex", width: "100%" }}
                 accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
                 beforeUpload={(file) => {
-                  const isLt10Mb = file.size / 1024 / 1024 < 10;
-                  if (!isLt10Mb) {
-                    message.error("파일 크기는 10MB 미만이어야 합니다.");
+                  const isLt20Mb = file.size / 1024 / 1024 < 20;
+                  if (!isLt20Mb) {
+                    message.error("파일 크기는 20MB 미만이어야 합니다.");
                   }
-                  return isLt10Mb;
+                  return isLt20Mb;
                 }}
               >
                 {fileList.length >= 6 ? null : uploadButton}
