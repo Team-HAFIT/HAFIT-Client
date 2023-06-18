@@ -65,7 +65,7 @@ const PostsAll = () => {
 
   const getPosts = useCallback(() => {
     axios
-      .get("/api/post", {
+      .get("/api/posts", {
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${accessToken}`,

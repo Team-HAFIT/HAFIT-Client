@@ -161,9 +161,9 @@ const CommunityLayout = () => {
                 <Menu.Item key="/community/posts-all">
                   <Link to="/community/posts-all">전체글 보기</Link>
                 </Menu.Item>
-                <Menu.Item key="/fotd">오운완</Menu.Item>
-                <Menu.Item key="/feedback">자세 피드백</Menu.Item>
-                <Menu.Item key="/qna">운동 Q&amp;A</Menu.Item>
+                <Menu.Item key="/community/fotd">오운완</Menu.Item>
+                <Menu.Item key="/community/feedback">자세 피드백</Menu.Item>
+                <Menu.Item key="/community/qna">운동 Q&amp;A</Menu.Item>
               </div>
               <div
                 style={{

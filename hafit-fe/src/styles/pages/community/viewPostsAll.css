@@ -319,3 +319,10 @@
 .carousel-next-button {
   right: 10px;
 }
+
+.left-upload-lists {
+  width: 100%;
+  min-height: 504px;
+  max-height: 504px;
+  border-radius: 12px;
+}
