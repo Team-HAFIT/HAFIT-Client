@@ -32,6 +32,7 @@ import RestTimerPage from "./pages/exercises/RestTimerPage";
 // 운동 : 스쿼트
 import SquatSetting from "./pages/exercises/squat/SquatSetting";
 import SquatResult from "./pages/exercises/squat/SquatResult";
+import SquatExec from "./pages/exercises/squat/SquatExec";
 
 // 커뮤니티
 import PostsAll from "./pages/community/view-posts/PostsAll";
@@ -98,6 +99,8 @@ function App() {
 
               {/* 운동 */}
               <Route path="/squat/setting" element={<SquatSetting />} />
+              <Route path="/exec/squat" element={<SquatExec />} />
+              
               <Route path="/exec/result" element={<SquatResult />} />
               <Route path="/exec/rest" element={<RestTimerPage />} />
             </Route>

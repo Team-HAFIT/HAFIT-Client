@@ -40,7 +40,6 @@ const getBase64 = (file) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = (err) => reject(err);
   });
-  console.log(file);
 };
 
 // 파일 업로드 시, 드래그 앤 드롭 기능을 위한 props
