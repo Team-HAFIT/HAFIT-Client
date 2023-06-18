@@ -1,8 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-// Main Layout
+// 레이아웃
 import MainLayout from "./layout/MainLayout";
+import CommunityLayout from "./layout/community/CommunityLayout";
 
 // 공통
 import PreparingPage from "./pages/PreparingPage";
@@ -31,9 +32,10 @@ import RestTimerPage from "./pages/exercises/RestTimerPage";
 // 운동 : 스쿼트
 import SquatSetting from "./pages/exercises/squat/SquatSetting";
 import SquatResult from "./pages/exercises/squat/SquatResult";
+import SquatExec from "./pages/exercises/squat/SquatExec";
 
 // 커뮤니티
-import ViewPostsAll from "./pages/community/ViewPostsAll";
+import PostsAll from "./pages/community/view-posts/PostsAll";
 
 // 테스트용
 import Test from "./pages/test";
@@ -97,6 +99,8 @@ function App() {
 
               {/* 운동 */}
               <Route path="/squat/setting" element={<SquatSetting />} />
+              <Route path="/exec/squat" element={<SquatExec />} />
+              
               <Route path="/exec/result" element={<SquatResult />} />
               <Route path="/exec/rest" element={<RestTimerPage />} />
             </Route>
@@ -123,9 +127,13 @@ function App() {
 
 function CommunityRoutes() {
   return (
+    // /community 경로에 대한 중첩 라우트
     <Routes>
-      {/* /community 경로에 대한 중첩 라우트 */}
-      <Route path="/main" element={<ViewPostsAll />} />
+      {/* 커뮤니티 공통 레이아웃을 포함하는 컴포넌트 */}
+      <Route element={<CommunityLayout />}>
+        <Route path="/main" element={<PostsAll />} />
+        <Route path="/posts-all" element={<PostsAll />} />
+      </Route>
       {/* <Route path=":postId" element={<ViewPostDetails />} /> */}
     </Routes>
   );

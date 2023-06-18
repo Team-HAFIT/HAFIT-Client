@@ -1,5 +1,7 @@
 import { Modal } from "antd";
 import React, { useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 import {
   Typography,
@@ -14,6 +16,7 @@ import {
   Avatar,
   Carousel,
   Select,
+  Form,
 } from "antd";
 import {
   PlusOutlined,
@@ -31,13 +34,12 @@ const { Dragger } = Upload;
 
 // 파일 업로드 시, base64로 변환하는 함수
 const getBase64 = (file) => {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
     reader.onerror = (err) => reject(err);
   });
-  console.log(file);
 };
 
 // 파일 업로드 시, 드래그 앤 드롭 기능을 위한 props
@@ -62,27 +64,32 @@ const getBase64 = (file) => {
 // };
 
 const PostModal = (props) => {
+  const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
+  const [form] = Form.useForm();
+
+  const accessToken = useSelector((state) => state.authToken.accessToken);
 
   // --------- START : 파일 업로드 관련 ---------- //
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-2",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
+    // {
+    //   uid: "-1",
+    //   name: "image.png",
+    //   status: "done",
+    //   url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    // },
+    // {
+    //   uid: "-2",
+    //   name: "image.png",
+    //   status: "done",
+    //   url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    // },
   ]);
 
   const handleCancel = () => setPreviewOpen(false);
+
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -93,8 +100,22 @@ const PostModal = (props) => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-  const onUploadChange = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
+  // const onUploadChange = ({ fileList: newFileList }) =>
+  //   setFileList(...newFileList);
+
+  const onUploadChange = async ({ fileList: newFileList }) => {
+    const promises = newFileList.map(async (file) => {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      console.log("파일~~: " + JSON.stringify(file));
+      return file;
+    });
+    
+    const updatedFileList = await Promise.all(promises);
+    setFileList(updatedFileList);
+  };
+
   const uploadButton = (
     <div>
       <PlusOutlined />
@@ -121,6 +142,80 @@ const PostModal = (props) => {
   };
   // --------- END : 캐러셀 prev, next 관련 ---------- //
 
+  const onFinish = async (values) => {
+    setLoading(true); // 요청 시작 시, 로딩 중 상태로 설정
+    // values.preventDefault(); // 페이지 리로딩 방지
+
+    try {
+      const { categoryId, post_content } = values;
+
+      const formData = new FormData();
+      formData.append("categoryId", categoryId);
+      formData.append("post_content", post_content);
+
+      for (let i = 0; i < fileList.length; i++) {
+        formData.append("files", fileList[i]);
+        console.log(`파일 [${i}]: ` + JSON.stringify(fileList[i]));
+      }
+
+      console.log(formData.getAll("files"));
+
+      // const body = new FormData();
+      // body.append("categoryId", categoryId);
+      // body.append("post_content", post_content);
+      // fileList.forEach((file, index) => {
+      //   body.append(`files[${index}].file`, file.originFileObj);
+      //   body.append(`files[${index}].file_name`, file.name);
+      //   body.append(`files[${index}].size`, file.size);
+      //   body.append(`files[${index}].type`, file.type);
+      // });
+
+      // const body = {
+      //   categoryId,
+      //   files: fileList.map((file) => ({
+      //     file_name: file.name,
+      //     size: file.size,
+      //     type: file.type,
+      //   })),
+      //   post_content,
+      // };
+
+      let endPoint;
+      if (fileList.length === 0) {
+        endPoint = "/api/posts/nofile";
+      }
+      if (fileList.length > 0) {
+        endPoint = "/api/posts";
+      }
+
+      // const response = await axios.post("/api/posts", formData, headers);
+      const response = await axios({
+        method: "post",
+        url: endPoint,
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 5000,
+      });
+
+      console.log(response.data);
+
+      // Reset form and close the modal
+      form.resetFields();
+      props.setModalVisible(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false); // 요청 완료 시, 로딩 완료 상태로 설정
+    }
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
     <Modal
       visible={props.visible}
@@ -130,224 +225,288 @@ const PostModal = (props) => {
       width="68vw"
       style={{ top: "10vh" }}
     >
-      <Row>
-        <Col className="modal-header" span={24}>
-          <Button
-            className="modal-back-btn"
-            icon={<IoArrowBack style={{ fontSize: "1.4em" }} />}
-            onClick={() => props.setModalVisible(false)}
-          ></Button>
-          <Title
-            level={5}
-            style={{
-              display: "flex",
-              margin: 0,
-              marginLeft: "auto",
-              marginRight: "auto",
-              paddingLeft: "40px",
-            }}
-          >
-            새 게시물 작성하기
-          </Title>
-          <Button className="post-submit-btn">
-            <span>완료</span>
-          </Button>
-        </Col>
-      </Row>
-      <Divider className="divider" />
-      <Row>
-        <Col span={13} style={{ minHeight: "480px" }}>
-          {fileList.length === 0 ? (
-            <Dragger
-              {...props}
-              multiple={true}
-              maxCount={6}
-              style={{ width: "96%" }}
-              accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
-              showUploadList={false}
-              onChange={onUploadChange}
-              beforeUpload={(file) => {
-                const isLt20Mb = file.size / 1024 / 1024 < 20;
-                if (!isLt20Mb) {
-                  message.error("파일 크기는 10MB 미만이어야 합니다.");
-                }
-                return isLt20Mb;
+      <Form
+        form={form}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        style={{ maxWidth: "100%" }}
+      >
+        <Row>
+          <Col className="post-modal-header" span={24}>
+            <Button
+              className="modal-back-btn"
+              icon={<IoArrowBack style={{ fontSize: "1.4em" }} />}
+              onClick={() => props.setModalVisible(false)}
+            ></Button>
+            <Title
+              level={5}
+              style={{
+                display: "flex",
+                margin: 0,
+                marginLeft: "auto",
+                marginRight: "auto",
+                paddingLeft: "40px",
               }}
             >
-              <p className="ant-upload-drag-icon">
-                <PictureOutlined />
-              </p>
-              <p className="ant-upload-text">
-                이곳에 사진을 드래그하거나 클릭해서 첨부할 수 있습니다 :&#41;
-              </p>
-              <p className="ant-upload-hint">
-                최대 6장까지 업로드 가능합니다! <br />
-                사진 업로드 시, 다음의 주의사항을 숙지해주세요: <br />
-                <br />
-                1. 각 사진 파일 크기는 20MB 이하로 제한됩니다.
-                <br />
-                <br />
-                2. 지원되는 파일 형식은 JPG, PNG, GIF, MP4, AVI 입니다.
-                <br />
-                <br />
-                3. 저작권이 있는 사진은 업로드를 피해주세요.
-              </p>
-            </Dragger>
-          ) : (
-            <div className="carousel-wrapper">
-              <Button
-                className="carousel-button carousel-prev-button"
-                type="circle"
-                onClick={previous}
-                icon={
-                  <LeftOutlined style={{ color: "white", fontSize: "32px" }} />
-                }
-              />
-              <Carousel
-                ref={setCarouselRef}
-                slidesToShow={1} // Use slidesToShow instead of slidesPerView
-                dots // Enable pagination dots
-                infinite={true}
-                slidesToScroll={1}
+              새 게시물 작성하기
+            </Title>
+            <Button
+              className="post-submit-btn"
+              htmlType="submit"
+              loading={loading}
+            >
+              <span>완료</span>
+            </Button>
+          </Col>
+        </Row>
+        <Divider className="divider" />
+        <Row>
+          <Col span={13} style={{ minHeight: "480px" }}>
+            {fileList.length === 0 ? (
+              <Dragger
+                {...props}
+                multiple={true}
+                maxCount={6}
+                style={{ width: "96%" }}
+                accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
+                showUploadList={false}
+                onChange={onUploadChange}
+                beforeUpload={(file) => {
+                  const isLt20Mb = file.size / 1024 / 1024 < 20;
+                  if (!isLt20Mb) {
+                    message.error("파일 크기는 10MB 미만이어야 합니다.");
+                  }
+                  return isLt20Mb;
+                }}
               >
-                {fileList.map((file, index) => (
-                  <div key={index}>
-                    <img
-                      width={272}
-                      alt="slide"
-                      src={file.url}
+                <p className="ant-upload-drag-icon">
+                  <PictureOutlined />
+                </p>
+                <p className="ant-upload-text">
+                  이곳에 사진을 드래그하거나 클릭해서 첨부할 수 있습니다 :&#41;
+                </p>
+                <p className="ant-upload-hint">
+                  최대 6장까지 업로드 가능합니다! <br />
+                  사진 업로드 시, 다음의 주의사항을 숙지해주세요: <br />
+                  <br />
+                  1. 각 사진 파일 크기는 20MB 이하로 제한됩니다.
+                  <br />
+                  <br />
+                  2. 지원되는 파일 형식은 JPG, PNG, GIF, MP4, AVI 입니다.
+                  <br />
+                  <br />
+                  3. 저작권이 있는 사진은 업로드를 피해주세요.
+                </p>
+              </Dragger>
+            ) : (
+              <div className="carousel-wrapper">
+                <Button
+                  className="carousel-button carousel-prev-button"
+                  type="circle"
+                  onClick={previous}
+                  icon={
+                    <LeftOutlined
+                      style={{ color: "white", fontSize: "32px" }}
+                    />
+                  }
+                />
+                <Carousel
+                  ref={setCarouselRef}
+                  slidesToShow={1} // Use slidesToShow instead of slidesPerView
+                  dots // Enable pagination dots
+                  infinite={true}
+                  slidesToScroll={1}
+                >
+                  {/* {fileList.map((file, index) => (
+                    <div
+                      key={index}
                       style={{
                         width: "100%",
                         minHeight: "504px",
                         maxHeight: "504px",
                         borderRadius: "12px",
                       }}
+                    >
+                      <Upload
+                        className="left-upload-lists"
+                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        listType="picture-card"
+                        multiple
+                        fileList={[file]}
+                        onPreview={() => handlePreview(file)}
+                        onChange={onUploadChange}
+                        maxCount={6}
+                        accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
+                        beforeUpload={(uploadedFile) => {
+                          const isLt20Mb = uploadedFile.size / 1024 / 1024 < 20;
+                          if (!isLt20Mb) {
+                            message.error(
+                              "파일 크기는 20MB 미만이어야 합니다."
+                            );
+                          }
+                          return isLt20Mb;
+                        }}
+                      >
+                        {fileList.length >= 6 ? null : uploadButton}
+                      </Upload>
+                    </div>
+                  ))} */}
+
+                  {fileList.map((file, index) => (
+                    <div key={index}>
+                      <img
+                        width={272}
+                        alt="slide"
+                        // 미리보기 기능
+                        src={file.url || file.preview}
+                        crossorigin="anonymous"
+                        style={{
+                          width: "100%",
+                          minHeight: "504px",
+                          maxHeight: "504px",
+                          borderRadius: "12px",
+                        }}
+                      />
+                    </div>
+                  ))}
+                </Carousel>
+                <Button
+                  className="carousel-button carousel-next-button"
+                  type="circle"
+                  onClick={next}
+                  icon={
+                    <RightOutlined
+                      style={{ color: "white", fontSize: "32px" }}
                     />
-                  </div>
-                ))}
-                {/* <RightOutlined /> */}
-              </Carousel>
-              <Button
-                className="carousel-button carousel-next-button"
-                type="circle"
-                onClick={next}
-                icon={
-                  <RightOutlined style={{ color: "white", fontSize: "32px" }} />
-                }
-              />
-            </div>
-          )}
-        </Col>
-        <Col span={11}>
-          <Row style={{ marginLeft: "16px" }}>
-            <Col span={24} className="content-header">
-              <Space className="writer-info">
-                <Avatar
-                  style={{
-                    width: "48px",
-                    height: "48px",
-                    marginRight: "2px",
-                  }}
-                />
-                <Space direction="vertical" size={0}>
-                  <span
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: "600",
-                    }}
-                  >
-                    김해핏
-                  </span>
-                  <span style={{ color: "#999999" }}>2023. 04. 27</span>
-                </Space>
-              </Space>
-              <Space className="select-category">
-                <Select
-                  defaultValue="게시판 선택"
-                  style={{
-                    width: 120,
-                  }}
-                  // onChange={handleChange}
-                  options={[
-                    {
-                      value: "오운완",
-                      label: "오운완",
-                    },
-                    {
-                      value: "자세 피드백",
-                      label: "자세 피드백",
-                    },
-                    {
-                      value: "운동 Q&A",
-                      label: "운동 Q&A",
-                    },
-                  ]}
-                />
-              </Space>
-            </Col>
-            <Col span={24} className="content-body">
-              <TextArea
-                showCount
-                maxLength={500}
-                bordered={false}
-                style={{
-                  height: 160,
-                  resize: "none",
-                  fontSize: "16px",
-                  marginBottom: "8px",
-                }}
-                placeholder="내용 입력 ..."
-              />
-              <Divider />
-            </Col>
-            <Col span={24} className="content-files">
-              <Title
-                level={5}
-                style={{
-                  margin: 0,
-                  marginBottom: "8px",
-                }}
-              >
-                사진/동영상
-              </Title>
-              <Upload
-                className="upload-lists"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={onUploadChange}
-                maxCount={6}
-                style={{ display: "flex", width: "100%" }}
-                accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
-                beforeUpload={(file) => {
-                  const isLt20Mb = file.size / 1024 / 1024 < 20;
-                  if (!isLt20Mb) {
-                    message.error("파일 크기는 20MB 미만이어야 합니다.");
                   }
-                  return isLt20Mb;
-                }}
-              >
-                {fileList.length >= 6 ? null : uploadButton}
-              </Upload>
-              <Modal
-                open={previewOpen}
-                title={previewTitle}
-                footer={null}
-                onCancel={handleCancel}
-              >
-                <img
-                  alt="example"
-                  style={{
-                    width: "100%",
-                  }}
-                  src={previewImage}
                 />
-              </Modal>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+              </div>
+            )}
+          </Col>
+          <Col span={11}>
+            <Row style={{ marginLeft: "16px" }}>
+              <Col span={24} className="content-header">
+                <Space className="writer-info">
+                  <Avatar
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      marginRight: "2px",
+                    }}
+                  />
+                  <Space direction="vertical" size={0}>
+                    <span
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: "600",
+                      }}
+                    >
+                      김해핏
+                    </span>
+                    <span style={{ color: "#999999" }}>2023. 04. 27</span>
+                  </Space>
+                </Space>
+                <Space className="select-category">
+                  <Form.Item
+                    name="categoryId"
+                    rules={[
+                      {
+                        required: true,
+                        message: "카테고리를 선택해주세요!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      defaultValue="카테고리 선택"
+                      style={{
+                        width: 120,
+                      }}
+                      // onChange={handleChange}
+                      options={[
+                        {
+                          value: "1",
+                          label: "오운완",
+                        },
+                        {
+                          value: "2",
+                          label: "자세 피드백",
+                        },
+                        {
+                          value: "3",
+                          label: "운동 Q&A",
+                        },
+                      ]}
+                    />
+                  </Form.Item>
+                </Space>
+              </Col>
+              <Col span={24} className="content-body">
+                <Form.Item name="post_content">
+                  <TextArea
+                    showCount
+                    maxLength={500}
+                    bordered={false}
+                    style={{
+                      height: 160,
+                      resize: "none",
+                      fontSize: "16px",
+                      marginBottom: "8px",
+                    }}
+                    placeholder="내용 입력 ..."
+                  />
+                </Form.Item>
+                <Divider />
+              </Col>
+              <Col span={24} className="content-files">
+                <Title
+                  level={5}
+                  style={{
+                    margin: 0,
+                    marginBottom: "8px",
+                  }}
+                >
+                  사진/동영상
+                </Title>
+                <Upload
+                  className="upload-lists"
+                  // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  listType="picture-card"
+                  multiple={true}
+                  fileList={fileList}
+                  onPreview={handlePreview}
+                  onChange={onUploadChange}
+                  maxCount={6}
+                  style={{ display: "flex", width: "100%" }}
+                  accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
+                  beforeUpload={(file) => {
+                    const isLt20Mb = file.size / 1024 / 1024 < 20;
+                    if (!isLt20Mb) {
+                      message.error("파일 크기는 20MB 미만이어야 합니다.");
+                    }
+                    return isLt20Mb;
+                  }}
+                >
+                  {fileList.length >= 6 ? null : uploadButton}
+                </Upload>
+                <Modal
+                  open={previewOpen}
+                  title={previewTitle}
+                  footer={null}
+                  onCancel={handleCancel}
+                >
+                  <img
+                    alt=""
+                    style={{
+                      width: "100%",
+                    }}
+                    src={previewImage}
+                  />
+                </Modal>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Form>
     </Modal>
   );
 };

@@ -211,7 +211,7 @@
   font-size: 15px;
 }
 
-.modal-header {
+.post-modal-header {
   display: flex;
   flex-wrap: wrap;
 }
@@ -318,4 +318,11 @@
 
 .carousel-next-button {
   right: 10px;
+}
+
+.left-upload-lists {
+  width: 100%;
+  min-height: 504px;
+  max-height: 504px;
+  border-radius: 12px;
 }

@@ -65,7 +65,7 @@ const EditMyInfo = () => {
   useEffect(() => {
     if (userEmail) {
       axios
-        .get(`/api/my/${userEmail}`, {
+        .get(`/api/my`, {
           headers: {
             "Content-Type": "application/json",
             authorization: `Bearer ${accessToken}`,
