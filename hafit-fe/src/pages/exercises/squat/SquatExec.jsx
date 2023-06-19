@@ -70,6 +70,7 @@ let SquatExec = () => {
       })
       .then((response) => {
         let data = response.data;
+        console.log(data);
         setReps(data.targetCount);
         setTs(data.targetSet);
         setRt(data.restTime);
@@ -80,7 +81,7 @@ let SquatExec = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [accessToken, planId]);
 
   useEffect(() => {
     if (cs != null) {

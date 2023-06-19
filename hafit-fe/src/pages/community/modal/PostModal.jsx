@@ -100,8 +100,10 @@ const PostModal = (props) => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-  // const onUploadChange = ({ fileList: newFileList }) =>
-  //   setFileList(...newFileList);
+  // [1] 초기 antd 기본 코드
+  // const onUploadChange = ({ fileList: newFileList }) => {
+  //   setFileList(newFileList);
+  // }
 
   const onUploadChange = async ({ fileList: newFileList }) => {
     const promises = newFileList.map(async (file) => {
@@ -111,10 +113,24 @@ const PostModal = (props) => {
       console.log("파일~~: " + JSON.stringify(file));
       return file;
     });
-    
+
     const updatedFileList = await Promise.all(promises);
     setFileList(updatedFileList);
   };
+
+  // const onUploadChange = ({ fileList: newFileList }) => {
+  //   // 'fileList'에는 base64 적용한 파일을 저장
+  //   const updatedFileList = newFileList.map((file) => {
+  //     if (!file.preview) {
+  //       file.preview = getBase64(file.originFileObj);
+  //     }
+  //     return file;
+  //   });
+  //   setFileList(updatedFileList);
+  
+  //   // 'files'에는 파일을 그대로 저장
+  //   setFiles(newFileList);
+  // };
 
   const uploadButton = (
     <div>
@@ -154,7 +170,7 @@ const PostModal = (props) => {
       formData.append("post_content", post_content);
 
       for (let i = 0; i < fileList.length; i++) {
-        formData.append("files", fileList[i]);
+        formData.append("files", fileList[i].originFileObj);
         console.log(`파일 [${i}]: ` + JSON.stringify(fileList[i]));
       }
 
