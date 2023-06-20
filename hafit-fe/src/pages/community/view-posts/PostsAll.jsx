@@ -10,6 +10,7 @@ import {
   Empty,
   Menu,
   Dropdown,
+  Modal,
 } from "antd";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
@@ -64,6 +65,33 @@ const PostsAll = () => {
   const [lastPostId, setLastPostId] = useState(999999);
   const size = 15; // 한 번에 불러올 게시글 개수
 
+  // 게시글 삭제
+  const handleDelete = () => {
+    Modal.confirm({
+      title: "게시글을 삭제하시겠어요?",
+      onOk: () => {
+        axios
+          .delete(`/api/posts/${selectedPostId}`, {
+            headers: {
+              "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+              authorization: `Bearer ${accessToken}`,
+            },
+            timeout: 5000, // 요청 제한 시간 설정
+          })
+          .then(() => {
+            message.success("게시글이 삭제되었습니다", 1);
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      },
+      onCancel: () => {
+        console.log("게시글 삭제를 취소하셨습니다! ˙ᵕ˙");
+      },
+    });
+  };
+
   const menu = (
     <Menu>
       <Menu.Item
@@ -75,7 +103,11 @@ const PostsAll = () => {
         수정
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="post-delete" style={{ color: "red" }}>
+      <Menu.Item
+        key="post-delete"
+        onClick={handleDelete}
+        style={{ color: "red" }}
+      >
         삭제
       </Menu.Item>
     </Menu>
