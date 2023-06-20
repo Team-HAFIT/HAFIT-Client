@@ -4,21 +4,18 @@ import React from "react";
 
 // import MainHeader from "../components/MainNavbar";
 
-import NoContent from "../assets/img/no_content.jpg";
+import PreparingImg from "../assets/img/coming-soon-sunrise-dark.jpg";
 
 import "../styles/pages/preparingPage.css";
 
 function PreparingPage() {
   return (
-    <div>
-        {/* <MainHeader /> */}
-        <div className="no-content">
-            <img src={NoContent} alt="준비중" style={{width: "100%"}}/>
-        </div>     
-        <div>
-
-        </div>
-    </div>
+    <React.Fragment>
+      {/* <MainHeader /> */}
+      <div className="no-content">
+        <img src={PreparingImg} alt="준비 중인 페이지입니다." />
+      </div>
+    </React.Fragment>
   );
 }
 
