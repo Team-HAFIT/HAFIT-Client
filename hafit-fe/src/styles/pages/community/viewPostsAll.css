@@ -5,6 +5,7 @@
   transition: 0.2s;
   overflow: initial;
   width: 100%;
+  height: calc(100vh - 120px);
   max-width: 876px;
   margin: 24px auto;
 }

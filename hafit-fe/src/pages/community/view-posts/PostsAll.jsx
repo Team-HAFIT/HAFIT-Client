@@ -1,6 +1,6 @@
 import { CommentOutlined } from "@ant-design/icons";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { theme, Avatar, List, Divider, Button, message } from "antd";
+import { theme, Avatar, List, Divider, Button, message, Empty } from "antd";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
@@ -72,7 +72,7 @@ const PostsAll = () => {
       })
       .then((response) => {
         setData((prevData) => prevData.concat(response.data));
-        message.success("게시글을 불러왔습니다", 1);
+        // message.success("게시글을 불러왔습니다", 1);
 
         // 마지막 게시글 postId 업데이트
         if (response.data.length > 0) {
@@ -89,29 +89,29 @@ const PostsAll = () => {
             comment_count: 2,
             createdAt: "2023-06-18 16:43:18.269857",
             files: [
-              {
-                file_name:
-                  "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
-              },
+              // {
+              //   file_name:
+              //     "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+              // },
               {
                 file_name:
                   "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
               },
-              // {
-              //   file_name: "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
-              // },
+              {
+                file_name: "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
+              },
               // {
               //   file_name: "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
               // },
-              {
-                file_name:
-                  "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
-              },
+              // {
+              //   file_name:
+              //     "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+              // },
             ],
             modifiedAt: "2023-06-18 16:43:18.269857",
             postId: 0,
             post_content:
-              "네트워크 오류로 인해 게시글을 불러오지 못했습니다. 다시 시도해주세요.",
+              "네트워크 오류로 인해 게시글을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.",
             post_totalLikes: 7,
             user_name: "해핏",
           },
@@ -203,7 +203,6 @@ const PostsAll = () => {
   //   }
   // }, [getPosts]);
 
-
   // 현재 방식 : 문서 전체를 대상으로 동작하도록 유연하게 변경
   const onScroll = () => {
     const SCROLLED_HEIGHT = window.scrollY;
@@ -241,134 +240,139 @@ const PostsAll = () => {
         textAlign: "center",
         background: "#e7e7e7",
         borderRadius: "12px",
-        height: "100vh",
+        maxHeight: "100vh",
+        minHeight: "280px",
         overflow: "auto",
       }}
     >
       {/* 게시글 무한 스크롤 */}
-      <List
-        dataSource={data}
-        height={ContainerHeight}
-        itemHeight={47}
-        itemKey="data.post"
-        onScroll={onScroll}
-      >
-        {data.map((post) => (
-          <div
-            style={{
-              background: colorBgContainer,
-              marginBottom: "8px",
-              borderRadius: "8px",
-              padding: "8px 8px 24px 8px",
-              minHeight: "12rem",
-            }}
-            key={post.postId} // 게시글 고유 id를 key로 사용
-          >
-            <div style={{ display: "block", margin: "0 24px" }}>
-              <div>
-                <List.Item key={post.postId} style={{ paddingBottom: "4px" }}>
-                  <div style={{ display: "flex" }}>
-                    <Avatar
-                      size={56}
-                      src="#"
-                      // style={{ width: "48px", height: "48px" }}
+      {data.length ? (
+        <List
+          dataSource={data}
+          height={ContainerHeight}
+          itemHeight={47}
+          itemKey="data.post"
+          onScroll={onScroll}
+        >
+          {data.map((post) => (
+            <div
+              style={{
+                background: colorBgContainer,
+                marginBottom: "8px",
+                borderRadius: "8px",
+                padding: "8px 8px 24px 8px",
+                minHeight: "12rem",
+              }}
+              key={post.postId} // 게시글 고유 id를 key로 사용
+            >
+              <div style={{ display: "block", margin: "0 24px" }}>
+                <div>
+                  <List.Item key={post.postId} style={{ paddingBottom: "4px" }}>
+                    <div style={{ display: "flex" }}>
+                      <Avatar
+                        size={56}
+                        src="#"
+                        // style={{ width: "48px", height: "48px" }}
+                        style={{
+                          display: "flex",
+                          textAlign: "left",
+                          marginRight: "8px",
+                        }}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-evenly",
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: "flex",
+                            fontSize: "15px",
+                            fontWeight: "650",
+                          }}
+                        >
+                          {post.user_name}
+                        </span>
+                        <span
+                          style={{
+                            display: "flex",
+                            fontSize: "14px",
+                            color: "rgba(0, 0, 0, 0.45)",
+                          }}
+                        >
+                          {post.createdAt}
+                        </span>
+                      </div>
+                    </div>
+                    <HiOutlineDotsHorizontal
                       style={{
-                        display: "flex",
-                        textAlign: "left",
-                        marginRight: "8px",
+                        fontSize: "28px",
+                        color: "#999999",
+                        alignSelf: "self-start",
                       }}
                     />
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-evenly",
-                      }}
-                    >
-                      <span
-                        style={{
-                          display: "flex",
-                          fontSize: "15px",
-                          fontWeight: "650",
-                        }}
-                      >
-                        {post.user_name}
-                      </span>
-                      <span
-                        style={{
-                          display: "flex",
-                          fontSize: "14px",
-                          color: "rgba(0, 0, 0, 0.45)",
-                        }}
-                      >
-                        {post.createdAt}
-                      </span>
-                    </div>
-                  </div>
-                  <HiOutlineDotsHorizontal
-                    style={{
-                      fontSize: "28px",
-                      color: "#999999",
-                      alignSelf: "self-start",
-                    }}
-                  />
-                </List.Item>
-              </div>
-              <Divider style={{ margin: "0 0 16px 0" }} />
-              <p className="post-content-p">
-                <span className="post-content-text">{post.post_content}</span>
-              </p>
+                  </List.Item>
+                </div>
+                <Divider style={{ margin: "0 0 16px 0" }} />
+                <p className="post-content-p">
+                  <span className="post-content-text">{post.post_content}</span>
+                </p>
 
-              <div>
-                <article className="image-container">
-                  {renderImagesByPost(post)}
-                </article>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  textAlign: "left",
-                  marginTop: "12px",
-                }}
-              >
-                <div style={{ marginRight: "16px" }}>
-                  <LikeButton />
+                <div>
+                  <article className="image-container">
+                    {renderImagesByPost(post)}
+                  </article>
                 </div>
 
-                <Button
-                  shape="round"
+                <div
                   style={{
-                    height: "100%",
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "4px 12px",
+                    textAlign: "left",
+                    marginTop: "12px",
                   }}
-                  icon={
-                    <CommentOutlined
+                >
+                  <div style={{ marginRight: "16px" }}>
+                    <LikeButton />
+                  </div>
+
+                  <Button
+                    shape="round"
+                    style={{
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      padding: "4px 12px",
+                    }}
+                    icon={
+                      <CommentOutlined
+                        style={{
+                          fontSize: "1.8em",
+                          color: "#999999",
+                        }}
+                      />
+                    }
+                  >
+                    <span
                       style={{
-                        fontSize: "1.8em",
+                        fontSize: "16px",
+                        fontWeight: "500",
                         color: "#999999",
                       }}
-                    />
-                  }
-                >
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: "500",
-                      color: "#999999",
-                    }}
-                  >
-                    2
-                  </span>
-                </Button>
+                    >
+                      2
+                    </span>
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </List>
+          ))}
+        </List>
+      ) : (
+        <Empty description="첫 게시글의 주인공이 되어보세요!" />
+      )}
     </div>
   );
 };
