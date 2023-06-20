@@ -71,6 +71,7 @@
   height: 100%;
   border-radius: 12px;
   --swiper-navigation-size: 28px;
+  z-index: 0;
   /* --swiper-navigation-color: white; */
 }
 
@@ -147,7 +148,7 @@
   object-fit: contain;
   min-width: 20em;
   max-width: 100%;
-  max-height: 480px;
+  max-height: 400px;
   /* max-height: 100%; */
   width: auto;
   height: auto;
@@ -160,7 +161,7 @@
   object-fit: cover;
   min-width: 20em;
   max-width: 100%;
-  max-height: 440px;
+  max-height: 400px;
   width: auto;
   height: auto;
   margin: 4px 8px;

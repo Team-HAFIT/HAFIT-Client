@@ -1,13 +1,6 @@
 import { CommentOutlined } from "@ant-design/icons";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import {
-  theme,
-  Avatar,
-  List,
-  Divider,
-  Button,
-} from "antd";
-import VirtualList from "rc-virtual-list";
+import { theme, Avatar, List, Divider, Button, message, Skeleton } from "antd";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
@@ -27,45 +20,52 @@ import "../../../styles/pages/community/viewPostsAll.css";
 
 import LikeButton from "../../../components/buttons/LikeBtn";
 
+// 수정 시작 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SwiperCore.use([Navigation, Pagination]);
 
-const fakeDataUrl = "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
+const fakeDataUrl =
+  "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
 const ContainerHeight = 1200;
 
 const PostsAll = () => {
   const accessToken = useSelector((state) => state.authToken.accessToken);
 
-  //   --------- START : 게시글 무한 스크롤 ---------- //
-  const [data, setData] = useState([]);
-  const appendData = useCallback(() => {
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((body) => {
-        setData((prevData) => prevData.concat(body.results));
-        // message.success(`${body.results.length} more items loaded!`);
-      });
-  }, []);
-
-  useEffect(() => {
-    appendData();
-  }, [appendData]);
-
-  const onScroll = (e) => {
-    if (
-      e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
-      ContainerHeight
-    ) {
-      appendData();
-    }
-  };
-  //   --------- END : 게시글 무한 스크롤 ---------- //
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([
+    // {
+    //   category_name: "오운완",
+    //   comment_count: 2,
+    //   createdAt: "2023-06-18 16:43:18.269857",
+    //   files: [
+    //     {
+    //       file_name:
+    //         "https://feedback-file-bucket.s3.ap-northeast-2.amazonaws.com/static/posts/d2b359aa-4a8e-483d-aaf8-2e146abc4d2d.9fe11359-2e4f-4b24-8d27-d972509a1a62",
+    //     },
+    //   ],
+    //   modifiedAt: "2023-06-18 16:43:18.269857",
+    //   postId: 0,
+    //   post_content:
+    //     "동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리 나라 만세~~~",
+    //   post_totalLikes: 7,
+    //   user_name: "해핏",
+    // },
+  ]);
+  const [lastPostId, setLastPostId] = useState(999999);
+  const size = 15; // 한 번에 불러올 게시글 개수
 
   // --------- START : 게시글 정보 관련 ---------- //
-  const [posts, setPosts] = useState([]);
-
   const getPosts = useCallback(() => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+
     axios
       .get("/api/posts", {
+        params: {
+          lastPostId: lastPostId,
+          size: size,
+        },
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${accessToken}`,
@@ -73,66 +73,93 @@ const PostsAll = () => {
         timeout: 10000,
       })
       .then((response) => {
-        setPosts(response.data);
+        setData((prevData) => prevData.concat(response.data));
+        message.success("게시글을 불러왔습니다", 1);
+
+        // 마지막 게시글 postId 업데이트
+        if (response.data.length > 0) {
+          setLastPostId(response.data[response.data.length - 1].postId);
+        }
       })
       .catch((error) => {
         console.log(error);
+        message.error("게시글을 불러오지 못했습니다", 1);
         // 네트워크 오류로 인해 게시글을 불러오지 못했을 때, 임시 렌더링
-        setPosts([
+        setData([
           {
-            userId: 1,
-            images: [
-              "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
-              "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
-              "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
-              // "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
-              "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
-              // "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
-              // "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+            category_name: "오운완",
+            comment_count: 2,
+            createdAt: "2023-06-18 16:43:18.269857",
+            files: [
+              {
+                file_name:
+                  "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+              },
+              {
+                file_name:
+                  "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
+              },
+              // {
+              //   file_name: "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
+              // },
+              // {
+              //   file_name: "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+              // },
+              {
+                file_name:
+                  "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+              },
             ],
-            content:
+            modifiedAt: "2023-06-18 16:43:18.269857",
+            postId: 0,
+            post_content:
               "네트워크 오류로 인해 게시글을 불러오지 못했습니다. 다시 시도해주세요.",
+            post_totalLikes: 7,
+            user_name: "해핏",
           },
         ]);
+      })
+      .finally(() => {
+        setLoading(false);
+        console.log("마지막 포스트 id " + lastPostId);
       });
-  }, [accessToken, setPosts]);
+  }, [accessToken, lastPostId, loading]);
 
   useEffect(() => {
     getPosts();
-  }, [getPosts]);
+  }, []);
 
-  // 각 게시글 이미지 개수에 따른 렌더링 함수
   const renderImagesByPost = (post) => {
-    if (!post?.images || post.images.length === 0) {
+    if (!post?.files || post.files.length === 0) {
       return null;
     }
-    if (post.images.length === 1) {
+    if (post.files.length === 1) {
       return (
         <img
           className="post-image-only"
           width={272}
           alt="logo"
-          src={post.images[0]}
+          src={post.files[0].file_name}
         />
       );
-    } else if (post.images.length === 2) {
+    } else if (post.files.length === 2) {
       return (
         <>
           <img
             className="post-image"
             width={272}
             alt="logo"
-            src={post.images[0]}
+            src={post.files[0].file_name}
           />
           <img
             className="post-image"
             width={272}
             alt="logo"
-            src={post.images[1]}
+            src={post.files[1].file_name}
           />
         </>
       );
-    } else if (post.images.length >= 3) {
+    } else if (post.files.length >= 3) {
       // SwiperCore.use([Navigation, Pagination]);
 
       return (
@@ -143,9 +170,9 @@ const PostsAll = () => {
           pagination={{ clickable: true }}
           className="mySwiper"
         >
-          {post.images.map((image, index) => (
+          {post.files.map((files, index) => (
             <SwiperSlide key={index}>
-              <img width={272} alt="slide" src={image} />
+              <img width={272} alt="slide" src={files.file_name} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -154,126 +181,195 @@ const PostsAll = () => {
   };
   // --------- END : 게시글 정보 관련 ---------- //
 
+  //   --------- START : 게시글 무한 스크롤 ---------- //
+
+  // 이전 방식 : 요소의 높이를 고정값으로 설정 -> 해당 요소가 스크롤 가능한 경우에만 동작
+  // const onScroll = (e) => {
+  //   if (
+  //     e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
+  //     ContainerHeight
+  //   ) {
+  //     getPosts();
+  //   }
+  // };
+
+  // scrollableDiv의 바닥에 닿았을 때 동작
+  // const onScroll = useCallback(() => {
+  //   const element = document.getElementById("scrollableDiv");
+  //   if (element) {
+  //     const isScrolledToBottom =
+  //       element.scrollHeight - element.scrollTop === element.clientHeight;
+  //     if (isScrolledToBottom) {
+  //       getPosts();
+  //     }
+  //   }
+  // }, [getPosts]);
+
+
+  // 현재 방식 : 문서 전체를 대상으로 동작하도록 유연하게 변경
+  const onScroll = () => {
+    const SCROLLED_HEIGHT = window.scrollY;
+    const WINDOW_HEIGHT = window.innerHeight;
+    const DOC_TOTAL_HEIGHT = document.body.offsetHeight;
+    const IS_BOTTOM = WINDOW_HEIGHT + SCROLLED_HEIGHT === DOC_TOTAL_HEIGHT;
+
+    if (IS_BOTTOM) {
+      getPosts();
+    }
+  };
+
+  useEffect(() => {
+    const element = document.getElementById("scrollableDiv");
+    if (element) {
+      element.addEventListener("scroll", onScroll);
+    }
+    return () => {
+      if (element) {
+        element.removeEventListener("scroll", onScroll);
+      }
+    };
+  }, [onScroll]);
+  //   --------- END : 게시글 무한 스크롤 ---------- //
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   return (
     <div
+      id="scrollableDiv"
       style={{
         padding: 24,
         textAlign: "center",
         background: "#e7e7e7",
         borderRadius: "12px",
+        height: "100vh",
+        overflow: "auto",
       }}
     >
       {/* 게시글 무한 스크롤 */}
-      <List>
-        <VirtualList
-          data={data}
-          height={ContainerHeight}
-          itemHeight={47}
-          itemKey="email"
-          onScroll={onScroll}
-        >
-          {(item) => (
-            <div
-              style={{
-                background: colorBgContainer,
-                marginBottom: "8px",
-                borderRadius: "8px",
-                padding: "8px 8px 24px 8px",
-                minHeight: "12rem",
-              }}
-            >
-              <div style={{ display: "block", margin: "0 24px" }}>
-                <div>
-                  <List.Item key={item.email} style={{ paddingBottom: "4px" }}>
-                    <List.Item.Meta
-                      style={{ display: "flex", textAlign: "left" }}
-                      avatar={
-                        <Avatar
-                          src={item.picture.large}
-                          style={{ width: "48px", height: "48px" }}
-                        />
-                      }
-                      title={<a href="https://ant.design">{item.name.last}</a>}
-                      description="2023. 05. 18 - 20:24"
-                    />
-                    <HiOutlineDotsHorizontal
+      <List
+        dataSource={data}
+        height={ContainerHeight}
+        itemHeight={47}
+        itemKey="data.post"
+        onScroll={onScroll}
+      >
+        {data.map((post) => (
+          <div
+            style={{
+              background: colorBgContainer,
+              marginBottom: "8px",
+              borderRadius: "8px",
+              padding: "8px 8px 24px 8px",
+              minHeight: "12rem",
+            }}
+            key={post.postId} // 게시글 고유 id를 key로 사용
+          >
+            <div style={{ display: "block", margin: "0 24px" }}>
+              <div>
+                <List.Item key={post.postId} style={{ paddingBottom: "4px" }}>
+                  <div style={{ display: "flex" }}>
+                    <Avatar
+                      size={56}
+                      src="#"
+                      // style={{ width: "48px", height: "48px" }}
                       style={{
-                        fontSize: "28px",
-                        color: "#999999",
-                        alignSelf: "self-start",
+                        display: "flex",
+                        textAlign: "left",
+                        marginRight: "8px",
                       }}
                     />
-                  </List.Item>
-                </div>
-                <Divider style={{ margin: "0 0 16px 0" }} />
-                <p className="post-content-p">
-                  <span className="post-content-text">
-                    동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리 나라
-                    만세
-                  </span>
-                </p>
-                <p className="post-content-p">
-                  <span className="post-content-text">
-                    #무궁화 #삼천리 #화려강산 #대한사람 #대한으로 #길이
-                    #보전하세
-                  </span>
-                </p>
-
-                <div>
-                  {Array.from(posts).map((post, index) => (
-                    <article key={index} className="image-container">
-                      {renderImagesByPost(post)}
-                    </article>
-                  ))}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    textAlign: "left",
-                    marginTop: "12px",
-                  }}
-                >
-                  <div style={{ marginRight: "16px" }}>
-                    <LikeButton />
-                  </div>
-
-                  <Button
-                    shape="round"
-                    style={{
-                      height: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      padding: "4px 12px",
-                    }}
-                    icon={
-                      <CommentOutlined
-                        style={{
-                          fontSize: "1.8em",
-                          color: "#999999",
-                        }}
-                      />
-                    }
-                  >
-                    <span
+                    <div
                       style={{
-                        fontSize: "16px",
-                        fontWeight: "500",
-                        color: "#999999",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-evenly",
                       }}
                     >
-                      2
-                    </span>
-                  </Button>
+                      <span
+                        style={{
+                          display: "flex",
+                          fontSize: "15px",
+                          fontWeight: "650",
+                        }}
+                      >
+                        {post.user_name}
+                      </span>
+                      <span
+                        style={{
+                          display: "flex",
+                          fontSize: "14px",
+                          color: "rgba(0, 0, 0, 0.45)",
+                        }}
+                      >
+                        {post.createdAt}
+                      </span>
+                    </div>
+                  </div>
+                  <HiOutlineDotsHorizontal
+                    style={{
+                      fontSize: "28px",
+                      color: "#999999",
+                      alignSelf: "self-start",
+                    }}
+                  />
+                </List.Item>
+              </div>
+              <Divider style={{ margin: "0 0 16px 0" }} />
+              <p className="post-content-p">
+                <span className="post-content-text">{post.post_content}</span>
+              </p>
+
+              <div>
+                <article className="image-container">
+                  {renderImagesByPost(post)}
+                </article>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  textAlign: "left",
+                  marginTop: "12px",
+                }}
+              >
+                <div style={{ marginRight: "16px" }}>
+                  <LikeButton />
                 </div>
+
+                <Button
+                  shape="round"
+                  style={{
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "4px 12px",
+                  }}
+                  icon={
+                    <CommentOutlined
+                      style={{
+                        fontSize: "1.8em",
+                        color: "#999999",
+                      }}
+                    />
+                  }
+                >
+                  <span
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "500",
+                      color: "#999999",
+                    }}
+                  >
+                    2
+                  </span>
+                </Button>
               </div>
             </div>
-          )}
-        </VirtualList>
+          </div>
+        ))}
       </List>
     </div>
   );

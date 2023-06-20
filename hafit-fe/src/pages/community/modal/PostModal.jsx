@@ -80,12 +80,6 @@ const PostModal = (props) => {
     //   status: "done",
     //   url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
     // },
-    // {
-    //   uid: "-2",
-    //   name: "image.png",
-    //   status: "done",
-    //   url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    // },
   ]);
 
   const handleCancel = () => setPreviewOpen(false);
@@ -100,37 +94,19 @@ const PostModal = (props) => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-  // [1] 초기 antd 기본 코드
-  // const onUploadChange = ({ fileList: newFileList }) => {
-  //   setFileList(newFileList);
-  // }
 
   const onUploadChange = async ({ fileList: newFileList }) => {
     const promises = newFileList.map(async (file) => {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
+        file.status = "done";
       }
-      console.log("파일~~: " + JSON.stringify(file));
       return file;
     });
 
     const updatedFileList = await Promise.all(promises);
     setFileList(updatedFileList);
   };
-
-  // const onUploadChange = ({ fileList: newFileList }) => {
-  //   // 'fileList'에는 base64 적용한 파일을 저장
-  //   const updatedFileList = newFileList.map((file) => {
-  //     if (!file.preview) {
-  //       file.preview = getBase64(file.originFileObj);
-  //     }
-  //     return file;
-  //   });
-  //   setFileList(updatedFileList);
-  
-  //   // 'files'에는 파일을 그대로 저장
-  //   setFiles(newFileList);
-  // };
 
   const uploadButton = (
     <div>
@@ -176,38 +152,17 @@ const PostModal = (props) => {
 
       console.log(formData.getAll("files"));
 
-      // const body = new FormData();
-      // body.append("categoryId", categoryId);
-      // body.append("post_content", post_content);
-      // fileList.forEach((file, index) => {
-      //   body.append(`files[${index}].file`, file.originFileObj);
-      //   body.append(`files[${index}].file_name`, file.name);
-      //   body.append(`files[${index}].size`, file.size);
-      //   body.append(`files[${index}].type`, file.type);
-      // });
+      // let endPoint;
+      // if (fileList.length === 0) {
+      //   endPoint = "/api/posts/nofile";
+      // }
+      // if (fileList.length > 0) {
+      //   endPoint = "/api/posts";
+      // }
 
-      // const body = {
-      //   categoryId,
-      //   files: fileList.map((file) => ({
-      //     file_name: file.name,
-      //     size: file.size,
-      //     type: file.type,
-      //   })),
-      //   post_content,
-      // };
-
-      let endPoint;
-      if (fileList.length === 0) {
-        endPoint = "/api/posts/nofile";
-      }
-      if (fileList.length > 0) {
-        endPoint = "/api/posts";
-      }
-
-      // const response = await axios.post("/api/posts", formData, headers);
       const response = await axios({
         method: "post",
-        url: endPoint,
+        url: "/api/posts",
         data: formData,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -221,6 +176,7 @@ const PostModal = (props) => {
       // Reset form and close the modal
       form.resetFields();
       props.setModalVisible(false);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     } finally {
@@ -281,6 +237,7 @@ const PostModal = (props) => {
             {fileList.length === 0 ? (
               <Dragger
                 {...props}
+                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 multiple={true}
                 maxCount={6}
                 style={{ width: "96%" }}
@@ -333,41 +290,6 @@ const PostModal = (props) => {
                   infinite={true}
                   slidesToScroll={1}
                 >
-                  {/* {fileList.map((file, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        width: "100%",
-                        minHeight: "504px",
-                        maxHeight: "504px",
-                        borderRadius: "12px",
-                      }}
-                    >
-                      <Upload
-                        className="left-upload-lists"
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        listType="picture-card"
-                        multiple
-                        fileList={[file]}
-                        onPreview={() => handlePreview(file)}
-                        onChange={onUploadChange}
-                        maxCount={6}
-                        accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
-                        beforeUpload={(uploadedFile) => {
-                          const isLt20Mb = uploadedFile.size / 1024 / 1024 < 20;
-                          if (!isLt20Mb) {
-                            message.error(
-                              "파일 크기는 20MB 미만이어야 합니다."
-                            );
-                          }
-                          return isLt20Mb;
-                        }}
-                      >
-                        {fileList.length >= 6 ? null : uploadButton}
-                      </Upload>
-                    </div>
-                  ))} */}
-
                   {fileList.map((file, index) => (
                     <div key={index}>
                       <img
