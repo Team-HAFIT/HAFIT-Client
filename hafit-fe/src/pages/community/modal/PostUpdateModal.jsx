@@ -33,17 +33,17 @@ import "../../../styles/pages/community/viewPostsAll.css";
 
 const { Title } = Typography;
 const { TextArea } = Input;
-// const { Dragger } = Upload;
+const { Dragger } = Upload;
 
 // 파일 업로드 시, base64로 변환하는 함수
-// const getBase64 = (file) => {
-//   return new Promise((resolve, reject) => {
-//     const reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onload = () => resolve(reader.result);
-//     reader.onerror = (err) => reject(err);
-//   });
-// };
+const getBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (err) => reject(err);
+  });
+};
 
 const PostUpdateModal = (props) => {
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
@@ -54,9 +54,67 @@ const PostUpdateModal = (props) => {
 
   const [postInfo, setPostInfo] = useState({});
 
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  const today = new Date().toLocaleDateString('ko-KR', options);
-  
+  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+  const today = new Date().toLocaleDateString("ko-KR", options);
+
+  // --------- START : 파일 업로드 관련 ---------- //
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+  const [fileList, setFileList] = useState([]);
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+
+  const onUploadChange = async ({ fileList: newFileList }) => {
+    const promises = newFileList.map(async (file) => {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+        file.status = "done";
+      }
+      return file;
+    });
+
+    const updatedFileList = await Promise.all(promises);
+    setFileList(updatedFileList);
+  };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
+  // --------- END : 파일 업로드 관련 ---------- //
+
+  // --------- START : 캐러셀 prev, next 관련 ---------- //
+  const [carouselRef, setCarouselRef] = useState(null);
+
+  const next = () => {
+    carouselRef.next();
+  };
+
+  const previous = () => {
+    carouselRef.prev();
+  };
+  // --------- END : 캐러셀 prev, next 관련 ---------- //
+
   // 게시글 정보 불러오기
   useEffect(() => {
     if (props.postId) {
@@ -72,9 +130,14 @@ const PostUpdateModal = (props) => {
           setPostInfo({
             ...response.data,
           });
+          setFileList(response.data.files);
+          //   setFileList({
+          //     ...response.data.files,
+          //   })
           console.log(response.data);
           setIsLoading(false);
           console.log("postInfo: " + JSON.stringify(postInfo));
+          console.log("fileList: " + JSON.stringify(fileList));
         })
         .catch((error) => {
           console.error(error);
@@ -85,67 +148,8 @@ const PostUpdateModal = (props) => {
     }
   }, [accessToken, props.postId]);
 
-  // --------- START : 파일 업로드 관련 ---------- //
-  //   const [previewOpen, setPreviewOpen] = useState(false);
-  //   const [previewImage, setPreviewImage] = useState("");
-  //   const [previewTitle, setPreviewTitle] = useState("");
-  //   const [fileList, setFileList] = useState([]);
-
-  //   const handleCancel = () => setPreviewOpen(false);
-
-  //   const handlePreview = async (file) => {
-  //     if (!file.url && !file.preview) {
-  //       file.preview = await getBase64(file.originFileObj);
-  //     }
-  //     setPreviewImage(file.url || file.preview);
-  //     setPreviewOpen(true);
-  //     setPreviewTitle(
-  //       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-  //     );
-  //   };
-
-  //   const onUploadChange = async ({ fileList: newFileList }) => {
-  //     const promises = newFileList.map(async (file) => {
-  //       if (!file.url && !file.preview) {
-  //         file.preview = await getBase64(file.originFileObj);
-  //         file.status = "done";
-  //       }
-  //       return file;
-  //     });
-
-  //     const updatedFileList = await Promise.all(promises);
-  //     setFileList(updatedFileList);
-  //   };
-
-  //   const uploadButton = (
-  //     <div>
-  //       <PlusOutlined />
-  //       <div
-  //         style={{
-  //           marginTop: 8,
-  //         }}
-  //       >
-  //         Upload
-  //       </div>
-  //     </div>
-  //   );
-  // --------- END : 파일 업로드 관련 ---------- //
-
-  // --------- START : 캐러셀 prev, next 관련 ---------- //
-  const [carouselRef, setCarouselRef] = useState(null);
-
-  const next = () => {
-    carouselRef.next();
-  };
-
-  const previous = () => {
-    carouselRef.prev();
-  };
-  // --------- END : 캐러셀 prev, next 관련 ---------- //
-
   const onFinish = async (values) => {
     setLoading(true); // 요청 시작 시, 로딩 중 상태로 설정
-    // values.preventDefault(); // 페이지 리로딩 방지
 
     try {
       const { categoryId, post_content } = values;
@@ -154,19 +158,19 @@ const PostUpdateModal = (props) => {
       formData.append("categoryId", categoryId);
       formData.append("post_content", post_content);
 
-      //   for (let i = 0; i < fileList.length; i++) {
-      //     formData.append("files", fileList[i].originFileObj);
-      //     console.log(`파일 [${i}]: ` + JSON.stringify(fileList[i]));
-      //   }
+      for (let i = 0; i < fileList.length; i++) {
+        formData.append("files", fileList[i].originFileObj);
+        // console.log(`파일 [${i}]: ` + JSON.stringify(fileList[i]));
+      }
 
-      //   console.log(formData.getAll("files"));
+      console.log(formData.getAll("files"));
 
       const response = await axios({
         method: "put",
         url: `/api/posts/${props.postId}`,
         data: formData,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${accessToken}`,
         },
         timeout: 5000,
@@ -250,7 +254,7 @@ const PostUpdateModal = (props) => {
             <Divider className="divider" />
             <Row>
               <Col span={13} style={{ minHeight: "480px" }}>
-                {/* {fileList.length === 0 ? (
+                {fileList.length === 0 ? (
                   <Dragger
                     {...props}
                     // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -288,54 +292,54 @@ const PostUpdateModal = (props) => {
                       3. 저작권이 있는 사진은 업로드를 피해주세요.
                     </p>
                   </Dragger>
-                ) : ( */}
-                <div className="carousel-wrapper">
-                  <Button
-                    className="carousel-button carousel-prev-button"
-                    type="circle"
-                    onClick={previous}
-                    icon={
-                      <LeftOutlined
-                        style={{ color: "white", fontSize: "32px" }}
-                      />
-                    }
-                  />
-                  <Carousel
-                    ref={setCarouselRef}
-                    slidesToShow={1} // Use slidesToShow instead of slidesPerView
-                    dots // Enable pagination dots
-                    infinite={true}
-                    slidesToScroll={1}
-                  >
-                    {postInfo.files.map((file, index) => (
-                      <div key={index}>
-                        <img
-                          width={272}
-                          alt="slide"
-                          src={file.file_name}
-                          crossOrigin="anonymous"
-                          style={{
-                            width: "100%",
-                            minHeight: "504px",
-                            maxHeight: "504px",
-                            borderRadius: "12px",
-                          }}
+                ) : (
+                  <div className="carousel-wrapper">
+                    <Button
+                      className="carousel-button carousel-prev-button"
+                      type="circle"
+                      onClick={previous}
+                      icon={
+                        <LeftOutlined
+                          style={{ color: "white", fontSize: "32px" }}
                         />
-                      </div>
-                    ))}
-                  </Carousel>
-                  <Button
-                    className="carousel-button carousel-next-button"
-                    type="circle"
-                    onClick={next}
-                    icon={
-                      <RightOutlined
-                        style={{ color: "white", fontSize: "32px" }}
-                      />
-                    }
-                  />
-                </div>
-                {/* )} */}
+                      }
+                    />
+                    <Carousel
+                      ref={setCarouselRef}
+                      slidesToShow={1} // Use slidesToShow instead of slidesPerView
+                      dots // Enable pagination dots
+                      infinite={true}
+                      slidesToScroll={1}
+                    >
+                      {fileList.map((file, index) => (
+                        <div key={index}>
+                          <img
+                            width={272}
+                            alt="slide"
+                            src={file.file_name}
+                            crossOrigin="anonymous"
+                            style={{
+                              width: "100%",
+                              minHeight: "504px",
+                              maxHeight: "504px",
+                              borderRadius: "12px",
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </Carousel>
+                    <Button
+                      className="carousel-button carousel-next-button"
+                      type="circle"
+                      onClick={next}
+                      icon={
+                        <RightOutlined
+                          style={{ color: "white", fontSize: "32px" }}
+                        />
+                      }
+                    />
+                  </div>
+                )}
               </Col>
               <Col span={11}>
                 <Row style={{ marginLeft: "16px" }}>
@@ -416,7 +420,7 @@ const PostUpdateModal = (props) => {
                     </Form.Item>
                     <Divider />
                   </Col>
-                  {/* <Col span={24} className="content-files">
+                  <Col span={24} className="content-files">
                     <Title
                       level={5}
                       style={{
@@ -461,7 +465,7 @@ const PostUpdateModal = (props) => {
                         src={previewImage}
                       />
                     </Modal>
-                  </Col> */}
+                  </Col>
                 </Row>
               </Col>
             </Row>
