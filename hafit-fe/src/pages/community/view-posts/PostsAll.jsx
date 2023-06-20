@@ -1,6 +1,6 @@
 import { CommentOutlined } from "@ant-design/icons";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { theme, Avatar, List, Divider, Button, message, Skeleton } from "antd";
+import { theme, Avatar, List, Divider, Button, message } from "antd";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
@@ -23,8 +23,6 @@ import LikeButton from "../../../components/buttons/LikeBtn";
 // 수정 시작 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SwiperCore.use([Navigation, Pagination]);
 
-const fakeDataUrl =
-  "https://randomuser.me/api/?results=20&inc=name,gender,email,nat,picture&noinfo";
 const ContainerHeight = 1200;
 
 const PostsAll = () => {
