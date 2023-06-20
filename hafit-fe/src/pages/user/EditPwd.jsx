@@ -1,12 +1,4 @@
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Row,
-  Typography,
-  Modal,
-} from "antd";
+import { Button, Col, Form, Input, Row, Typography, Modal } from "antd";
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -58,25 +50,31 @@ const EditPwd = () => {
           .then((response) => {
             console.log("비밀번호 변경 요청");
             console.log(response.data); // 응답 결과 출력
-            if (response.data === true) {
-              Modal.success({
-                title: "비밀번호가 변경되었습니다. 다시 로그인해주세요",
-                onOk: () => {
-                  dispatch(DELETE_TOKEN());
-                  removeCookieToken();
-                  navigate("/login");
-                },
-              });
-            } else {
-              form.setFields([
-                {
-                  name: "oldPassword",
-                  errors: ["현재 사용 중인 비밀번호와 일치하지 않습니다"],
-                },
-              ]);
-            }
+            // if (response.data === true) {
+            Modal.success({
+              title: "비밀번호가 변경되었습니다. 다시 로그인해주세요",
+              onOk: () => {
+                dispatch(DELETE_TOKEN());
+                removeCookieToken();
+                navigate("/login");
+              },
+            });
+            // } else {
+            // form.setFields([
+            //   {
+            //     name: "oldPassword",
+            //     errors: ["현재 사용 중인 비밀번호와 일치하지 않습니다"],
+            //   },
+            // ]);
+            // }
           })
           .catch((error) => {
+            form.setFields([
+              {
+                name: "oldPassword",
+                errors: ["현재 사용 중인 비밀번호와 일치하지 않습니다"],
+              },
+            ]);
             console.error(error.response.data);
           })
           .finally(() => {

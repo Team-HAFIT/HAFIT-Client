@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { getCookieToken, removeCookieToken } from "../storage/Cookie";
 import { requestToken } from "../api/Users";
@@ -10,7 +10,7 @@ export function CheckToken(key) {
   const { authenticated, expireTime } = useSelector((state) => state.authToken);
   const refreshToken = getCookieToken();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthToken = async () => {
@@ -33,7 +33,7 @@ export function CheckToken(key) {
             dispatch(DELETE_TOKEN());
             removeCookieToken();
             setIsAuth("Failed");
-            navigate("/login");
+            // navigate("/login");
           }
         }
       }

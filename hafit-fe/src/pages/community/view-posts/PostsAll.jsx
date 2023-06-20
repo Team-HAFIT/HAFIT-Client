@@ -416,7 +416,7 @@ const PostsAll = () => {
                   }}
                 >
                   <div style={{ marginRight: "16px" }}>
-                    <LikeButton />
+                    <LikeButton postId={post.postId} likes={post.post_totalLikes} isLike={post.post_likedByUser} />
                   </div>
 
                   <Button

@@ -1,24 +1,66 @@
 import { useState } from "react";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Button } from "antd";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
-function LikeButton() {
-  const [likes, setLikes] = useState(10);
-  const [isLiked, setIsLiked] = useState(false);
+function LikeButton({ postId, likes, isLike }) {
+  const accessToken = useSelector((state) => state.authToken.accessToken);
 
-  const handleLikeClick = () => {
+  const [totalLikes, setTotalLikes] = useState(likes);
+
+  // const [likes, setLikes] = useState(10);
+  const [isLiked, setIsLiked] = useState(isLike);
+
+  const handleLike = () => {
     if (!isLiked) {
-      setLikes(likes + 1);
+      console.log("좋아요 postId: ", postId);
+      axios
+        .post(`/api/post-like/${postId}`, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          timeout: 5000,
+        })
+        .then((response) => {
+          setTotalLikes(totalLikes + 1);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
-      setLikes(likes - 1);
+      axios
+        .delete(`/api/post-like/${postId}`, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          timeout: 5000,
+        })
+        .then((response) => {
+          setTotalLikes(totalLikes - 1);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     setIsLiked(!isLiked);
   };
 
+  // const handleLikeClick = () => {
+  //   if (!isLiked) {
+  //     setLikes(likes + 1);
+  //   } else {
+  //     setLikes(likes - 1);
+  //   }
+  //   setIsLiked(!isLiked);
+  // };
+
   return (
     <Button
       shape="round"
-      onClick={handleLikeClick}
+      onClick={handleLike}
       style={{
         width: "100%",
         height: "100%",
@@ -35,7 +77,9 @@ function LikeButton() {
         )
       }
     >
-      <span style={{ fontSize: "16px", fontWeight: "500", color: "#999999" }}>{likes}</span>
+      <span style={{ fontSize: "16px", fontWeight: "500", color: "#999999" }}>
+        {totalLikes}
+      </span>
     </Button>
   );
 }
