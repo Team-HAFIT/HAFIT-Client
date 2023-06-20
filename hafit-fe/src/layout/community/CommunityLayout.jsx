@@ -7,6 +7,8 @@ import { IoMdNotifications } from "react-icons/io";
 import { IoCreateOutline } from "react-icons/io5";
 import { Layout, Menu, Avatar, List, Badge, Divider, Button } from "antd";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 import SwiperCore, { Navigation, Pagination } from "swiper";
 
@@ -29,6 +31,25 @@ const CommunityLayout = () => {
   const location = useLocation();
 
   const [modalVisible, setModalVisible] = useState(false); // 모달 표시 여부 상태값
+
+  const accessToken = useSelector((state) => state.authToken.accessToken);
+  const [userInfo, setUserInfo] = useState({});
+  useEffect(() => {
+    axios.get('/api/my', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      timeout: 5000,
+    })
+    .then((response) => {
+      console.log(response.data);
+      setUserInfo(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }, [accessToken]);
 
   useEffect(() => {
     const navbarScroll = () => {
@@ -95,24 +116,24 @@ const CommunityLayout = () => {
                       fontWeight: "600",
                     }}
                   >
-                    김해핏
+                    {userInfo.name}
                   </span>{" "}
                   <FiEdit3 />
                 </div>
-                <span style={{ margin: "0 16px" }}>example@hafit.com</span>
+                <span style={{ margin: "0 16px" }}>{userInfo.email}</span>
               </div>
             </div>
             <Divider style={{ color: "white", borderColor: "#9999996c" }} />
             <Menu.Item key="1">
-              <HomeOutlined />
+              <HomeOutlined style={{ marginRight: "8px" }} />
               HOME
             </Menu.Item>
             <Menu.Item key="2">
-              <GoSearch />
+              <GoSearch style={{ marginRight: "8px" }} />
               검색
             </Menu.Item>
             <Menu.Item key="3">
-              <UserOutlined />
+              <UserOutlined style={{ marginRight: "8px" }} />
               마이페이지
             </Menu.Item>
             <Divider style={{ color: "white", borderColor: "#9999996c" }} />
