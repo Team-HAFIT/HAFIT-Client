@@ -31,7 +31,7 @@ const SqautSetting = () => {
       .then((response) => {
         console.log(response.data); // 응답 결과 출력
 
-        const planId = response.data.planId; // 응답 데이터에서 planId 추출
+        const planId = response.data; // 응답 데이터에서 planId 추출
         navigate("/exec/squat", { state: { planId } }); // 이동 시, planId 값을 함께 전달
       })
       .catch((error) => {
