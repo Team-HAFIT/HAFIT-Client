@@ -125,7 +125,7 @@ const EditMyInfo = () => {
     console.log("통신사: " + typeof updatedUserInfo.carrier);
 
     axios
-      .put(`/api/my/${userEmail}`, updatedUserInfo, {
+      .put(`/api/my`, updatedUserInfo, {
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${accessToken}`,
@@ -154,7 +154,7 @@ const EditMyInfo = () => {
       title: "정말 탈퇴하시겠어요?",
       onOk: () => {
         axios
-          .delete(`/api/my/${userEmail}`, {
+          .delete(`/api/my`, {
             headers: {
               "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
               authorization: `Bearer ${accessToken}`,
