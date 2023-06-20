@@ -2,106 +2,39 @@ import React, { useEffect, useRef, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-backend-webgl";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import '../../../styles/pages/exercise/execPage.css';
+import "../../../styles/pages/exercise/execPage.css";
 
-let SquatExec = () => {
-  let accessToken = useSelector((state) => state.authToken.accessToken);
-
-  let detector;
-  let detectorConfig;
-  let poses;
-  let skeleton = true;
-  let confidence_threshold = 0.5;
-  let video, ctx, canvas;
-  let hurrycheckpoint;
-  let hurrycheck;
-
-  let squatStarted = false;
-  let squatFinished = false;
-  let kneeAngleThreshold = 130;
-  let orangehurryAngleThreshold = 30;
-  let redhurryAngleThreshold = 50;
+const Movenet = () => {
+  const detectorRef = useRef(null);
+  const detectorConfigRef = useRef(null);
+  const posesRef = useRef(null);
+  const skeleton = true;
+  const confidenceThreshold = 0.5; //정확도
+  let video, ctx, canvas; //세트 개수
+  let hurrycheckpoint; //허리 체크 포인트
+  let hurrycheck; //허리 값 변수
+  let squatStarted = false; //스쿼트 위 아래 여부
+  let squatFinished = false; //스쿼트 위 아래 여부
+  let kneeAngleThreshold = 140; //무릎 각도(스쿼트)
+  let orangeHurryAngleThreshold = 15; //허리 각도(굽혀경고)
+  let redHurryAngleThreshold = 25; //허리 각도(굽혀짐)
   let currentSet = 1; // 현재 세트
-  let repsPerSet = 10; // 목표 횟수
-  let totalSets = 3; // 목표 세트
-  let bad = 100; // 점수
-  let plan = 0; // 플랜 객체(planId)
-  let today = new Date(); // 날짜 생성을 위한 객체 생성
-  let startTime = today.getFullYear() + "-"; // 년도
-  if (today.getMonth() + 1 < 10) {
-    startTime += "0";
-  }
-  startTime += today.getMonth() + 1 + "-"; // 월
-  if (today.getDate() < 10) {
-    startTime += "0";
-  }
-  startTime += today.getDate() + " "; // 일
-  if (today.getHours() < 10) {
-    startTime += "0";
-  }
-  startTime += today.getHours() + ":"; // 시
-  if (today.getMinutes() < 10) {
-    startTime += "0";
-  }
-  startTime += today.getMinutes() + ":"; // 분
-  if (today.getSeconds() < 10) {
-    startTime += "0";
-  }
-  startTime += today.getSeconds(); // 초
+  let totalSets = 5; // 전체 세트
+  let repsPerSet = 10; // 세트 개수
 
-  let [reps, setReps] = useState();
-  let [ts, setTs] = useState();
-  let [rt, setRt] = useState();
-  let [we, setWe] = useState();
-  let [pl, setPl] = useState();
-  let [cs, setCs] = useState();
+  const [timer, setTimer] = useState(0); //타이머 변수
+  const timerRef = useRef(null); //타이머 나타내는변수
+  const [isPoseDetected, setIsPoseDetected] = useState(false); //포즈감지 여부 변수
+  const [isOrangeDetected, setIsOrangeDetected] = useState(false); //허리 주의 여부 변수
+  const [isRedDetected, setIsRedDetected] = useState(false); //허리 경고 여부 변수
+  const startTimeRef = useRef(null); //타이머 시작변수
+  const [squatCount, setSquatCount] = useState(0); //스쿼트 개수 변수
 
-  let planId = 1;   
-  useEffect(() => {
-    axios
-      .get(`/api/sets/${planId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        timeout: 10000,
-      })
-      .then((response) => {
-        let data = response.data;
-        console.log(data);
-        setReps(data.targetCount);
-        setTs(data.targetSet);
-        setRt(data.restTime);
-        setWe(data.weight);
-        setPl(data.plan);
-        setCs(data.realSet || null);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [accessToken, planId]);
+  const moduleRef = useRef(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
-  useEffect(() => {
-    if (cs != null) {
-      repeatSetting(reps, ts, rt, we, pl, cs);
-    } else {
-      startSetting(reps, ts, rt, we, pl);
-    }
-  }, [cs]);
-  let limitTime = 10000;
-
-  let videoRef = useRef(null);
-  let canvasRef = useRef(null);
-
-  let [timer, setTimer] = useState(0);
-  let timerRef = useRef(null);
-  let [isPoseDetected, setIsPoseDetected] = useState(false);
-  let startTimeRef = useRef(null);
-  let [squatCount, setSquatCount] = useState(0);
-
-  let edges = {
+  const edges = {
     "5,7": "m",
     "5,17": "m",
     "6,17": "m",
@@ -119,7 +52,7 @@ let SquatExec = () => {
     "11,20": "m",
   };
 
-  let hurry_check_edges = {
+  const hurryCheckEdges = {
     "5,7": "m",
     "5,17": "m",
     "6,17": "m",
@@ -134,7 +67,7 @@ let SquatExec = () => {
     "11,20": "m",
   };
 
-  let hurry_error_edges = {
+  const hurryErrorEdges = {
     "17,18": "m",
     "18,19": "m",
     "19,20": "m",
@@ -153,12 +86,11 @@ let SquatExec = () => {
     }
   }, [isPoseDetected]);
 
-  // 타이머 시작
-  let startTimer = () => {
+  const startTimer = () => {
     if (!timerRef.current) {
       startTimeRef.current = Date.now() - timer * 1000; // Subtract elapsed time from current time
       timerRef.current = setInterval(() => {
-        let elapsedSeconds = Math.floor(
+        const elapsedSeconds = Math.floor(
           (Date.now() - startTimeRef.current) / 1000
         );
         setTimer(elapsedSeconds);
@@ -166,98 +98,95 @@ let SquatExec = () => {
     }
   };
 
-  // 타이머 정지
-  let stopTimer = () => {
+  const stopTimer = () => {
     clearInterval(timerRef.current);
     timerRef.current = null;
   };
 
-  let init = async () => {
-    tf.setBackend("webgpu");
-    detectorConfig = {
+  const init = async () => {
+    tf.setBackend("webgl");
+    detectorConfigRef.current = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_THUNDER,
       enableSmoothing: true,
-      enableSegmentation: false,
+      enableSegmentation: true,
     };
-    detector = await poseDetection.createDetector(
+    detectorRef.current = await poseDetection.createDetector(
       poseDetection.SupportedModels.MoveNet,
-      detectorConfig
+      detectorConfigRef.current
     );
     setup();
     draw();
   };
 
-  let setup = async () => {
+  const setup = async () => {
     canvas = canvasRef.current;
     ctx = canvas.getContext("2d");
     video = videoRef.current;
 
-    let camera = await navigator.mediaDevices.getUserMedia({
+    const camera = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false,
     });
     video.srcObject = camera;
 
-    // Add an event listener for the 'loadeddata' event
     video.addEventListener("loadeddata", () => {
       video.play();
     });
 
-    let onLoadedMetadata = () => {
+    const onLoadedMetadata = () => {
       // Start detecting poses once the video dimensions are set.
       getPoses();
     };
     video.addEventListener("loadedmetadata", onLoadedMetadata);
   };
 
-  let getPoses = async () => {
-    poses = await detector.estimatePoses(video);
-    setTimeout(getPoses, 0);
-
-    if (poses && poses.length > 0) {
+  const getPoses = async () => {
+    posesRef.current = await detectorRef.current.estimatePoses(video);
+    setTimeout(getPoses, 5);
+    if (posesRef.current && posesRef.current.length > 0) {
       setIsPoseDetected(true);
-      let leftShoulder = poses[0].keypoints[5];
-      let rightShoulder = poses[0].keypoints[6];
-      let leftHip = poses[0].keypoints[11];
-      let rightHip = poses[0].keypoints[12];
-      let midShoulderX = (leftShoulder.x + rightShoulder.x) / 2;
-      let midShoulderY = (leftShoulder.y + rightShoulder.y) / 2;
-      let midHipX = (leftHip.x + rightHip.x) / 2;
-      let midHipY = (leftHip.y + rightHip.y) / 2;
-      let middleShoulder = {
+      const leftShoulder = posesRef.current[0].keypoints[5];
+      const rightShoulder = posesRef.current[0].keypoints[6];
+      const leftHip = posesRef.current[0].keypoints[11];
+      const rightHip = posesRef.current[0].keypoints[12];
+      const midShoulderX = (leftShoulder.x + rightShoulder.x) / 2;
+      const midShoulderY = (leftShoulder.y + rightShoulder.y) / 2;
+      const midHipX = (leftHip.x + rightHip.x) / 2;
+      const midHipY = (leftHip.y + rightHip.y) / 2;
+      const middleShoulder = {
         x: midShoulderX,
         y: midShoulderY,
         score: Math.min(leftShoulder.score, rightShoulder.score),
       };
-      poses[0].keypoints[17] = {
+      posesRef.current[0].keypoints[17] = {
         x: midShoulderX,
         y: midShoulderY,
         score: Math.min(leftShoulder.score, rightShoulder.score),
       };
-      let midhip = {
+      const midhip = {
         x: midHipX,
         y: midHipY,
         score: Math.min(leftHip.score, rightHip.score),
       };
-      poses[0].keypoints[20] = {
+      posesRef.current[0].keypoints[20] = {
         x: midHipX,
         y: midHipY,
         score: Math.min(leftHip.score, rightHip.score),
       };
-      let x1 = middleShoulder.x;
-      let y1 = middleShoulder.y;
-      let x2 = poses[0].keypoints[20].x;
-      let y2 = poses[0].keypoints[20].y;
-      let x1_3 = (2 * x1 + x2) / 3;
-      let y1_3 = (2 * y1 + y2) / 3;
-      let x2_3 = (x1 + 2 * x2) / 3;
-      let y2_3 = (y1 + 2 * y2) / 3;
-      poses[0].keypoints[18] = {
+      const x1 = middleShoulder.x;
+      const y1 = middleShoulder.y;
+      const x2 = posesRef.current[0].keypoints[20].x;
+      const y2 = posesRef.current[0].keypoints[20].y;
+      const x1_3 = (2 * x1 + x2) / 3;
+      const y1_3 = (2 * y1 + y2) / 3;
+      const x2_3 = (x1 + 2 * x2) / 3;
+      const y2_3 = (y1 + 2 * y2) / 3;
+      posesRef.current[0].keypoints[18] = {
         x: x1_3,
         y: y1_3,
         score: Math.min(leftShoulder.score, rightShoulder.score),
       };
-      poses[0].keypoints[19] = {
+      posesRef.current[0].keypoints[19] = {
         x: x2_3,
         y: y2_3,
         score: Math.min(leftHip.score, rightHip.score),
@@ -273,28 +202,7 @@ let SquatExec = () => {
     }
   };
 
-  // 운동 계획에서 넘어왔을 때
-  function startSetting(reps, ts, restT, we, pl) {
-    repsPerSet = reps;
-    totalSets = ts;
-    rt = restT;
-    we = we;
-    plan = pl;
-    limitTime = repsPerSet * we * 100;
-  }
-
-  // 휴식 화면에서 넘어왔을 때
-  function repeatSetting(reps, ts, restT, we, pl, cs) {
-    repsPerSet = reps;
-    totalSets = ts;
-    rt = restT;
-    we = we;
-    plan = pl;
-    currentSet = cs;
-    limitTime = repsPerSet * we * 100;
-  }
-
-  let draw = () => {
+  const draw = () => {
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
@@ -316,7 +224,7 @@ let SquatExec = () => {
     ctx.font = "30px Arial";
     ctx.save();
 
-    if (poses && poses.length > 0) {
+    if (posesRef.current && posesRef.current.length > 0) {
       countSquats();
     } else {
     }
@@ -324,51 +232,36 @@ let SquatExec = () => {
     window.requestAnimationFrame(draw);
   };
 
-  let drawShapes = (ctx) => {
-    let centerX = 450; // 중심 X 좌표
-    let centerY = 40; // 중심 Y 좌표
-    let radius = 25; // 원의 반지름
-    let gap = 20; // 원과 원 사이의 간격
+  const formatTime = (time) => {
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = Math.floor(time % 60);
 
-    let originalStrokeStyle = ctx.strokeStyle;
+    const formattedHours = String(hours).padStart(2, "0");
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    const formattedSeconds = String(seconds).padStart(2, "0");
 
-    for (let i = 0; i < totalSets; i++) {
-      let x = centerX + (radius * 2 + gap) * i;
-      let y = centerY;
-
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, 2 * Math.PI);
-
-      if (i < currentSet) {
-        ctx.fillStyle = "green"; // 완료된 세트에 초록색으로 채우기
-      } else {
-        ctx.fillStyle = "white";
-      }
-      ctx.strokeStyle = "yellow"; // Set stroke color to yellow
-      ctx.fill();
-      ctx.stroke();
-    }
-    ctx.strokeStyle = originalStrokeStyle;
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
 
-  let drawKeypoints = () => {
-    var count = 0;
-    if (poses && poses.length > 0) {
-      let canvasWidth = canvas.width;
-      let canvasHeight = canvas.height;
-      let originalWidth = video.videoWidth;
-      let originalHeight = video.videoHeight;
-      let widthRatio = canvasWidth / originalWidth;
-      let heightRatio = canvasHeight / originalHeight;
+  const drawKeypoints = () => {
+    let count = 0;
+    if (posesRef.current && posesRef.current.length > 0) {
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const originalWidth = video.videoWidth;
+      const originalHeight = video.videoHeight;
+      const widthRatio = canvasWidth / originalWidth;
+      const heightRatio = canvasHeight / originalHeight;
       ctx.save();
 
       ctx.font = "10px Arial";
 
-      for (let kp of poses[0].keypoints) {
-        let { x, y, score } = kp;
-        let adjustedX = x * widthRatio;
-        let adjustedY = y * heightRatio;
-        if (score > confidence_threshold) {
+      for (let i = 0; i < posesRef.current[0].keypoints.length; i++) {
+        const { x, y, score } = posesRef.current[0].keypoints[i];
+        const adjustedX = x * widthRatio;
+        const adjustedY = y * heightRatio;
+        if (score > confidenceThreshold) {
           count = count + 1;
           ctx.fillStyle = "white";
           ctx.strokeStyle = "black";
@@ -384,33 +277,45 @@ let SquatExec = () => {
     }
   };
 
-  let drawSkeleton = () => {
-    if (poses && poses.length > 0) {
-      let canvasWidth = canvas.width;
-      let canvasHeight = canvas.height;
-      let originalWidth = video.videoWidth;
-      let originalHeight = video.videoHeight;
-      let widthRatio = canvasWidth / originalWidth;
-      let heightRatio = canvasHeight / originalHeight;
+  const drawSkeleton = () => {
+    setIsOrangeDetected(false);
+    setIsRedDetected(false);
+
+    if (posesRef.current && posesRef.current.length > 0) {
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const originalWidth = video.videoWidth;
+      const originalHeight = video.videoHeight;
+      const widthRatio = canvasWidth / originalWidth;
+      const heightRatio = canvasHeight / originalHeight;
+
+      const hurryKeypointsConfident = posesRef.current[0].keypoints
+        .slice(16, 20)
+        .every((kp) => kp.score > confidenceThreshold);
 
       if (
-        hurrycheck > orangehurryAngleThreshold &&
-        hurrycheck <= redhurryAngleThreshold
+        hurryKeypointsConfident &&
+        hurrycheck > orangeHurryAngleThreshold &&
+        hurrycheck <= redHurryAngleThreshold
       ) {
-        for (let [key, value] of Object.entries(hurry_check_edges)) {
-          let p = key.split(",");
-          let p1 = parseInt(p[0]);
-          let p2 = parseInt(p[1]);
-          let kp1 = poses[0].keypoints[p1];
-          let kp2 = poses[0].keypoints[p2];
-          let x1 = kp1.x * widthRatio;
-          let y1 = kp1.y * heightRatio;
-          let c1 = kp1.score;
-          let x2 = kp2.x * widthRatio;
-          let y2 = kp2.y * heightRatio;
-          let c2 = kp2.score;
-          if (c1 > confidence_threshold && c2 > confidence_threshold) {
-            ctx.strokeStyle = "rgb(0, 255, 0)"; // 초록색
+        setIsOrangeDetected(true);
+        setIsRedDetected(false);
+
+        for (const [key, value] of Object.entries(hurryCheckEdges)) {
+          const p = key.split(",");
+          const p1 = parseInt(p[0]);
+          const p2 = parseInt(p[1]);
+          const kp1 = posesRef.current[0].keypoints[p1];
+          const kp2 = posesRef.current[0].keypoints[p2];
+          const x1 = kp1.x * widthRatio;
+          const y1 = kp1.y * heightRatio;
+          const c1 = kp1.score;
+          const x2 = kp2.x * widthRatio;
+          const y2 = kp2.y * heightRatio;
+          const c2 = kp2.score;
+
+          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+            ctx.strokeStyle = "rgb(0, 255, 0)"; // Green color
             ctx.lineWidth = 6;
             ctx.beginPath();
             ctx.moveTo(x1, y1);
@@ -418,43 +323,22 @@ let SquatExec = () => {
             ctx.stroke();
           }
         }
-        for (let [key, value] of Object.entries(hurry_error_edges)) {
-          let p = key.split(",");
-          let p1 = parseInt(p[0]);
-          let p2 = parseInt(p[1]);
-          let kp1 = poses[0].keypoints[p1];
-          let kp2 = poses[0].keypoints[p2];
-          let x1 = kp1.x * widthRatio;
-          let y1 = kp1.y * heightRatio;
-          let c1 = kp1.score;
-          let x2 = kp2.x * widthRatio;
-          let y2 = kp2.y * heightRatio;
-          let c2 = kp2.score;
-          if (c1 > confidence_threshold && c2 > confidence_threshold) {
-            ctx.strokeStyle = "rgb(255, 165, 0)"; // 주황색
-            ctx.lineWidth = 6;
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-            bad -= 5;
-          }
-        }
-      } else if (hurrycheck > redhurryAngleThreshold) {
-        for (let [key, value] of Object.entries(hurry_check_edges)) {
-          let p = key.split(",");
-          let p1 = parseInt(p[0]);
-          let p2 = parseInt(p[1]);
-          let kp1 = poses[0].keypoints[p1];
-          let kp2 = poses[0].keypoints[p2];
-          let x1 = kp1.x * widthRatio;
-          let y1 = kp1.y * heightRatio;
-          let c1 = kp1.score;
-          let x2 = kp2.x * widthRatio;
-          let y2 = kp2.y * heightRatio;
-          let c2 = kp2.score;
-          if (c1 > confidence_threshold && c2 > confidence_threshold) {
-            ctx.strokeStyle = "rgb(0, 255, 0)"; // 초록색
+
+        for (const [key, value] of Object.entries(hurryErrorEdges)) {
+          const p = key.split(",");
+          const p1 = parseInt(p[0]);
+          const p2 = parseInt(p[1]);
+          const kp1 = posesRef.current[0].keypoints[p1];
+          const kp2 = posesRef.current[0].keypoints[p2];
+          const x1 = kp1.x * widthRatio;
+          const y1 = kp1.y * heightRatio;
+          const c1 = kp1.score;
+          const x2 = kp2.x * widthRatio;
+          const y2 = kp2.y * heightRatio;
+          const c2 = kp2.score;
+
+          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+            ctx.strokeStyle = "rgb(255, 165, 0)"; // Orange color
             ctx.lineWidth = 6;
             ctx.beginPath();
             ctx.moveTo(x1, y1);
@@ -462,43 +346,77 @@ let SquatExec = () => {
             ctx.stroke();
           }
         }
-        for (let [key, value] of Object.entries(hurry_error_edges)) {
-          let p = key.split(",");
-          let p1 = parseInt(p[0]);
-          let p2 = parseInt(p[1]);
-          let kp1 = poses[0].keypoints[p1];
-          let kp2 = poses[0].keypoints[p2];
-          let x1 = kp1.x * widthRatio;
-          let y1 = kp1.y * heightRatio;
-          let c1 = kp1.score;
-          let x2 = kp2.x * widthRatio;
-          let y2 = kp2.y * heightRatio;
-          let c2 = kp2.score;
-          if (c1 > confidence_threshold && c2 > confidence_threshold) {
-            ctx.strokeStyle = "rgb(255, 0, 0)"; // 빨간색
+      } else if (
+        hurryKeypointsConfident &&
+        hurrycheck > redHurryAngleThreshold
+      ) {
+        setIsOrangeDetected(false);
+        setIsRedDetected(true);
+
+        for (const [key, value] of Object.entries(hurryCheckEdges)) {
+          const p = key.split(",");
+          const p1 = parseInt(p[0]);
+          const p2 = parseInt(p[1]);
+          const kp1 = posesRef.current[0].keypoints[p1];
+          const kp2 = posesRef.current[0].keypoints[p2];
+          const x1 = kp1.x * widthRatio;
+          const y1 = kp1.y * heightRatio;
+          const c1 = kp1.score;
+          const x2 = kp2.x * widthRatio;
+          const y2 = kp2.y * heightRatio;
+          const c2 = kp2.score;
+
+          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+            ctx.strokeStyle = "rgb(0, 255, 0)"; // Green color
             ctx.lineWidth = 6;
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
             ctx.stroke();
-            bad -= 5;
+          }
+        }
+
+        for (const [key, value] of Object.entries(hurryErrorEdges)) {
+          const p = key.split(",");
+          const p1 = parseInt(p[0]);
+          const p2 = parseInt(p[1]);
+          const kp1 = posesRef.current[0].keypoints[p1];
+          const kp2 = posesRef.current[0].keypoints[p2];
+          const x1 = kp1.x * widthRatio;
+          const y1 = kp1.y * heightRatio;
+          const c1 = kp1.score;
+          const x2 = kp2.x * widthRatio;
+          const y2 = kp2.y * heightRatio;
+          const c2 = kp2.score;
+
+          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+            ctx.strokeStyle = "rgb(255, 0, 0)"; // Red color
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
           }
         }
       } else {
-        for (let [key, value] of Object.entries(edges)) {
-          let p = key.split(",");
-          let p1 = parseInt(p[0]);
-          let p2 = parseInt(p[1]);
-          let kp1 = poses[0].keypoints[p1];
-          let kp2 = poses[0].keypoints[p2];
-          let x1 = kp1.x * widthRatio;
-          let y1 = kp1.y * heightRatio;
-          let c1 = kp1.score;
-          let x2 = kp2.x * widthRatio;
-          let y2 = kp2.y * heightRatio;
-          let c2 = kp2.score;
-          if (c1 > confidence_threshold && c2 > confidence_threshold) {
-            ctx.strokeStyle = "rgb(0, 255, 0)"; // 초록색
+        for (const [key, value] of Object.entries(edges)) {
+          setIsOrangeDetected(false);
+          setIsRedDetected(false);
+
+          const p = key.split(",");
+          const p1 = parseInt(p[0]);
+          const p2 = parseInt(p[1]);
+          const kp1 = posesRef.current[0].keypoints[p1];
+          const kp2 = posesRef.current[0].keypoints[p2];
+          const x1 = kp1.x * widthRatio;
+          const y1 = kp1.y * heightRatio;
+          const c1 = kp1.score;
+          const x2 = kp2.x * widthRatio;
+          const y2 = kp2.y * heightRatio;
+          const c2 = kp2.score;
+
+          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+            ctx.strokeStyle = "rgb(0, 255, 0)"; // Green color
             ctx.lineWidth = 6;
             ctx.beginPath();
             ctx.moveTo(x1, y1);
@@ -507,23 +425,25 @@ let SquatExec = () => {
           }
         }
       }
+    } else {
+      setIsOrangeDetected(false);
+      setIsRedDetected(false);
     }
   };
 
-  // 스쿼트 카운트 함수
-  let countSquats = () => {
-    let kneeKeypointsConfident = poses[0].keypoints
+  const countSquats = () => {
+    const kneeKeypointsConfident = posesRef.current[0].keypoints
       .slice(10, 16)
-      .every((kp) => kp.score > confidence_threshold);
+      .every((kp) => kp.score > confidenceThreshold);
     if (kneeKeypointsConfident) {
-      let leftHip = poses[0].keypoints[11];
-      let rightHip = poses[0].keypoints[12];
-      let leftKnee = poses[0].keypoints[13];
-      let rightKnee = poses[0].keypoints[14];
-      let leftAnkle = poses[0].keypoints[15];
-      let rightAnkle = poses[0].keypoints[16];
-      let leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
-      let rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
+      const leftHip = posesRef.current[0].keypoints[11];
+      const rightHip = posesRef.current[0].keypoints[12];
+      const leftKnee = posesRef.current[0].keypoints[13];
+      const rightKnee = posesRef.current[0].keypoints[14];
+      const leftAnkle = posesRef.current[0].keypoints[15];
+      const rightAnkle = posesRef.current[0].keypoints[16];
+      const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
+      const rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
       if (
         !squatStarted &&
         leftKneeAngle <= kneeAngleThreshold &&
@@ -532,8 +452,6 @@ let SquatExec = () => {
         squatStarted = true;
         squatFinished = false;
       }
-
-      // 스쿼트 시작 및 카운트
       if (
         squatStarted &&
         leftKneeAngle > kneeAngleThreshold &&
@@ -543,50 +461,14 @@ let SquatExec = () => {
         squatStarted = false;
         squatFinished = true;
       }
-
-      // 스쿼트 할때마다 몇회 완료 출력
       if (squatCount > 0 && squatFinished) {
         console.log(`스쿼트 ${squatCount}회 완료!`);
         squatFinished = false;
       }
-      // 스쿼트 종료
-      if (squatCount === repsPerSet) {
-        // 사용할 데이터를 객체에 담기
-        let data = {
-          realCount: squatCount,
-          realSet: currentSet,
-          realTime: timer,
-          weight: we, // 이상한 곳
-          score: bad,
-          plan: plan,
-          startTime: startTime,
-          limitTime: limitTime,
-        };
-
-        // axios.post() 요청 보내기
-        axios
-          .post(
-            "/api/sets",
-            { ExerciseSetDTO: data },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          )
-          .then((response) => {
-            console.log(response.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
     }
   };
 
-  // 각도 계산
-  let calculateAngle = (p1, p2, p3) => {
+  const calculateAngle = (p1, p2, p3) => {
     let dx1 = p1.x - p2.x;
     let dy1 = p1.y - p2.y;
     let dx2 = p3.x - p2.x;
@@ -600,7 +482,14 @@ let SquatExec = () => {
 
   return (
     <div id="container">
-      <div id="state">
+      <div id="state" style={{ width: 1152, height: 864 }}>
+        <div id="count">
+          <span id="A">개수</span>
+          <br />
+          <span id="B">{squatCount}</span>
+          <br />
+          <span id="C">/ {repsPerSet}</span>
+        </div>
         <div id="shapeContainer">
           {Array.from({ length: totalSets }, (_, index) => (
             <div
@@ -609,28 +498,59 @@ let SquatExec = () => {
             ></div>
           ))}
         </div>
-        <div>타이머: {timer}초</div>
-        <div>스쿼트 카운트: {squatCount}</div>
-        <div>Pose 감지 상태: {isPoseDetected ? "감지됨" : "감지 안됨"}</div>
+        <div id="timer">
+          <span id="D">운동 시간 </span>
+          <br />
+          <span id="E">{formatTime(timer)}</span>
+        </div>
+        <div id="checkpose">
+          <div
+            id="yes1"
+            style={{ display: isPoseDetected ? "block" : "none" }}
+          ></div>
+          <div id="no1" style={{ display: isPoseDetected ? "none" : "block" }}>
+            포즈감지가 불안정합니다.
+          </div>
+          <div
+            id="yes2"
+            style={{ display: isOrangeDetected ? "none" : "block" }}
+          ></div>
+          <div
+            id="no2"
+            style={{ display: isOrangeDetected ? "block" : "none" }}
+          >
+            허리가 굽혀집니다 주의해주세요
+          </div>
+          <div
+            id="yes3"
+            style={{ display: isRedDetected ? "none" : "block" }}
+          ></div>
+          <div id="no3" style={{ display: isRedDetected ? "block" : "none" }}>
+            허리가 너무굽혀졌습니다.
+          </div>
+        </div>
+        <div id="close">
+          <button id="closebtn">종료</button>
+        </div>
       </div>
-      <div id="module">
+      <div id="module" ref={moduleRef}>
         <video
           id="webcam"
           ref={videoRef}
-          width="900"
-          height="700"
+          width="1152"
+          height="864"
           autoPlay
           muted
         ></video>
         <canvas
           id="movenet_Canvas"
           ref={canvasRef}
-          width="900"
-          height="700"
+          width="1152"
+          height="864"
         ></canvas>
       </div>
     </div>
   );
 };
 
-export default SquatExec;
+export default Movenet;

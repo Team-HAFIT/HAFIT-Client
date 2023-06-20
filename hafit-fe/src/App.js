@@ -58,10 +58,11 @@ function App() {
         <Routes>
           {/* 공용 컴포넌트 :: 회원, 비회원 모두 접근 가능 */}
           <Route element={<MainLayout />}>
-            <Route path="/prepare" element={<PreparingPage />} /> {/* 준비 중인 페이지 */}
+            <Route path="/prepare" element={<PreparingPage />} />{" "}
+            {/* 준비 중인 페이지 */}
             <Route path="/notice" element={<NoticePage />} /> {/* 공지사항 */}
-            <Route path="/calendar" element={<CalendarPage />} /> 
-            <Route path="/stats" element={<StatsPage />} /> 
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/stats" element={<StatsPage />} />
           </Route>
 
           {/* PublicRoute: 토큰이 없는 사용자만 접근 가능 (로그인 X) */}
@@ -95,8 +96,8 @@ function App() {
 
               {/* 운동 */}
               <Route path="/squat/setting" element={<SquatSetting />} />
-              <Route path="/exec/squat" element={<SquatExec />} />
-              
+              {/* <Route path="/exec/squat" element={<SquatExec />} /> */}
+
               <Route path="/exec/result" element={<SquatResult />} />
               <Route path="/exec/rest" element={<RestTimerPage />} />
             </Route>
@@ -104,6 +105,9 @@ function App() {
 
           {/* 공통 Header를 포함하지 않는 컴포넌트 :: 로그인 사용자만 접근 가능 */}
           <Route element={<PrivateRoute />}>
+            {/* 운동 */}
+            <Route path="/exec/squat" element={<SquatExec />} />
+
             {/* 커뮤니티 */}
             {/* <Route path="/community/main" element={<ViewPostsAll />} /> */}
             <Route path="/community/*" element={<CommunityRoutes />} />
