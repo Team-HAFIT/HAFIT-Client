@@ -1,6 +1,16 @@
 import { CommentOutlined } from "@ant-design/icons";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { theme, Avatar, List, Divider, Button, message, Empty } from "antd";
+import {
+  theme,
+  Avatar,
+  List,
+  Divider,
+  Button,
+  message,
+  Empty,
+  Menu,
+  Dropdown,
+} from "antd";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
@@ -18,15 +28,18 @@ import "swiper/css/pagination";
 
 import "../../../styles/pages/community/viewPostsAll.css";
 
+import PostUpdateModal from "../modal/PostUpdateModal";
 import LikeButton from "../../../components/buttons/LikeBtn";
 
-// 수정 시작 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SwiperCore.use([Navigation, Pagination]);
 
 const ContainerHeight = 1200;
 
 const PostsAll = () => {
   const accessToken = useSelector((state) => state.authToken.accessToken);
+
+  const [modalVisible, setModalVisible] = useState(false); // 모달 표시 여부 상태값
+  const [selectedPostId, setSelectedPostId] = useState(null); // 선택한 게시글 id
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([
@@ -50,6 +63,23 @@ const PostsAll = () => {
   ]);
   const [lastPostId, setLastPostId] = useState(999999);
   const size = 15; // 한 번에 불러올 게시글 개수
+
+  const menu = (
+    <Menu>
+      <Menu.Item
+        key="post-update"
+        onClick={() => {
+          setModalVisible(true);
+        }}
+      >
+        수정
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="post-delete" style={{ color: "red" }}>
+        삭제
+      </Menu.Item>
+    </Menu>
+  );
 
   // --------- START : 게시글 정보 관련 ---------- //
   const getPosts = useCallback(() => {
@@ -98,7 +128,8 @@ const PostsAll = () => {
                   "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
               },
               {
-                file_name: "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
+                file_name:
+                  "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
               },
               // {
               //   file_name: "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
@@ -306,13 +337,32 @@ const PostsAll = () => {
                         </span>
                       </div>
                     </div>
-                    <HiOutlineDotsHorizontal
-                      style={{
-                        fontSize: "28px",
-                        color: "#999999",
-                        alignSelf: "self-start",
-                      }}
-                    />
+                    <Menu>
+                      <Menu.Item>
+                        <Dropdown
+                          overlay={menu}
+                          trigger={["click"]}
+                          onVisibleChange={(visible) => {
+                            if (visible) {
+                              setSelectedPostId(post.postId); // 선택한 게시글 id 업데이트
+                            }
+                          }}
+                        >
+                          <HiOutlineDotsHorizontal
+                            style={{
+                              fontSize: "28px",
+                              color: "#999999",
+                              alignSelf: "self-start",
+                            }}
+                          />
+                        </Dropdown>
+                        <PostUpdateModal
+                          visible={modalVisible}
+                          setModalVisible={setModalVisible}
+                          postId={selectedPostId}
+                        />
+                      </Menu.Item>
+                    </Menu>
                   </List.Item>
                 </div>
                 <Divider style={{ margin: "0 0 16px 0" }} />
