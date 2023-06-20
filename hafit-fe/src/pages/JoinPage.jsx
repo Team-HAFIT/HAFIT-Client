@@ -46,7 +46,7 @@ const JoinPage = () => {
   // 이메일 중복체크
   const checkEmail = (email) => {
     return axios
-      .get(`/api/my/email/${email}`, {
+      .get(`/api/auth/email/${email}`, {
         timeout: 5000,
       })
       .then((response) => {

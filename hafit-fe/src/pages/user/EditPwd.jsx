@@ -48,7 +48,7 @@ const EditPwd = () => {
 
       onOk: () => {
         axios
-          .put(`/api/my/${userEmail}/password`, values, {
+          .put(`/api/my/password-change`, values, {
             headers: {
               "Content-Type": "application/json",
               authorization: `Bearer ${accessToken}`,
