@@ -8,3 +8,12 @@ body {
   margin-left: 80px;
   margin-right: 80px;
 }
+
+.card-exec {
+  width: 400;
+  background-color: #f9f9f9;
+}
+
+.ant-card .ant-card-body {
+  padding: 0 !important;
+}
