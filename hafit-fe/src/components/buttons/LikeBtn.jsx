@@ -16,17 +16,18 @@ function LikeButton({ postId, likes, isLike }) {
     if (!isLiked) {
       console.log("좋아요 postId: ", postId);
       axios
-        .post(`/api/post-like/${postId}`, {
+        .post(`/api/post-like/${postId}`, null, {
           headers: {
             authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
           },
           timeout: 5000,
         })
         .then((response) => {
+          console.log(response);
           setTotalLikes(totalLikes + 1);
         })
         .catch((error) => {
+          console.log(`요청url: /api/post-like/${postId}`);
           console.log(error);
         });
     } else {
@@ -39,6 +40,7 @@ function LikeButton({ postId, likes, isLike }) {
           timeout: 5000,
         })
         .then((response) => {
+          console.log(response);
           setTotalLikes(totalLikes - 1);
         })
         .catch((error) => {
