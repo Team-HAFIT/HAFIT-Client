@@ -63,6 +63,7 @@ const PhoneNumberInput = (props) => {
       onChange={handlePhoneChange}
       maxLength={13}
       placeholder="휴대폰 번호를 입력해주세요"
+      style={{ height: "48px", fontSize: "16px" }}
     />
   );
 };

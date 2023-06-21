@@ -215,6 +215,7 @@ const EditMyInfo = () => {
                   ]}
                 >
                   <Input
+                    className="userinfo-input"
                     placeholder="김해핏"
                     value={userInfo.name}
                     readOnly={false}
@@ -226,6 +227,7 @@ const EditMyInfo = () => {
                   initialValue={userInfo.email}
                 >
                   <Input
+                    className="userinfo-input"
                     placeholder="example@hafit.net"
                     readOnly={true}
                     style={{
@@ -305,6 +307,7 @@ const EditMyInfo = () => {
                 >
                   <ConfigProvider locale={locale}>
                     <DatePicker
+                      className="userinfo-input"
                       onChange={(date) =>
                         form.setFieldsValue({ birthday: date })
                       }
@@ -355,7 +358,12 @@ const EditMyInfo = () => {
                     },
                   ]}
                 >
-                  <Input suffix="cm" value={userInfo.height} />
+                  <Input
+                    className="userinfo-input"
+                    suffix="cm"
+                    value={userInfo.height}
+                    maxLength={3}
+                  />
                 </Form.Item>
                 <Form.Item
                   label="몸무게(kg)"
@@ -368,7 +376,12 @@ const EditMyInfo = () => {
                     },
                   ]}
                 >
-                  <Input suffix="kg" value={userInfo.weight} />
+                  <Input
+                    className="userinfo-input"
+                    suffix="kg"
+                    value={userInfo.weight}
+                    maxLength={3}
+                  />
                 </Form.Item>
                 <Divider />
                 <Form.Item>

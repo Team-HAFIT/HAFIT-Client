@@ -144,7 +144,11 @@ const JoinPage = () => {
                 ]}
                 hasFeedback
               >
-                <Input placeholder="example@gmail.com" maxLength={40} />
+                <Input
+                  className="userinfo-input"
+                  placeholder="example@gmail.com"
+                  maxLength={40}
+                />
               </Form.Item>
               <Form.Item
                 label="이름"
@@ -161,7 +165,11 @@ const JoinPage = () => {
                 ]}
                 hasFeedback
               >
-                <Input placeholder="홍길동" maxLength={24} />
+                <Input
+                  className="userinfo-input"
+                  placeholder="홍길동"
+                  maxLength={24}
+                />
               </Form.Item>
               <Form.Item
                 label="비밀번호"
@@ -207,6 +215,7 @@ const JoinPage = () => {
                 hasFeedback
               >
                 <Input.Password
+                  className="userinfo-input"
                   placeholder="영문, 숫자, 특수문자 포함 8자 ~ 20자"
                   maxLength={20}
                 />
@@ -232,7 +241,7 @@ const JoinPage = () => {
                 ]}
                 hasFeedback
               >
-                <Input.Password maxLength={20} />
+                <Input.Password className="userinfo-input" maxLength={20} />
               </Form.Item>
               <Divider plain>추가 정보</Divider>
               {/* 전화번호 인증 구현 전까지 'carrier' 주석 처리 */}
@@ -263,7 +272,10 @@ const JoinPage = () => {
                 ]}
                 hasFeedback
               >
-                <PhoneNumberInput onChange={handlePhoneChange} value={phone} />
+                <PhoneNumberInput
+                  onChange={handlePhoneChange}
+                  value={phone}
+                />
               </Form.Item>
 
               <Form.Item>
