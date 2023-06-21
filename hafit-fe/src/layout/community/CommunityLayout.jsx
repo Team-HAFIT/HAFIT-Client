@@ -35,20 +35,21 @@ const CommunityLayout = () => {
   const accessToken = useSelector((state) => state.authToken.accessToken);
   const [userInfo, setUserInfo] = useState({});
   useEffect(() => {
-    axios.get('/api/my', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      timeout: 5000,
-    })
-    .then((response) => {
-      console.log(response.data);
-      setUserInfo(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+    axios
+      .get("/api/my", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setUserInfo(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, [accessToken]);
 
   useEffect(() => {
@@ -114,11 +115,14 @@ const CommunityLayout = () => {
                       fontSize: "18px",
                       color: "white",
                       fontWeight: "600",
+                      marginRight: "4px",
                     }}
                   >
                     {userInfo.name}
                   </span>{" "}
-                  <FiEdit3 />
+                  <Link to="/user/info">
+                    <FiEdit3 style={{ fontSize: "16px" }}/>
+                  </Link>
                 </div>
                 <span style={{ margin: "0 16px" }}>{userInfo.email}</span>
               </div>
