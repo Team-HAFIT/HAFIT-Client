@@ -388,11 +388,6 @@ const PostsAll = () => {
                             }}
                           />
                         </Dropdown>
-                        <PostUpdateModal
-                          visible={modalVisible}
-                          setModalVisible={setModalVisible}
-                          postId={selectedPostId}
-                        />
                       </Menu.Item>
                     </Menu>
                   </List.Item>
@@ -416,7 +411,11 @@ const PostsAll = () => {
                   }}
                 >
                   <div style={{ marginRight: "16px" }}>
-                    <LikeButton postId={post.postId} likes={post.post_totalLikes} isLike={post.post_likedByUser} />
+                    <LikeButton
+                      postId={post.postId}
+                      likes={post.post_totalLikes}
+                      isLike={post.post_likedByUser}
+                    />
                   </div>
 
                   <Button
@@ -451,6 +450,11 @@ const PostsAll = () => {
               </div>
             </div>
           ))}
+          <PostUpdateModal
+            visible={modalVisible}
+            setModalVisible={setModalVisible}
+            postId={selectedPostId}
+          />
         </List>
       ) : (
         <Empty description="첫 게시글의 주인공이 되어보세요!" />

@@ -1,6 +1,3 @@
-// 2023. 06. 20 기준
-// 서버측 파일(사진) 수정 부분 미구현 상태로, 업로드 관련 부분 주석 처리
-
 import { Modal, Spin } from "antd";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
