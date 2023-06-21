@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import { useDispatch, useSelector } from "react-redux";
-import jwt_decode from "jwt-decode";
 
 import { removeCookieToken } from "../../storage/Cookie";
 import { DELETE_TOKEN } from "../../store/Auth";
@@ -21,11 +20,6 @@ const EditPwd = () => {
   const [form] = Form.useForm();
 
   const accessToken = useSelector((state) => state.authToken.accessToken);
-  let decodedToken = null; // 토큰 값이 없을 경우 에러 방지용
-  if (accessToken) {
-    decodedToken = jwt_decode(accessToken);
-  }
-  const userEmail = decodedToken.email;
 
   const dispatch = useDispatch();
 

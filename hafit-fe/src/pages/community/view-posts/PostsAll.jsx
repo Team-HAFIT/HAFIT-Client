@@ -63,7 +63,7 @@ const PostsAll = () => {
     // },
   ]);
   const [lastPostId, setLastPostId] = useState(999999);
-  const size = 15; // 한 번에 불러올 게시글 개수
+  const size = 10; // 한 번에 불러올 게시글 개수
 
   // 게시글 삭제
   const handleDelete = () => {
@@ -184,7 +184,7 @@ const PostsAll = () => {
         setLoading(false);
         console.log("마지막 포스트 id " + lastPostId);
       });
-  }, [accessToken, lastPostId, loading]);
+  }, [accessToken, lastPostId, loading, size]);
 
   useEffect(() => {
     getPosts();
@@ -450,6 +450,7 @@ const PostsAll = () => {
               </div>
             </div>
           ))}
+          {/* 게시글 수정 모달 */}
           <PostUpdateModal
             visible={modalVisible}
             setModalVisible={setModalVisible}

@@ -133,8 +133,8 @@ const PostUpdateModal = (props) => {
           //   })
           console.log(response.data);
           setIsLoading(false);
-          console.log("postInfo: " + JSON.stringify(postInfo));
-          console.log("fileList: " + JSON.stringify(fileList));
+          // console.log("postInfo: " + JSON.stringify(postInfo));
+          // console.log("fileList: " + JSON.stringify(fileList));
         })
         .catch((error) => {
           console.error(error);
@@ -193,18 +193,7 @@ const PostUpdateModal = (props) => {
   return (
     <>
       {isLoading ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            background: "rgba(0, 0, 0, 0.05)",
-            height: "calc(100vh - 50px)",
-          }}
-        >
-          <Spin style={{ paddingBottom: "96px" }} />
-        </div>
+        <></>
       ) : (
         <Modal
           visible={props.visible}
@@ -237,7 +226,7 @@ const PostUpdateModal = (props) => {
                     paddingLeft: "40px",
                   }}
                 >
-                  새 게시물 작성하기
+                  게시물 수정하기
                 </Title>
                 <Button
                   className="post-submit-btn"

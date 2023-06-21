@@ -57,6 +57,7 @@ function LoginMain() {
                   <img
                     src={SquatImg}
                     style={{ width: "100%", borderRadius: "4px" }}
+                    alt="스쿼트 운동하기"
                   />
                 </Card>
               </div>
@@ -73,6 +74,7 @@ function LoginMain() {
                   <img
                     src={DeadliftImg}
                     style={{ width: "100%", borderRadius: "4px" }}
+                    alt="데드리프트 운동하기"
                   />
                 </Card>
               </div>
@@ -89,6 +91,7 @@ function LoginMain() {
                   <img
                     src={BenchpressImg}
                     style={{ width: "100%", borderRadius: "4px" }}
+                    alt="벤치프레스 운동하기"
                   />
                 </Card>
               </div>

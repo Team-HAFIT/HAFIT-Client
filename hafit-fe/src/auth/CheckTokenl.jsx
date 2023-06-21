@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { getCookieToken, removeCookieToken } from "../storage/Cookie";
 import { requestToken } from "../api/Users";
@@ -7,10 +7,12 @@ import { DELETE_TOKEN, SET_TOKEN } from "../store/Auth";
 
 export function CheckToken(key) {
   const [isAuth, setIsAuth] = useState("Loaded");
-  const { authenticated, expireTime } = useSelector((state) => state.authToken);
+  const { authenticated, expireTime, accessToken } = useSelector(
+    (state) => state.authToken
+  );
   const refreshToken = getCookieToken();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthToken = async () => {
@@ -33,13 +35,27 @@ export function CheckToken(key) {
             dispatch(DELETE_TOKEN());
             removeCookieToken();
             setIsAuth("Failed");
-            navigate("/login");
+            // navigate("/login");
           }
+        }
+      }
+      if (accessToken === null) {
+        const response = await requestToken(refreshToken);
+
+        if (response.status) {
+          const token = response.accessToken;
+          dispatch(SET_TOKEN(token));
+          setIsAuth("Success");
+        } else {
+          dispatch(DELETE_TOKEN());
+          removeCookieToken();
+          setIsAuth("Failed");
+          // navigate("/login");
         }
       }
     };
     checkAuthToken();
-  }, [dispatch, refreshToken, authenticated, expireTime]);
+  }, [dispatch, refreshToken, authenticated, expireTime, accessToken]);
 
   return {
     isAuth,
