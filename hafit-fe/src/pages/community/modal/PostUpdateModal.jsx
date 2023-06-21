@@ -317,7 +317,7 @@ const PostUpdateModal = (props) => {
                             width={272}
                             alt="slide"
                             src={file.file_name}
-                            crossOrigin="anonymous"
+                            // crossOrigin="anonymous"
                             style={{
                               width: "100%",
                               minHeight: "504px",
