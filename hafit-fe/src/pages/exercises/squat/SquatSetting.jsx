@@ -19,7 +19,7 @@ const SqautSetting = () => {
   const onFinish = (values) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
 
-    const updatedValues = { ...values, exerciseId: 1 };
+    const updatedValues = { ...values, exerciseId: 2 };
     axios
       .post("/api/plans", updatedValues, {
         headers: {
@@ -32,7 +32,8 @@ const SqautSetting = () => {
         console.log(response.data); // 응답 결과 출력
 
         const planId = response.data; // 응답 데이터에서 planId 추출
-        navigate("/exec/squat", { state: { planId } }); // 이동 시, planId 값을 함께 전달
+        const realSet = 1;
+        navigate("/exec/squat", { state: { planId, realSet } }); // 이동 시, planId 값을 함께 전달
       })
       .catch((error) => {
         console.error(error);
