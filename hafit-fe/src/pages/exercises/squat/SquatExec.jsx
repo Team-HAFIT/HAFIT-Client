@@ -3,11 +3,12 @@ import * as tf from "@tensorflow/tfjs";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-backend-webgl";
 import "../../../styles/pages/exercise/execPage.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios'; // axios 호출
 import { useSelector } from "react-redux";
 
 const Movenet = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const planId = location.state.planId;
   const detectorRef = useRef(null);
@@ -521,6 +522,7 @@ const Movenet = () => {
             })
               .then(response => {
                 console.log('전송 성공:', response.data);
+                navigate("/exec/result", { state: { planId: planId } })
               })
               .catch(error => {
                 console.error('전송 실패:', error);
