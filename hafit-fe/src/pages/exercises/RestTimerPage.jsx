@@ -6,9 +6,9 @@ import { Button, Input, Modal } from "antd";
 import "../../styles/pages/restTimerPage.css";
 
 const RestTimerPage = () => {
-  const [timer, setTimer] = useState(3);
+  const [timer, setTimer] = useState(15);
   const [isExpired, setIsExpired] = useState(false);
-  const [setSelectedTime] = useState(0);
+  const [selectedTime ,setSelectedTime] = useState(0);
   const [inputTime, setInputTime] = useState(0);
 
   useEffect(() => {

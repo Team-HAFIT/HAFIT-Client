@@ -26,7 +26,9 @@ function FixedHeader() {
 
   const menu = (
     <Menu>
-      <Menu.Item key="1">내 프로필</Menu.Item>
+      <Menu.Item key="1" onClick={goToUserInfo}>
+        내 프로필
+      </Menu.Item>
       <Menu.Item key="2" onClick={goToUserInfo}>
         내 정보 수정
       </Menu.Item>
@@ -68,12 +70,12 @@ function FixedHeader() {
           </Link>
         </Menu.Item>
         <Menu.Item key="/calendar" className="group-menu desktop-only">
-          <Link to="/prepare" className="nav-menu">
+          <Link to="/calendar" className="nav-menu">
             운동 일정
           </Link>
         </Menu.Item>
         <Menu.Item key="/stats" className="group-menu desktop-only">
-          <Link to="/prepare" className="nav-menu">
+          <Link to="/stats" className="nav-menu">
             운동 통계
           </Link>
         </Menu.Item>

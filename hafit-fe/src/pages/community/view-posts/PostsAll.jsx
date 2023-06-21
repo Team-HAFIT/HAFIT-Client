@@ -63,7 +63,7 @@ const PostsAll = () => {
     // },
   ]);
   const [lastPostId, setLastPostId] = useState(999999);
-  const size = 15; // 한 번에 불러올 게시글 개수
+  const size = 8; // 한 번에 불러올 게시글 개수
 
   // 게시글 삭제
   const handleDelete = () => {

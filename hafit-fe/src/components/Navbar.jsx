@@ -76,12 +76,12 @@ function Header() {
               </Link>
             </Menu.Item>
             <Menu.Item key="/calendar" className="group-menu desktop-only">
-              <Link to="/prepare" className="nav-menu">
+              <Link to="/calendar" className="nav-menu">
                 운동 일정
               </Link>
             </Menu.Item>
             <Menu.Item key="/stats" className="group-menu desktop-only">
-              <Link to="/prepare" className="nav-menu">
+              <Link to="/stats" className="nav-menu">
                 운동 통계
               </Link>
             </Menu.Item>
@@ -107,9 +107,9 @@ function Header() {
           <Link to="/calendar">모바일 메뉴2</Link>
         </Menu.Item>
       </React.Fragment> */}
-          <Menu.Item key="/exec/rest">
+          {/* <Menu.Item key="/exec/rest">
             <Link to="/exec/rest">...</Link>
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item style={{ marginLeft: "auto", marginRight: "80px" }}>
             <Dropdown overlay={menu} trigger={["hover"]}>
               <a
