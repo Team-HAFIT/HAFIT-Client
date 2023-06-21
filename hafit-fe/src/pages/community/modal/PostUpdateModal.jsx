@@ -1,4 +1,4 @@
-import { Modal, Spin } from "antd";
+import { Modal } from "antd";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";

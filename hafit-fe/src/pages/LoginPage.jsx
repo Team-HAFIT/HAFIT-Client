@@ -158,7 +158,7 @@ const LoginPage = () => {
             <img src={naver} alt="네이버 로그인" style={{ width: "80%" }} />
           </Link>
         </div>
-        <div className="sign-up" style={{ textAlign: "center" }}>
+        <div className="sign-up" style={{ textAlign: "center", marginBottom: "24px" }}>
           <span>아직 회원이 아니신가요?</span> <a href="/join">회원가입</a>
         </div>
       </div>

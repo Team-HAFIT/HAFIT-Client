@@ -64,7 +64,7 @@ const PostsAll = () => {
   ]);
   const [lastPostId, setLastPostId] = useState(999999);
   const size = 10; // 한 번에 불러올 게시글 개수
-  
+
   const [reachedEnd, setReachedEnd] = useState(false); // 게시글 끝까지 불러왔는지 여부
 
   // 게시글 삭제
@@ -271,7 +271,7 @@ const PostsAll = () => {
   // }, [getPosts]);
 
   // 현재 방식 : 문서 전체를 대상으로 동작하도록 유연하게 변경
-  const onScroll = () => {
+  const onScroll = useCallback(() => {
     const SCROLLED_HEIGHT = window.scrollY;
     const WINDOW_HEIGHT = window.innerHeight;
     const DOC_TOTAL_HEIGHT = document.body.offsetHeight;
@@ -280,7 +280,7 @@ const PostsAll = () => {
     if (IS_BOTTOM) {
       getPosts();
     }
-  };
+  }, [getPosts]);
 
   useEffect(() => {
     const element = document.getElementById("scrollableDiv");
@@ -465,7 +465,9 @@ const PostsAll = () => {
         <Empty description="첫 게시글의 주인공이 되어보세요!" />
       )}
       {reachedEnd && (
-        <Divider plain style={{ fontSize: "15px" }}>게시글의 끝에 도달하셨습니다 🎉</Divider>
+        <Divider plain style={{ fontSize: "15px" }}>
+          게시글의 끝에 도달하셨습니다 🎉
+        </Divider>
       )}
     </div>
   );
