@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, Input, Modal } from "antd";
+import { useLocation } from "react-router-dom";
+import axios from 'axios'; // axios 호출
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // import Header from "../../components/MainNavbar";
 
@@ -10,6 +14,30 @@ const RestTimerPage = () => {
   const [isExpired, setIsExpired] = useState(false);
   const [selectedTime ,setSelectedTime] = useState(0);
   const [inputTime, setInputTime] = useState(0);
+  const location = useLocation();
+  const planId = location.state.planId;
+  const realSet = location.state.realSet;
+  const accessToken = useSelector((state) => state.authToken.accessToken); // 액세스 토큰 생성
+  const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
+
+  useEffect(() => {
+    axios  // planId로 플랜 계획 조회해오기
+      .get(`/api/plans/${planId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      })
+      .then((response) => {
+        const plan = response.data;
+        console.log(plan);
+        setSelectedTime(plan.plan_rest_time);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }, [planId]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -63,6 +91,24 @@ const RestTimerPage = () => {
 
   const handleNextSet = () => {
     // Next set button functionality
+    const data = { restTime : selectedTime, 
+                   weight : 10,
+                   plan : planId
+                    };
+    axios.put("/api/sets/rest", data, {
+      headers: {
+        "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+        Authorization: `Bearer ${accessToken}`,
+      },
+      timeout: 5000, // 요청 제한 시간 설정
+    }).then((response) => {
+      console.log(response.data); // 응답 결과 출력
+      navigate("/exec/squat", { state: { planId, realSet : realSet + 1 } }); // 이동 시, planId 값을 함께 전달
+    })
+    .catch((error) => {
+      console.error(error);
+      console.log(error.response);
+    })
   };
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -139,3 +185,4 @@ const RestTimerPage = () => {
 };
 
 export default RestTimerPage;
+

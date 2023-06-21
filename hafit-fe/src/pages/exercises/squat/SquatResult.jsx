@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Col, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import axios from 'axios'; // axios 호출
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import "../../../styles/pages/squatResult.css";
 
@@ -11,10 +15,49 @@ import SquatMuscle from "../../../assets/img/squat_muscle.png";
 const { Title } = Typography;
 
 const SquatResult = () => {
+  const accessToken = useSelector((state) => state.authToken.accessToken); // 액세스 토큰 생성
+  const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate hook 사용
+  const location = useLocation();
+  const planId = location.state.planId;
+  const [set, setSet] = useState(0) // 세트 수
+  const [count, setCount] = useState(0) // 카운트 수
+  const [time, setTime] = useState(0); // 소모 시간(몇초 기준)
+  const [weight, setWeight] = useState(0); // 무게
+  const [forceRender, setForceRender] = useState(false); // 렌더링을 강제로 발생시킬 상태 추가
   const currentDate = new Date();
   const currentDateString = `${currentDate.getFullYear()}. ${
     currentDate.getMonth() + 1
   }. ${currentDate.getDate()} - ${currentDate.getHours()}:${currentDate.getMinutes()}`;
+
+  useEffect(() => {
+    axios  // planId로 플랜 계획 조회해오기
+      .get(`/api/sets/all/${planId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      })
+      .then((response) => {
+        const listData = response.data; // 서버에서 전달된 JSON 배열을 변수에 할당합니다.
+
+        const item = listData[listData.length-1];
+        setWeight(item.weight);
+        setCount(item.realCount);
+        setSet(item.realSet);
+        setTime(item.realTime);
+        setForceRender(true); // 렌더링을 강제로 발생시킬 상태를 true로 설정
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }, [planId]);
+
+  useEffect(() => {
+    if (forceRender) {
+      setForceRender(false); // 렌더링을 강제로 발생시키는 상태를 다시 false로 설정
+    }
+  }, [forceRender]);
 
   return (
     <div className="exec-result" style={{backgroundColor: "#360d57", height:"100vh"}}>
@@ -43,16 +86,16 @@ const SquatResult = () => {
               <div style={{ textAlign: "left", color: "white", marginLeft:"40px", height: "100%", borderLeft: "1px solid #eeeeee", paddingLeft: "40px" }}>
                 <Title level={2} style={{color: "white", marginBottom: "4px", fontWeight: "bold" }}>스쿼트 <span style={{fontSize: "18px", margin: "0 4px"}}>| Squat</span></Title>
                 <p style={{margin: 0 }}>{currentDateString}</p>
-                <p><span style={{fontSize: "40px", marginRight: "6px",fontWeight: "500"}}>5</span>개 
+                <p><span style={{fontSize: "40px", marginRight: "6px",fontWeight: "500"}}>{count}</span>개 
                 <span style={{fontSize: "40px", margin: "0 10px"}}>/</span> 
-                <span style={{fontSize: "40px", marginRight: "6px",fontWeight: "500"}}>1</span>세트 
-                <span style={{fontSize: "32px", fontWeight:"250", margin: "0 24px"}}> 총 5개 </span></p>
+                <span style={{fontSize: "40px", marginRight: "6px",fontWeight: "500"}}>{set}</span>세트 
+                <span style={{fontSize: "32px", fontWeight:"250", margin: "0 24px"}}> 총 {count*set}개 </span></p>
                 {/* <p className="exercise-result-time">운동 시간 00 : 0 : 30</p> */}
                 <p style={{margin: "32px 0"}}>
-                  <span style={{fontSize: "16px", marginRight: "12px"}}>소모 칼로리</span><span style={{fontSize: "28px", fontWeight:"550", marginRight: "10px"}}>15</span><span style={{fontSize:"16px"}}>kcal</span>
+                  <span style={{fontSize: "16px", marginRight: "12px"}}>소모 칼로리</span><span style={{fontSize: "28px", fontWeight:"550", marginRight: "10px"}}>{time}</span><span style={{fontSize:"16px"}}>kcal</span>
                 </p>
                 <p style={{margin: "32px 0"}}>
-                <span style={{fontSize: "16px", marginRight: "12px"}}>중량</span><span style={{fontSize: "28px", fontWeight:"550", marginRight: "10px"}}>0</span><span style={{fontSize:"16px"}}>kg</span>
+                <span style={{fontSize: "16px", marginRight: "12px"}}>중량</span><span style={{fontSize: "28px", fontWeight:"550", marginRight: "10px"}}>{weight}</span><span style={{fontSize:"16px"}}>kg</span>
                 </p>
                 <p style={{margin: "32px 0"}}>
                 <span style={{fontSize: "16px", marginRight: "12px"}}>운동 강도</span>

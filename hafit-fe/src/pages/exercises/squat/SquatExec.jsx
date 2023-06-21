@@ -11,6 +11,7 @@ const Movenet = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const planId = location.state.planId;
+  const realSet = location.state.realSet;
   const detectorRef = useRef(null);
   const detectorConfigRef = useRef(null);
   const posesRef = useRef(null);
@@ -40,10 +41,10 @@ const Movenet = () => {
   const [startTime, setStartTime] = useState(new Date());               // 운동 시작 시간
   const [restTime, setRestTime] = useState(0);                          // 휴식 시간
   
-  let realRepsPerSet = repsPerSet;
-  let realWeight = weight;
-  let realTime = new Date() - startTime;
-  let realSet = 0;
+  let realRepsPerSet = repsPerSet; // 목표 개수
+  let realWeight = weight; // 목표 무게
+  let realTime = new Date() - startTime; // 소요 시간
+  let realTargetSet = 0; // 목표 세트
   const moduleRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -111,13 +112,13 @@ const Movenet = () => {
         setRepsPerSet(plan.plan_target_count);
         setRestTime(plan.plan_rest_time);
         realRepsPerSet = plan.plan_target_count;
-        realSet = currentSet+1;
         realWeight = plan.plan_weight;
+        realTargetSet = plan.plan_target_set;
       })
       .catch((error) => {
         console.log(error);
       })
-  }, [planId]);
+  }, [planId, realSet]);
 
   useEffect(() => {
     if (isPoseDetected) {
@@ -522,7 +523,10 @@ const Movenet = () => {
             })
               .then(response => {
                 console.log('전송 성공:', response.data);
-                navigate("/exec/result", { state: { planId: planId } })
+                if (realSet === realTargetSet) 
+                  navigate("/exec/result", { state: { planId: planId } })
+                else
+                  navigate("/exec/rest", { state: { planId: planId, realSet: realSet } })
               })
               .catch(error => {
                 console.error('전송 실패:', error);
@@ -567,7 +571,7 @@ const Movenet = () => {
           {Array.from({ length: totalSets }, (_, index) => (
             <div
               key={index}
-              className={index < currentSet ? "shape completed" : "shape"}
+              className={index < realSet ? "shape completed" : "shape"}
             ></div>
           ))}
         </div>
