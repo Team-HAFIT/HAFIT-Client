@@ -64,6 +64,8 @@ const PostsAll = () => {
   ]);
   const [lastPostId, setLastPostId] = useState(999999);
   const size = 10; // 한 번에 불러올 게시글 개수
+  
+  const [reachedEnd, setReachedEnd] = useState(false); // 게시글 끝까지 불러왔는지 여부
 
   // 게시글 삭제
   const handleDelete = () => {
@@ -115,7 +117,7 @@ const PostsAll = () => {
 
   // --------- START : 게시글 정보 관련 ---------- //
   const getPosts = useCallback(() => {
-    if (loading) {
+    if (loading || reachedEnd) {
       return;
     }
     setLoading(true);
@@ -139,6 +141,8 @@ const PostsAll = () => {
         // 마지막 게시글 postId 업데이트
         if (response.data.length > 0) {
           setLastPostId(response.data[response.data.length - 1].postId);
+        } else {
+          setReachedEnd(true); // 마지막 게시글에 도달
         }
       })
       .catch((error) => {
@@ -184,7 +188,7 @@ const PostsAll = () => {
         setLoading(false);
         console.log("마지막 포스트 id " + lastPostId);
       });
-  }, [accessToken, lastPostId, loading, size]);
+  }, [accessToken, lastPostId, loading, reachedEnd, size]);
 
   useEffect(() => {
     getPosts();
@@ -459,6 +463,9 @@ const PostsAll = () => {
         </List>
       ) : (
         <Empty description="첫 게시글의 주인공이 되어보세요!" />
+      )}
+      {reachedEnd && (
+        <Divider plain style={{ fontSize: "15px" }}>게시글의 끝에 도달하셨습니다 🎉</Divider>
       )}
     </div>
   );
