@@ -347,7 +347,7 @@ const PostUpdateModal = (props) => {
                         >
                           {postInfo.user_name}
                         </span>
-                        <span style={{ color: "#999999" }}>{today}</span>
+                        <span style={{ color: "#999999" }}>{postInfo.modifiedAt}</span>
                       </Space>
                     </Space>
                     <Space className="select-category">

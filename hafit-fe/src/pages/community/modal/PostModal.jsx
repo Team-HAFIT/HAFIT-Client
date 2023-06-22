@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -64,6 +64,10 @@ const getBase64 = (file) => {
 // };
 
 const PostModal = (props) => {
+
+  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+  const today = new Date().toLocaleDateString("ko-KR", options);
+
   const [loading, setLoading] = useState(false); // 요청 중 여부 상태 저장용 state
   const [form] = Form.useForm();
 
@@ -81,6 +85,25 @@ const PostModal = (props) => {
     //   url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
     // },
   ]);
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    axios
+      .get("/api/my", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        timeout: 5000,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setUserInfo(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [accessToken]);
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -339,9 +362,9 @@ const PostModal = (props) => {
                         fontWeight: "600",
                       }}
                     >
-                      김해핏
+                      {userInfo.name}
                     </span>
-                    <span style={{ color: "#999999" }}>2023. 04. 27</span>
+                    <span style={{ color: "#999999" }}>{today}</span>
                   </Space>
                 </Space>
                 <Space className="select-category">

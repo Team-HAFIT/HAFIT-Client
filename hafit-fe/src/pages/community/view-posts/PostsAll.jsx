@@ -369,7 +369,7 @@ const PostsAll = () => {
                             color: "rgba(0, 0, 0, 0.45)",
                           }}
                         >
-                          {post.createdAt}
+                          {post.modifiedAt}
                         </span>
                       </div>
                     </div>
