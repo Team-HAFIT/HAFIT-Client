@@ -64,7 +64,6 @@ const getBase64 = (file) => {
 // };
 
 const PostModal = (props) => {
-
   const options = { year: "numeric", month: "2-digit", day: "2-digit" };
   const today = new Date().toLocaleDateString("ko-KR", options);
 
@@ -157,6 +156,11 @@ const PostModal = (props) => {
   };
   // --------- END : 캐러셀 prev, next 관련 ---------- //
 
+  const handleBack = () => {
+    form.resetFields();
+    props.setModalVisible(false);
+  };
+
   const onFinish = async (values) => {
     setLoading(true); // 요청 시작 시, 로딩 중 상태로 설정
     // values.preventDefault(); // 페이지 리로딩 방지
@@ -231,7 +235,7 @@ const PostModal = (props) => {
             <Button
               className="modal-back-btn"
               icon={<IoArrowBack style={{ fontSize: "1.4em" }} />}
-              onClick={() => props.setModalVisible(false)}
+              onClick={handleBack}
             ></Button>
             <Title
               level={5}

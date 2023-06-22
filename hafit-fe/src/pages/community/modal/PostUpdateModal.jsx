@@ -56,6 +56,7 @@ const PostUpdateModal = (props) => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [fileIdList, setFileIdList] = useState([]); // 삭제할 파일 id 목록
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -68,6 +69,10 @@ const PostUpdateModal = (props) => {
     setPreviewTitle(
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
+  };
+
+  const handleRemove = (file) => {
+    setFileIdList([...fileIdList, file.fileId]);
   };
 
   const onUploadChange = async ({ fileList: newFileList }) => {
@@ -154,9 +159,10 @@ const PostUpdateModal = (props) => {
               name: file.name,
               status: "done",
               url: URL.createObjectURL(file),
+              fileId: postInfo.files[index].fileId,
+              originFileObj: file,
             };
           });
-          console.log("변환된 파일 정보: ", files);
           setFileList(files);
         })
         .catch((error) => {
@@ -168,7 +174,12 @@ const PostUpdateModal = (props) => {
     } else {
       setIsLoading(false);
     }
-  }, [postInfo.files, accessToken]);
+  }, [postInfo, postInfo.files, accessToken]);
+
+  const handleBack = () => {
+    form.resetFields();
+    props.setModalVisible(false);
+  }
 
   const onFinish = async (values) => {
     setLoading(true); // 요청 시작 시, 로딩 중 상태로 설정
@@ -179,13 +190,13 @@ const PostUpdateModal = (props) => {
       const formData = new FormData();
       formData.append("categoryId", categoryId);
       formData.append("post_content", post_content);
+      formData.append("deleteImageIds", fileIdList); // 삭제할 파일 id 목록
 
       for (let i = 0; i < fileList.length; i++) {
         formData.append("files", fileList[i].originFileObj);
         // console.log(`파일 [${i}]: ` + JSON.stringify(fileList[i]));
       }
-
-      console.log(formData.getAll("files"));
+      // console.log(formData.getAll("files"));
 
       const response = await axios({
         method: "put",
@@ -239,7 +250,7 @@ const PostUpdateModal = (props) => {
                 <Button
                   className="modal-back-btn"
                   icon={<IoArrowBack style={{ fontSize: "1.4em" }} />}
-                  onClick={() => props.setModalVisible(false)}
+                  onClick={handleBack}
                 ></Button>
                 <Title
                   level={5}
@@ -451,6 +462,7 @@ const PostUpdateModal = (props) => {
                       fileList={fileList}
                       onPreview={handlePreview}
                       onChange={onUploadChange}
+                      onRemove={handleRemove}
                       maxCount={6}
                       style={{ display: "flex", width: "100%" }}
                       accept=".jpg, .jpeg, .png, .gif, .mp4, .avi"
