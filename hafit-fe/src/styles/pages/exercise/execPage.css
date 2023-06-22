@@ -13,11 +13,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
+  width: 1152px;
+  height: 864px;
 }
 
 #webcam,
 #movenet_Canvas {
   position: absolute;
+  width: 1152px;
+  height: 864px;
 }
 
 #state {
@@ -25,12 +29,14 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 1152px;
+  height: 864px;
   transform: translate(-50%, -50%);
   grid-template-columns: 1fr 6fr 1fr;
   grid-template-rows: 1.4fr 6fr 0.5fr 0.5fr;
   grid-template-areas:
     "count shapeContainer timer"
-    ". . ."
+    ". . Percentage"
     ". message ."
     ". . btn";
   z-index: 2;
@@ -39,6 +45,8 @@
 #count {
   grid-area: count;
   background-color: black;
+  width: 100%;
+  height: 100%;
   border: 2px solid white;
   flex-direction: column;
   border-radius: 2rem;
@@ -77,6 +85,8 @@
 #timer {
   grid-area: timer;
   display: flex;
+  width: 100%;
+  height: 100%;
   background-color: black;
   border: 2px solid white;
   flex-direction: column;
@@ -121,6 +131,8 @@
 .shape.completed {
   background-color: green;
 }
+
+
 
 #close{
   grid-area: btn;
@@ -245,4 +257,61 @@
   transform: translate(-50%, -50%);
   width: 80%;
   height: 80%;
+}
+
+#percent_line{
+  grid-area: Percentage;
+  display: grid;
+  grid-template-rows: 0.5fr 0.5fr 5fr;
+  grid-template-areas:
+    "."
+    "per_text"
+    "pro";
+}
+
+           
+#progress{
+  display: grid;
+  grid-area: pro;
+  grid-template-columns: 0.7fr 1fr 0.7fr;
+  grid-template-rows: 6fr 1fr;
+  grid-template-areas:
+    ". bar ."
+    ". . ."
+}
+
+#percent_text{
+  grid-area: per_text;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  color:blue
+}
+
+#progress-bar{
+  grid-area: bar;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 3px solid green;
+}
+#progress-state-none{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1%;
+  background-color: rgb(152, 152, 160);
+  z-index: 2;
+}
+#progress-state {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: greenyellow;
 }

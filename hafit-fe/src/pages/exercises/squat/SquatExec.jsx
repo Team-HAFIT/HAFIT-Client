@@ -40,11 +40,14 @@ const Movenet = () => {
   const [weight, setWeight] = useState(10);                             // 무게
   const [startTime, setStartTime] = useState(new Date());               // 운동 시작 시간
   const [restTime, setRestTime] = useState(0);                          // 휴식 시간
-  
+  const [squatPercentage, setSquatPercentage] = useState(0);            // 스쿼트 진행 퍼센테이지 변수
+
   let realRepsPerSet = repsPerSet; // 목표 개수
   let realWeight = weight; // 목표 무게
   let realTime = new Date() - startTime; // 소요 시간
   let realTargetSet = 0; // 목표 세트
+
+  const alertSoundRef = useRef(null);  // 경고음
   const moduleRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -89,6 +92,10 @@ const Movenet = () => {
   };
 
   useEffect(() => {
+    alertSoundRef.current = new Audio('/warring.mp3');
+  }, []);
+
+  useEffect(() => {
     init();
     startTimer();
     setCurrentSet(currentSet + 1);
@@ -119,6 +126,15 @@ const Movenet = () => {
         console.log(error);
       })
   }, [planId, realSet]);
+
+  useEffect(() => {
+    if (isRedDetected) {
+      alertSoundRef.current.play();
+    } else {
+      alertSoundRef.current.pause();
+      alertSoundRef.current.currentTime = 0;
+    }
+  }, [isRedDetected]);
 
   useEffect(() => {
     if (isPoseDetected) {
@@ -478,6 +494,7 @@ const Movenet = () => {
       .slice(10, 16)
       .every((kp) => kp.score > confidenceThreshold);
     if (kneeKeypointsConfident) {
+      setSquatPercentage(0);
       const leftHip = posesRef.current[0].keypoints[11];
       const rightHip = posesRef.current[0].keypoints[12];
       const leftKnee = posesRef.current[0].keypoints[13];
@@ -486,6 +503,8 @@ const Movenet = () => {
       const rightAnkle = posesRef.current[0].keypoints[16];
       const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
       const rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
+      const squatPercentage = calculateSquatPercentage(leftKneeAngle, rightKneeAngle);
+      setSquatPercentage(squatPercentage);
       if (
         !squatStarted &&
         leftKneeAngle <= kneeAngleThreshold &&
@@ -542,6 +561,8 @@ const Movenet = () => {
         console.log(`스쿼트 ${squatCount}회 완료!`);
         squatFinished = false;
       }
+    } else {
+      setSquatPercentage(0);
     }
   };
 
@@ -555,6 +576,21 @@ const Movenet = () => {
     let mag2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
     let angle = Math.acos(dot / (mag1 * mag2));
     return angle * (180.0 / Math.PI);
+  };
+
+  const calculateSquatPercentage = (leftKneeAngle, rightKneeAngle) => {
+    const maxKneeAngle = 180; // 최대 무릎 각도 (완전히 선 상태)
+    const squatKneeAngle = 140; // 스쿼트 완료 상태의 무릎 각도
+    const maxPercentage = 100; // 최대 퍼센테이지
+  
+    const leftPercentage = ((maxKneeAngle - leftKneeAngle) / (maxKneeAngle - squatKneeAngle)) * maxPercentage;
+    const rightPercentage = ((maxKneeAngle - rightKneeAngle) / (maxKneeAngle - squatKneeAngle)) * maxPercentage;
+  
+    const percentage = Math.min(leftPercentage, rightPercentage, maxPercentage);
+  
+    const formattedPercentage = percentage.toFixed(0); 
+  
+    return formattedPercentage;
   };
 
   return (
@@ -579,6 +615,20 @@ const Movenet = () => {
           <span id="D">운동 시간 </span>
           <br />
           <span id="E">{formatTime(timer)}</span>
+        </div>
+        <div id = "percent_line">
+          <div id ="percent_text" >
+            {squatPercentage}%
+          </div>
+          <div id="progress">
+            <div id="progress-bar">
+              <div id="progress-state-none" 
+                style={{ width: '100%', height: `calc(100% - ${squatPercentage}%)` }}
+              >
+              </div>
+              <div id="progress-state"></div>
+            </div>
+          </div>
         </div>
         <div id="checkpose">
           <div
