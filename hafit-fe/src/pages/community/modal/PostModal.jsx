@@ -256,7 +256,7 @@ const PostModal = (props) => {
         </Row>
         <Divider className="divider" />
         <Row>
-          <Col span={13} style={{ minHeight: "480px" }}>
+          <Col span={13} style={{ minHeight: "520px" }}>
             {fileList.length === 0 ? (
               <Dragger
                 {...props}

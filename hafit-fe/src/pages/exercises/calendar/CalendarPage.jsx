@@ -243,7 +243,7 @@ const CalendarPage = () => {
               onChange={handleTargetWeightChange}
             />
           </Form.Item>
-          <Form.Item label="반복 요일">
+          {/* <Form.Item label="반복 요일">
             <Checkbox.Group onChange={handleRepeatDaysChange}>
               <Checkbox value="월">월</Checkbox>
               <Checkbox value="화">화</Checkbox>
@@ -256,7 +256,7 @@ const CalendarPage = () => {
           </Form.Item>
           <Form.Item label="메모">
             <Input.TextArea rows={3} name="memo" />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item>
             <Button type="primary" htmlType="submit">
               저장

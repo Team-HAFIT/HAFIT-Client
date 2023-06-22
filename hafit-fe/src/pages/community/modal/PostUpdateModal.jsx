@@ -121,17 +121,43 @@ const PostUpdateModal = (props) => {
         })
         .then((response) => {
           setPostInfo(response.data);
-          setPostInfo({
-            ...response.data,
-          });
-          setFileList(response.data.files);
-          //   setFileList({
-          //     ...response.data.files,
-          //   })
           console.log(response.data);
-          setIsLoading(false);
-          // console.log("postInfo: " + JSON.stringify(postInfo));
-          // console.log("fileList: " + JSON.stringify(fileList));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [accessToken, props.postId]);
+
+  // s3 파일 url -> 파일 정보로 변환
+  useEffect(() => {
+    if (postInfo && postInfo.files) {
+      Promise.all(
+        postInfo.files.map((file) => {
+          return axios.get(`/api/posts/img/${file.fileId}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            responseType: "arraybuffer",
+            timeout: 10000,
+          });
+        })
+      )
+        .then((responses) => {
+          // const files = responses.map((res) => res.data);
+          const files = responses.map((res, index) => {
+            const file = new File([res.data], `file_${index}`, {
+              type: res.headers["content-type"],
+            });
+            return {
+              uid: `__AUTO__${Date.now()}${index}__`,
+              name: file.name,
+              status: "done",
+              url: URL.createObjectURL(file),
+            };
+          });
+          console.log("변환된 파일 정보: ", files);
+          setFileList(files);
         })
         .catch((error) => {
           console.error(error);
@@ -139,8 +165,10 @@ const PostUpdateModal = (props) => {
         .finally(() => {
           setIsLoading(false);
         });
+    } else {
+      setIsLoading(false);
     }
-  }, [accessToken, props.postId]);
+  }, [postInfo.files, accessToken]);
 
   const onFinish = async (values) => {
     setLoading(true); // 요청 시작 시, 로딩 중 상태로 설정
@@ -236,7 +264,7 @@ const PostUpdateModal = (props) => {
             </Row>
             <Divider className="divider" />
             <Row>
-              <Col span={13} style={{ minHeight: "480px" }}>
+              <Col span={13} style={{ minHeight: "520px" }}>
                 {fileList.length === 0 ? (
                   <Dragger
                     {...props}
@@ -294,7 +322,7 @@ const PostUpdateModal = (props) => {
                       infinite={true}
                       slidesToScroll={1}
                     >
-                      {fileList.map((file, index) => (
+                      {postInfo.files.map((file, index) => (
                         <div key={index}>
                           <img
                             width={272}
@@ -344,7 +372,9 @@ const PostUpdateModal = (props) => {
                         >
                           {postInfo.user_name}
                         </span>
-                        <span style={{ color: "#999999" }}>{postInfo.modifiedAt}</span>
+                        <span style={{ color: "#999999" }}>
+                          {postInfo.modifiedAt}
+                        </span>
                       </Space>
                     </Space>
                     <Space className="select-category">
@@ -359,7 +389,7 @@ const PostUpdateModal = (props) => {
                         ]}
                       >
                         <Select
-                          defaultValue="카테고리 선택"
+                          initialValue="카테고리 선택"
                           style={{
                             width: 120,
                           }}
