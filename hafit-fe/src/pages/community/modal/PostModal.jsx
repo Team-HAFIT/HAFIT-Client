@@ -85,7 +85,7 @@ const PostModal = (props) => {
     //   url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
     // },
   ]);
-  const [userInfo, setUserInfo] = useState({});
+  const [userName, setUserName] = useState({});
 
   useEffect(() => {
     axios
@@ -98,7 +98,7 @@ const PostModal = (props) => {
       })
       .then((response) => {
         console.log(response.data);
-        setUserInfo(response.data);
+        setUserName(response.data.name);
       })
       .catch((error) => {
         console.log(error);
@@ -362,7 +362,7 @@ const PostModal = (props) => {
                         fontWeight: "600",
                       }}
                     >
-                      {userInfo.name}
+                      {userName}
                     </span>
                     <span style={{ color: "#999999" }}>{today}</span>
                   </Space>

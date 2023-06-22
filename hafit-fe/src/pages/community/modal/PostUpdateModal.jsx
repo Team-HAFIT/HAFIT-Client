@@ -51,9 +51,6 @@ const PostUpdateModal = (props) => {
 
   const [postInfo, setPostInfo] = useState({});
 
-  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-  const today = new Date().toLocaleDateString("ko-KR", options);
-
   // --------- START : 파일 업로드 관련 ---------- //
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
