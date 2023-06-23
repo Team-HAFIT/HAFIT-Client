@@ -1,13 +1,10 @@
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
 function LikeButton({ postId, likes, isLike }) {
-  useEffect(() => {
-    console.log(`postId: ${postId}, likes: ${likes}, isLike: ${isLike}`);
-  })
   const accessToken = useSelector((state) => state.authToken.accessToken);
 
   const [totalLikes, setTotalLikes] = useState(likes);

@@ -62,6 +62,7 @@ const PostsAll = () => {
     //   user_name: "해핏",
     // },
   ]);
+  const [fileType, setFileType] = useState("");
   const [lastPostId, setLastPostId] = useState(999999);
   const size = 10; // 한 번에 불러올 게시글 개수
 
@@ -136,7 +137,19 @@ const PostsAll = () => {
       })
       .then((response) => {
         setData((prevData) => prevData.concat(response.data));
-        // message.success("게시글을 불러왔습니다", 1);
+
+        // for (let i = 0; i < response.data.length; i++) {
+        //   for (let j = 0; j < response.data[i].files.length; j++) {
+        //     const fileUrl = response.data[i].files[j].file_name;
+
+        //     // 파일명에서 마지막 점(.)의 인덱스 찾기.
+        //     const lastDotIndex = fileUrl.lastIndexOf(".");
+        //     // 파일명에서 마지막 점(.) 다음부터 끝까지의 부분 문자열을 추출
+        //     const fileExtension = fileUrl.substring(lastDotIndex + 1);
+        //     console.log(fileExtension);
+        //     setFileType(fileExtension);
+        //   }
+        // }
 
         // 마지막 게시글 postId 업데이트
         if (response.data.length > 0) {
@@ -198,35 +211,106 @@ const PostsAll = () => {
     if (!post?.files || post.files.length === 0) {
       return null;
     }
-    if (post.files.length === 1) {
-      return (
-        <img
-          className="post-image-only"
-          width={272}
-          alt="logo"
-          src={post.files[0].file_name}
-        />
-      );
-    } else if (post.files.length === 2) {
-      return (
-        <>
-          <img
-            className="post-image"
-            width={272}
-            alt="logo"
-            src={post.files[0].file_name}
-          />
-          <img
-            className="post-image"
-            width={272}
-            alt="logo"
-            src={post.files[1].file_name}
-          />
-        </>
-      );
-    } else if (post.files.length >= 3) {
-      // SwiperCore.use([Navigation, Pagination]);
 
+    const filesInfo = post.files.map((file) => {
+      const extension = file.file_name.split(".").pop().toLowerCase(); // 파일 확장자 추출
+      const isImage = /^jpe?g|png|gif$/.test(extension); // 이미지 파일인지 확인
+      return { url: file.file_name, extension, isImage };
+    });
+
+    if (filesInfo.length === 1) {
+      const { url, extension, isImage } = filesInfo[0];
+
+      if (isImage) {
+        return (
+          <img className="post-image-only" width={272} alt="logo" src={url} />
+        );
+      } else {
+        return (
+          <video className="post-image-only" width={272} controls>
+            <source src={url} type={`video/${extension}`} />
+          </video>
+        );
+      }
+    } else if (filesInfo.length === 2) {
+      const fileInfo1 = filesInfo[0];
+      const fileInfo2 = filesInfo[1];
+
+      if (fileInfo1.isImage && fileInfo2.isImage) {
+        // 이미지, 이미지
+        return (
+          <>
+            <img
+              className="post-image"
+              width={272}
+              alt="logo"
+              src={fileInfo1.url}
+            />
+            <img
+              className="post-image"
+              width={272}
+              alt="logo"
+              src={fileInfo2.url}
+            />
+          </>
+        );
+      } else if (fileInfo1.isImage && !fileInfo2.isImage) {
+        // 이미지, 비디오
+        return (
+          <>
+            <img
+              className="post-image"
+              width={272}
+              alt="logo"
+              src={fileInfo1.url}
+            />
+            <video className="post-image" width={272} controls>
+              <source
+                src={fileInfo2.url}
+                type={`video/${fileInfo2.extension}`}
+              />
+            </video>
+          </>
+        );
+      } else if (!fileInfo1.isImage && fileInfo2.isImage) {
+        // 비디오, 이미지
+        return (
+          <>
+            <video className="post-image" width={272} controls>
+              <source
+                src={fileInfo1.url}
+                type={`video/${fileInfo1.extension}`}
+              />
+            </video>
+            <img
+              className="post-image"
+              width={272}
+              alt="logo"
+              src={fileInfo2.url}
+            />
+          </>
+        );
+      } else {
+        // 비디오, 비디오
+        return (
+          <>
+            <video className="post-image" width={272} controls>
+              <source
+                src={fileInfo1.url}
+                type={`video/${fileInfo1.extension}`}
+              />
+            </video>
+            <video className="post-image" width={272} controls>
+              <source
+                src={fileInfo2.url}
+                type={`video/${fileInfo2.extension}`}
+              />
+            </video>
+          </>
+        );
+      }
+    } else {
+      // 3개 이상의 파일이 있는 경우
       return (
         <Swiper
           slidesPerView={2}
@@ -235,15 +319,27 @@ const PostsAll = () => {
           pagination={{ clickable: true }}
           className="mySwiper"
         >
-          {post.files.map((files, index) => (
+          {filesInfo.map((fileInfo, index) => (
             <SwiperSlide key={index}>
-              <img width={272} alt="slide" src={files.file_name} />
+              {fileInfo.isImage ? (
+                // 이미지인 경우
+                <img width={272} alt="slide" src={fileInfo.url} />
+              ) : (
+                // 비디오인 경우
+                <video className="post-image" width={272} controls>
+                  <source
+                    src={fileInfo.url}
+                    type={`video/${fileInfo.extension}`}
+                  />
+                </video>
+              )}
             </SwiperSlide>
           ))}
         </Swiper>
       );
     }
   };
+
   // --------- END : 게시글 정보 관련 ---------- //
 
   //   --------- START : 게시글 무한 스크롤 ---------- //

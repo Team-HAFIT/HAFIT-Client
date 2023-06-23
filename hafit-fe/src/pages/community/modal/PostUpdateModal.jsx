@@ -167,6 +167,7 @@ const PostUpdateModal = (props) => {
               status: "done",
               url: URL.createObjectURL(file),
               fileId: postInfo.files[index].fileId,
+              type: file.type,
               originFileObj: file,
             };
           });
@@ -340,7 +341,7 @@ const PostUpdateModal = (props) => {
                     >
                       {postInfo.files.map((file, index) => (
                         <div key={index}>
-                          {file.type.includes("video") ? (
+                          {file.type && file.type.includes("video") ? (
                             <video
                               width={272}
                               controls
