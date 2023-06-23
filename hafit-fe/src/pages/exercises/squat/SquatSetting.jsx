@@ -19,7 +19,7 @@ const SqautSetting = () => {
   const onFinish = (values) => {
     setLoading(true); // 요청 시작 시 로딩 중 상태로 설정
 
-    const updatedValues = { ...values, exerciseId: 2 };
+    const updatedValues = { ...values, exerciseId: 1 };
     axios
       .post("/api/plans", updatedValues, {
         headers: {

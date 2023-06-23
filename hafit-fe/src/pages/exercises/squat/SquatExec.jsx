@@ -7,6 +7,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios'; // axios 호출
 import { useSelector } from "react-redux";
 
+import warningSound from "../../../assets/mp3/warning.mp3";
+
 const Movenet = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -92,7 +94,7 @@ const Movenet = () => {
   };
 
   useEffect(() => {
-    alertSoundRef.current = new Audio('/assets/mp3/warning.mp3');
+    alertSoundRef.current = new Audio(warningSound);
   }, []);
 
   useEffect(() => {
