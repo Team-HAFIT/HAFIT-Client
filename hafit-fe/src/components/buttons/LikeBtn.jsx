@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
 function LikeButton({ postId, likes, isLike }) {
+  useEffect(() => {
+    console.log(`postId: ${postId}, likes: ${likes}, isLike: ${isLike}`);
+  })
   const accessToken = useSelector((state) => state.authToken.accessToken);
 
   const [totalLikes, setTotalLikes] = useState(likes);
@@ -16,23 +19,21 @@ function LikeButton({ postId, likes, isLike }) {
     if (!isLiked) {
       console.log("좋아요 postId: ", postId);
       axios
-        .post(`/api/post-like/${postId}`, null, {
+        .post(`/api/posts/like/${postId}`, null, {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
           timeout: 5000,
         })
         .then((response) => {
-          console.log(response);
           setTotalLikes(totalLikes + 1);
         })
         .catch((error) => {
-          console.log(`요청url: /api/post-like/${postId}`);
           console.log(error);
         });
     } else {
       axios
-        .delete(`/api/post-like/${postId}`, {
+        .delete(`/api/posts/like/${postId}`, {
           headers: {
             authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",

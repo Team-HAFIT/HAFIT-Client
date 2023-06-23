@@ -340,18 +340,37 @@ const PostUpdateModal = (props) => {
                     >
                       {postInfo.files.map((file, index) => (
                         <div key={index}>
-                          <img
-                            width={272}
-                            alt="slide"
-                            src={file.file_name}
-                            // crossOrigin="anonymous"
-                            style={{
-                              width: "100%",
-                              minHeight: "504px",
-                              maxHeight: "504px",
-                              borderRadius: "12px",
-                            }}
-                          />
+                          {file.type.includes("video") ? (
+                            <video
+                              width={272}
+                              controls
+                              style={{
+                                width: "100%",
+                                minHeight: "504px",
+                                maxHeight: "504px",
+                                borderRadius: "12px",
+                              }}
+                            >
+                              <source
+                                src={file.url || file.preview}
+                                type={file.type}
+                              />
+                            </video>
+                          ) : (
+                            <img
+                              width={272}
+                              alt="slide"
+                              // 미리보기 기능
+                              src={file.url || file.preview}
+                              crossorigin="anonymous"
+                              style={{
+                                width: "100%",
+                                minHeight: "504px",
+                                maxHeight: "504px",
+                                borderRadius: "12px",
+                              }}
+                            />
+                          )}
                         </div>
                       ))}
                     </Carousel>
