@@ -89,8 +89,8 @@ function MainHeader() {
           </Link>
         </Menu.Item>
         <Menu.Item key="/admin/ManagementPage" className="group-menu desktop-only">
-          <Link to="/admin/ManagementPage" className="nav-menu">
-            회원정보
+          <Link to="/admin/management" className="nav-menu">
+          회원관리
           </Link>
         </Menu.Item>
       </React.Fragment>
