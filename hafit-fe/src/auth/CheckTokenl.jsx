@@ -7,12 +7,9 @@ import { DELETE_TOKEN, SET_TOKEN } from "../store/Auth";
 
 export function CheckToken(key) {
   const [isAuth, setIsAuth] = useState("Loaded");
-  const { authenticated, expireTime, accessToken } = useSelector(
-    (state) => state.authToken
-  );
+  const { authenticated, expireTime, accessToken } = useSelector((state) => state.authToken);
   const refreshToken = getCookieToken();
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthToken = async () => {
@@ -30,16 +27,20 @@ export function CheckToken(key) {
             dispatch(SET_TOKEN(token));
             setIsAuth("Success");
           } else {
-            // alert("실패!\n" +"status: " + JSON.stringify(response.status) + "\ncode: " + JSON.stringify(response.code) + "\njson: "+ JSON.stringify(response.json));
-
             dispatch(DELETE_TOKEN());
             removeCookieToken();
             setIsAuth("Failed");
-            // navigate("/login");
           }
         }
       }
-      if (accessToken === null) {
+    };
+
+    checkAuthToken();
+  }, [dispatch, refreshToken, authenticated, expireTime]);
+
+  useEffect(() => {
+    if (accessToken === null) {
+      const requestTokenAndSetAuth = async () => {
         const response = await requestToken(refreshToken);
 
         if (response.status) {
@@ -50,12 +51,12 @@ export function CheckToken(key) {
           dispatch(DELETE_TOKEN());
           removeCookieToken();
           setIsAuth("Failed");
-          // navigate("/login");
         }
-      }
-    };
-    checkAuthToken();
-  }, [dispatch, refreshToken, authenticated, expireTime, accessToken]);
+      };
+
+      requestTokenAndSetAuth();
+    }
+  }, [dispatch, refreshToken, accessToken]);
 
   return {
     isAuth,

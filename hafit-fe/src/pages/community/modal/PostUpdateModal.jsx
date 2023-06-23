@@ -171,6 +171,7 @@ const PostUpdateModal = (props) => {
               originFileObj: file,
             };
           });
+          console.log("파일 타입::::::", files[0].type);
           setFileList(files);
         })
         .catch((error) => {

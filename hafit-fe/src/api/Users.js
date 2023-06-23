@@ -100,7 +100,7 @@ export const requestToken = async (refreshToken) => {
       "Content-Type": "text/plain",
       // "Authorization-refresh": `Bearer ${refreshToken}`,
     },
-    body: refreshToken,
+    body: `Bearer ${refreshToken}`,
   };
 
   const data = await getPromise("/api/auth/refresh", option).catch(() => {
