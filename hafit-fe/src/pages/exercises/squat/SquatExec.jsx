@@ -92,7 +92,7 @@ const Movenet = () => {
   };
 
   useEffect(() => {
-    alertSoundRef.current = new Audio('/warring.mp3');
+    alertSoundRef.current = new Audio('/assets/mp3/warning.mp3');
   }, []);
 
   useEffect(() => {

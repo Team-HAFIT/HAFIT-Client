@@ -126,11 +126,17 @@ const PostUpdateModal = (props) => {
         })
         .then((response) => {
           setPostInfo(response.data);
-          console.log(response.data);
+          setPostInfo({
+            ...response.data,
+          });
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error(error);
-        });
+        })
+        .finally(() => {
+          setIsLoading(false);
+        })
     }
   }, [accessToken, props.postId]);
 
@@ -171,8 +177,6 @@ const PostUpdateModal = (props) => {
         .finally(() => {
           setIsLoading(false);
         });
-    } else {
-      setIsLoading(false);
     }
   }, [postInfo, postInfo.files, accessToken]);
 
@@ -229,7 +233,8 @@ const PostUpdateModal = (props) => {
   return (
     <>
       {isLoading ? (
-        <></>
+        <>
+        </>
       ) : (
         <Modal
           visible={props.visible}
