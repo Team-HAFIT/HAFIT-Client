@@ -31,6 +31,7 @@ import "../../../styles/pages/community/viewPostsAll.css";
 const { Title } = Typography;
 const { TextArea } = Input;
 const { Dragger } = Upload;
+const { Option } = Select;
 
 // 파일 업로드 시, base64로 변환하는 함수
 const getBase64 = (file) => {
@@ -136,7 +137,7 @@ const PostUpdateModal = (props) => {
         })
         .finally(() => {
           setIsLoading(false);
-        })
+        });
     }
   }, [accessToken, props.postId]);
 
@@ -183,7 +184,7 @@ const PostUpdateModal = (props) => {
   const handleBack = () => {
     form.resetFields();
     props.setModalVisible(false);
-  }
+  };
 
   const onFinish = async (values) => {
     setLoading(true); // 요청 시작 시, 로딩 중 상태로 설정
@@ -233,8 +234,7 @@ const PostUpdateModal = (props) => {
   return (
     <>
       {isLoading ? (
-        <>
-        </>
+        <></>
       ) : (
         <Modal
           visible={props.visible}
@@ -395,7 +395,7 @@ const PostUpdateModal = (props) => {
                     </Space>
                     <Space className="select-category">
                       <Form.Item
-                        initialValue={postInfo.category_name}
+                        initialValue={postInfo.categoryId.toString()}
                         name="categoryId"
                         rules={[
                           {
@@ -405,26 +405,15 @@ const PostUpdateModal = (props) => {
                         ]}
                       >
                         <Select
-                          initialValue="카테고리 선택"
+                          initialValue={postInfo.categoryId.toString()}
                           style={{
                             width: 120,
                           }}
-                          // onChange={handleChange}
-                          options={[
-                            {
-                              value: "1",
-                              label: "오운완",
-                            },
-                            {
-                              value: "2",
-                              label: "자세 피드백",
-                            },
-                            {
-                              value: "3",
-                              label: "운동 Q&A",
-                            },
-                          ]}
-                        />
+                        >
+                          <Option value="1">오운완</Option>
+                          <Option value="2">자세 피드백</Option>
+                          <Option value="3">운동 Q&A</Option>
+                        </Select>
                       </Form.Item>
                     </Space>
                   </Col>
