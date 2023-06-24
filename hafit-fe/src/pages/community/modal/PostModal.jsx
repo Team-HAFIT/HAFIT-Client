@@ -158,6 +158,7 @@ const PostModal = (props) => {
 
   const handleBack = () => {
     form.resetFields();
+    setFileList([]);
     props.setModalVisible(false);
   };
 
@@ -341,7 +342,7 @@ const PostModal = (props) => {
                           alt="slide"
                           // 미리보기 기능
                           src={file.url || file.preview}
-                          crossorigin="anonymous"
+                          // crossorigin="anonymous"
                           style={{
                             width: "100%",
                             minHeight: "504px",

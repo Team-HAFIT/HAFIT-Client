@@ -43,28 +43,10 @@ const PostsAll = () => {
   const [selectedPostId, setSelectedPostId] = useState(null); // 선택한 게시글 id
 
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([
-    // {
-    //   category_name: "오운완",
-    //   comment_count: 2,
-    //   createdAt: "2023-06-18 16:43:18.269857",
-    //   files: [
-    //     {
-    //       file_name:
-    //         "https://feedback-file-bucket.s3.ap-northeast-2.amazonaws.com/static/posts/d2b359aa-4a8e-483d-aaf8-2e146abc4d2d.9fe11359-2e4f-4b24-8d27-d972509a1a62",
-    //     },
-    //   ],
-    //   modifiedAt: "2023-06-18 16:43:18.269857",
-    //   postId: 0,
-    //   post_content:
-    //     "동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리 나라 만세~~~",
-    //   post_totalLikes: 7,
-    //   user_name: "해핏",
-    // },
-  ]);
-  const [fileType, setFileType] = useState("");
+  const [data, setData] = useState([]);
+
   const [lastPostId, setLastPostId] = useState(999999);
-  const size = 10; // 한 번에 불러올 게시글 개수
+  const size = 15; // 한 번에 불러올 게시글 개수
 
   const [reachedEnd, setReachedEnd] = useState(false); // 게시글 끝까지 불러왔는지 여부
 
@@ -138,19 +120,6 @@ const PostsAll = () => {
       .then((response) => {
         setData((prevData) => prevData.concat(response.data));
 
-        // for (let i = 0; i < response.data.length; i++) {
-        //   for (let j = 0; j < response.data[i].files.length; j++) {
-        //     const fileUrl = response.data[i].files[j].file_name;
-
-        //     // 파일명에서 마지막 점(.)의 인덱스 찾기.
-        //     const lastDotIndex = fileUrl.lastIndexOf(".");
-        //     // 파일명에서 마지막 점(.) 다음부터 끝까지의 부분 문자열을 추출
-        //     const fileExtension = fileUrl.substring(lastDotIndex + 1);
-        //     console.log(fileExtension);
-        //     setFileType(fileExtension);
-        //   }
-        // }
-
         // 마지막 게시글 postId 업데이트
         if (response.data.length > 0) {
           setLastPostId(response.data[response.data.length - 1].postId);
@@ -168,25 +137,10 @@ const PostsAll = () => {
             comment_count: 2,
             createdAt: "2023-06-18 16:43:18.269857",
             files: [
-              // {
-              //   file_name:
-              //     "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
-              // },
               {
                 file_name:
                   "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
               },
-              {
-                file_name:
-                  "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
-              },
-              // {
-              //   file_name: "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
-              // },
-              // {
-              //   file_name:
-              //     "https://images.unsplash.com/photo-1684695414418-b76c47bfb731?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
-              // },
             ],
             modifiedAt: "2023-06-18 16:43:18.269857",
             postId: 0,
@@ -203,6 +157,19 @@ const PostsAll = () => {
       });
   }, [accessToken, lastPostId, loading, reachedEnd, size]);
 
+  const getFileContentType = (url) => {
+    return fetch(url)
+      .then((response) => {
+        // 응답 헤더에서 'Content-Type'가져옴
+        const contentType = response.headers.get("Content-Type");
+        return contentType;
+      })
+      .catch((error) => {
+        console.error(`Error fetching ${url}: ${error}`);
+        return null;
+      });
+  };
+
   useEffect(() => {
     getPosts();
   }, []);
@@ -211,7 +178,7 @@ const PostsAll = () => {
     if (!post?.files || post.files.length === 0) {
       return null;
     }
-
+    
     const filesInfo = post.files.map((file) => {
       const extension = file.file_name.split(".").pop().toLowerCase(); // 파일 확장자 추출
       const isImage = /^jpe?g|png|gif$/.test(extension); // 이미지 파일인지 확인
@@ -513,7 +480,7 @@ const PostsAll = () => {
                   <div style={{ marginRight: "16px" }}>
                     <LikeButton
                       postId={post.postId}
-                      likes={post.comment_count}
+                      likes={post.post_totalLikes}
                       isLike={post.post_likedByUser}
                     />
                   </div>

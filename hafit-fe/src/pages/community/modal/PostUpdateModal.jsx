@@ -141,37 +141,43 @@ const PostUpdateModal = (props) => {
     }
   }, [accessToken, props.postId]);
 
-  // s3 파일 url -> 파일 정보로 변환
+  // s3 파일 url -> 파일로 변환 -> base64로 변환
   useEffect(() => {
     if (postInfo && postInfo.files) {
       Promise.all(
-        postInfo.files.map((file) => {
-          return axios.get(`/api/posts/img/${file.fileId}`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            responseType: "arraybuffer",
-            timeout: 10000,
-          });
+        postInfo.files.map((file, index) => {
+          return axios
+            .get(`/api/posts/img/${file.fileId}`, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+              responseType: "arraybuffer",
+              timeout: 10000,
+            })
+            .then(async (res) => {
+              const base64 = await getBase64(
+                new File([res.data], `file_${index}`, {
+                  type: res.headers["content-type"],
+                })
+              );
+              return {
+                uid: `__AUTO__${Date.now()}${index}__`,
+                name: file.name,
+                status: "done",
+                url: URL.createObjectURL(
+                  new Blob([res.data], { type: res.headers["content-type"] })
+                ),
+                fileId: file.fileId,
+                type: res.headers["content-type"],
+                originFileObj: new File([res.data], file.name, {
+                  type: res.headers["content-type"],
+                }),
+                base64: base64,
+              };
+            });
         })
       )
-        .then((responses) => {
-          // const files = responses.map((res) => res.data);
-          const files = responses.map((res, index) => {
-            const file = new File([res.data], `file_${index}`, {
-              type: res.headers["content-type"],
-            });
-            return {
-              uid: `__AUTO__${Date.now()}${index}__`,
-              name: file.name,
-              status: "done",
-              url: URL.createObjectURL(file),
-              fileId: postInfo.files[index].fileId,
-              type: file.type,
-              originFileObj: file,
-            };
-          });
-          console.log("파일 타입::::::", files[0].type);
+        .then((files) => {
           setFileList(files);
         })
         .catch((error) => {
@@ -310,15 +316,15 @@ const PostUpdateModal = (props) => {
                     </p>
                     <p className="ant-upload-hint">
                       최대 6장까지 업로드 가능합니다! <br />
-                      사진 업로드 시, 다음의 주의사항을 숙지해주세요: <br />
+                      사진/동영상 업로드 시, 다음의 주의사항을 숙지해주세요: <br />
                       <br />
-                      1. 각 사진 파일 크기는 20MB 이하로 제한됩니다.
+                      1. 각 사진/동영상 파일 크기는 20MB 이하로 제한됩니다.
                       <br />
                       <br />
                       2. 지원되는 파일 형식은 JPG, PNG, GIF, MP4, AVI 입니다.
                       <br />
                       <br />
-                      3. 저작권이 있는 사진은 업로드를 피해주세요.
+                      3. 저작권이 있는 사진/동영상은 업로드를 피해주세요.
                     </p>
                   </Dragger>
                 ) : (
@@ -340,41 +346,45 @@ const PostUpdateModal = (props) => {
                       infinite={true}
                       slidesToScroll={1}
                     >
-                      {postInfo.files.map((file, index) => (
-                        <div key={index}>
-                          {file.type && file.type.includes("video") ? (
-                            <video
-                              width={272}
-                              controls
-                              style={{
-                                width: "100%",
-                                minHeight: "504px",
-                                maxHeight: "504px",
-                                borderRadius: "12px",
-                              }}
-                            >
-                              <source
-                                src={file.url || file.preview}
-                                type={file.type}
+                      {fileList.map((file, index) => {
+                        console.log(file);
+                        const extension = file.type
+                          .split("/")
+                          .pop()
+                          .toLowerCase();
+                        const isVideo = /^mp4|avi$/.test(extension);
+
+                        return (
+                          <div key={index}>
+                            {isVideo ? (
+                              <video
+                                width={272}
+                                controls
+                                style={{
+                                  width: "100%",
+                                  minHeight: "504px",
+                                  maxHeight: "504px",
+                                  borderRadius: "12px",
+                                }}
+                              >
+                                <source src={file.base64} type={file.type} />
+                              </video>
+                            ) : (
+                              <img
+                                width={272}
+                                alt="slide"
+                                src={file.base64}
+                                style={{
+                                  width: "100%",
+                                  minHeight: "504px",
+                                  maxHeight: "504px",
+                                  borderRadius: "12px",
+                                }}
                               />
-                            </video>
-                          ) : (
-                            <img
-                              width={272}
-                              alt="slide"
-                              // 미리보기 기능
-                              src={file.url || file.preview}
-                              crossorigin="anonymous"
-                              style={{
-                                width: "100%",
-                                minHeight: "504px",
-                                maxHeight: "504px",
-                                borderRadius: "12px",
-                              }}
-                            />
-                          )}
-                        </div>
-                      ))}
+                            )}
+                          </div>
+                        );
+                      })}
                     </Carousel>
                     <Button
                       className="carousel-button carousel-next-button"

@@ -98,9 +98,9 @@ export const requestToken = async (refreshToken) => {
     method: "POST",
     headers: {
       "Content-Type": "text/plain",
-      // "Authorization-refresh": `Bearer ${refreshToken}`,
+      "Authorization-refresh": `Bearer ${refreshToken}`,
     },
-    body: `Bearer ${refreshToken}`,
+    body: refreshToken,
   };
 
   const data = await getPromise("/api/auth/refresh", option).catch(() => {
@@ -111,7 +111,7 @@ export const requestToken = async (refreshToken) => {
     const status = data.ok;
     const code = data.status;
     const text = await data.text();
-    const json = text.length ? JSON.parse(text) : "";
+    const json = text.length ? JSON.parse(text) : null;
     
     // console.log("requestToken", data.json());
 
