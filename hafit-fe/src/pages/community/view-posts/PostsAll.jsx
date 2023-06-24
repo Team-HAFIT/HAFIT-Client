@@ -157,19 +157,6 @@ const PostsAll = () => {
       });
   }, [accessToken, lastPostId, loading, reachedEnd, size]);
 
-  const getFileContentType = (url) => {
-    return fetch(url)
-      .then((response) => {
-        // 응답 헤더에서 'Content-Type'가져옴
-        const contentType = response.headers.get("Content-Type");
-        return contentType;
-      })
-      .catch((error) => {
-        console.error(`Error fetching ${url}: ${error}`);
-        return null;
-      });
-  };
-
   useEffect(() => {
     getPosts();
   }, []);

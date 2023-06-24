@@ -311,7 +311,7 @@ const PostUpdateModal = (props) => {
                       <PictureOutlined />
                     </p>
                     <p className="ant-upload-text">
-                      이곳에 사진을 드래그하거나 클릭해서 첨부할 수 있습니다
+                      이곳에 사진/동영상을 드래그하거나 클릭해서 첨부할 수 있습니다
                       :&#41;
                     </p>
                     <p className="ant-upload-hint">
