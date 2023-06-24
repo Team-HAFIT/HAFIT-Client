@@ -33,6 +33,63 @@ const { TextArea } = Input;
 const { Dragger } = Upload;
 const { Option } = Select;
 
+// 파일 관련 상태 및 함수
+export const useFileUpload = (initialFiles = []) => {
+  const [fileList, setFileList] = useState(initialFiles);
+  const [fileIdList, setFileIdList] = useState([]);
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handleRemove = (file) => {
+    setFileIdList([...fileIdList, file.fileId]);
+  };
+
+  const onUploadChange = async ({ fileList: newFileList }) => {
+    const promises = newFileList.map(async (file) => {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+        file.status = "done";
+      }
+      return file;
+    });
+
+    const updatedFileList = await Promise.all(promises);
+    setFileList(updatedFileList);
+  };
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+
+  return {
+    fileList,
+    fileIdList,
+    previewOpen,
+    previewImage,
+    previewTitle,
+    handleRemove,
+    onUploadChange,
+    handlePreview,
+    handleCancel,
+    setFileList,
+    setFileIdList,
+    setPreviewOpen,
+    setPreviewImage,
+    setPreviewTitle,
+  };
+};
+
 // 파일 업로드 시, base64로 변환하는 함수
 const getBase64 = (file) => {
   return new Promise((resolve, reject) => {
@@ -53,41 +110,22 @@ const PostUpdateModal = (props) => {
   const [postInfo, setPostInfo] = useState({});
 
   // --------- START : 파일 업로드 관련 ---------- //
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([]);
-  const [fileIdList, setFileIdList] = useState([]); // 삭제할 파일 id 목록
-
-  const handleCancel = () => setPreviewOpen(false);
-
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(
-      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-    );
-  };
-
-  const handleRemove = (file) => {
-    setFileIdList([...fileIdList, file.fileId]);
-  };
-
-  const onUploadChange = async ({ fileList: newFileList }) => {
-    const promises = newFileList.map(async (file) => {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-        file.status = "done";
-      }
-      return file;
-    });
-
-    const updatedFileList = await Promise.all(promises);
-    setFileList(updatedFileList);
-  };
+  const {
+    fileList,
+    fileIdList,
+    previewOpen,
+    previewImage,
+    previewTitle,
+    handleRemove,
+    onUploadChange,
+    handlePreview,
+    handleCancel,
+    setFileList,
+    setFileIdList,
+    setPreviewOpen,
+    setPreviewImage,
+    setPreviewTitle,
+  } = useFileUpload(postInfo.files || []);
 
   const uploadButton = (
     <div>
@@ -127,9 +165,9 @@ const PostUpdateModal = (props) => {
         })
         .then((response) => {
           setPostInfo(response.data);
-          setPostInfo({
-            ...response.data,
-          });
+          // setPostInfo({
+          //   ...response.data,
+          // });
           setIsLoading(false);
         })
         .catch((error) => {
@@ -251,6 +289,7 @@ const PostUpdateModal = (props) => {
           maskClosable={false} // 모달 바깥 영역 클릭 시 모달 닫히지 않도록 설정
           width="68vw"
           style={{ top: "10vh" }}
+          destroyOnClose={true} // 모달이 닫힐 때, 모달 내부의 state 초기화
         >
           <Form
             form={form}
@@ -311,12 +350,13 @@ const PostUpdateModal = (props) => {
                       <PictureOutlined />
                     </p>
                     <p className="ant-upload-text">
-                      이곳에 사진/동영상을 드래그하거나 클릭해서 첨부할 수 있습니다
-                      :&#41;
+                      이곳에 사진/동영상을 드래그하거나 클릭해서 첨부할 수
+                      있습니다 :&#41;
                     </p>
                     <p className="ant-upload-hint">
                       최대 6장까지 업로드 가능합니다! <br />
-                      사진/동영상 업로드 시, 다음의 주의사항을 숙지해주세요: <br />
+                      사진/동영상 업로드 시, 다음의 주의사항을 숙지해주세요:{" "}
+                      <br />
                       <br />
                       1. 각 사진/동영상 파일 크기는 20MB 이하로 제한됩니다.
                       <br />
