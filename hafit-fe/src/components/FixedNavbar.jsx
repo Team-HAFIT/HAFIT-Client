@@ -84,6 +84,11 @@ function FixedHeader() {
             커뮤니티
           </Link>
         </Menu.Item>
+        <Menu.Item key="/admin/ManagementPage" className="group-menu desktop-only">
+          <Link to="/admin/management" className="nav-menu">
+            회원관리
+          </Link>
+        </Menu.Item>
       </React.Fragment>
 
       {/* 모바일에서는 '모바일 메뉴1'과 '모바일 메뉴2'가 소개와 공지사항을 대체합니다. */}

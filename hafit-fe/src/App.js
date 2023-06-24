@@ -46,6 +46,9 @@ import ExecStatsPage from "./pages/exercises/ExecStatsPage";
 import CalendarPage from "./pages/exercises/calendar/CalendarPage";
 import StatsPage from "./pages/exercises/StatsPage";
 
+// 유진
+import ManagementPage from "./pages/admin/ManagementPage";
+
 //라우트
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
@@ -63,6 +66,9 @@ function App() {
             <Route path="/notice" element={<NoticePage />} /> {/* 공지사항 */}
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/stats" element={<StatsPage />} />
+            
+            {/* 유진 */}
+            <Route path="/admin/management" element={<ManagementPage />} />
           </Route>
 
           {/* PublicRoute: 토큰이 없는 사용자만 접근 가능 (로그인 X) */}
@@ -119,6 +125,8 @@ function App() {
 
           {/* 임시 사용 */}
           <Route path="/stats" element={<ExecStatsPage />} />
+          {/* 유진 */}
+          <Route path="/admin/management" element={<ManagementPage />} />
         </Routes>
       </div>
     </Router>
