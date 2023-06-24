@@ -85,12 +85,14 @@ function Header() {
                 운동 통계
               </Link>
             </Menu.Item>
-            <Menu.Item
-              key="/community/main"
-              className="group-menu desktop-only"
-            >
+            <Menu.Item key="/community/main" className="group-menu desktop-only">
               <Link to="/community/main" className="nav-menu">
                 커뮤니티
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/admin/ManagementPage" className="group-menu desktop-only">
+              <Link to="/admin/management" className="nav-menu">
+                회원관리
               </Link>
             </Menu.Item>
           </React.Fragment>
