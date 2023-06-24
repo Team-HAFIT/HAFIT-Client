@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
+  Button,
   message,
   Modal,
 } from "antd";
@@ -82,7 +83,35 @@ const ManagementPage = () => {
       },
     });
   };  
-
+  const handleUserDelete = (record) => {
+    Modal.confirm({
+      title: "회원 삭제하시겠습니까?",
+      onOk: () => {
+        axios
+          .delete(`/api/admin/${record.userId}`,
+          
+            {
+              headers: {
+                "Content-Type": "application/json", // 요청 헤더에 Content-Type 설정
+                authorization: `Bearer ${accessToken}`,
+              },
+              timeout: 5000,
+            })
+          .then(() => {
+            message.success("삭제되었습니다", 1);
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.log(record.userId);
+            console.error(error);
+          });
+      },
+      onCancel: () => {
+        console.log("회원 삭제를 취소하셨습니다! ˙ᵕ˙");
+      },
+    });
+  };
+  
   const columns = [
     {
       title: "아이디",
@@ -101,18 +130,41 @@ const ManagementPage = () => {
       dataIndex: "carrier",
       key: "carrier",
       width: "10%",
+      render: (text) => {
+        if (text === 0) {
+          return "선택안함";
+        } else {
+          return text;
+        }
+      },
     },
     {
       title: "전화번호",
       dataIndex: "phone",
       key: "phone",
       width: "10%",
+      render: (text) => {
+        if (text === 0) {
+          return "선택안함";
+        } else {
+          return text;
+        }
+      },
     },
     {
       title: "성별",
       dataIndex: "sex",
       key: "sex",
       width: "10%",
+      render: (text) => {
+        if (text === "f") {
+          return "여성";
+        } else if (text === "m") {
+          return "남성";
+        } else {
+          return "선택안함";
+        }
+      },
     },
     {
       title: "이름",
@@ -125,18 +177,39 @@ const ManagementPage = () => {
       dataIndex: "birthday",
       key: "birthday",
       width: "10%",
+      render: (text) => {
+        if (text) {
+          return text;
+        } else {
+          return "선택안함";
+        }
+      },
     },
     {
       title: "키",
       dataIndex: "height",
       key: "height",
       width: "10%",
+      render: (text) => {
+        if (text === 0) {
+          return "선택안함";
+        } else {
+          return text;
+        }
+      },
     },
     {
       title: "몸무게",
       dataIndex: "weight",
       key: "weight",
       width: "10%",
+      render: (text) => {
+        if (text === 0) {
+          return "선택안함";
+        } else {
+          return text;
+        }
+      },
     },
     {
       title: "생성일",
@@ -149,9 +222,16 @@ const ManagementPage = () => {
       dataIndex: "socialType",
       key: "socialType",
       width: "10%",
+      render: (text) => {
+        if (text) {
+          return text;
+        } else {
+          return "일반로그인";
+        }
+      },
     },
     {
-      title: "권한",
+      title: "권한 변경",
       dataIndex: "role",
       key: "role",
       width: "10%",
@@ -165,6 +245,15 @@ const ManagementPage = () => {
           <Option value="ADMIN">관리자</Option>
           <Option value="USER">일반 회원</Option>
         </Select>
+      ),
+    },
+    {
+      title: "회원 삭제",
+      width: "10%",
+      render: (text, record) => (
+        <Button type="link" danger onClick={() => handleUserDelete(record)}>
+        삭제
+      </Button>
       ),
     },
   ];
