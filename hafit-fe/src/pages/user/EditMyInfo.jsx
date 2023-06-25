@@ -1,8 +1,3 @@
-/* 2023/06/12
- * carrier 값이 변경되지 않는 문제 발생, 원인 파악 필요
- * 휴대폰 인증 구현 전까지 'carrier' 주석 처리
- * */
-
 import {
   Button,
   Col,
@@ -17,7 +12,11 @@ import {
   Divider,
   DatePicker,
   ConfigProvider,
+  Avatar,
+  Upload,
+  message,
 } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import locale from "antd/locale/ko_KR";
@@ -40,6 +39,7 @@ const { Title } = Typography;
 
 const EditMyInfo = () => {
   const [userInfo, setUserInfo] = useState({
+    imageUrl: "",
     name: "",
     email: "",
     // carrier: "",
@@ -93,6 +93,54 @@ const EditMyInfo = () => {
   const [form] = Form.useForm();
   const [phone, setPhone] = useState(""); // 전화번호 입력값 상태 저장
   const [modalVisible, setModalVisible] = useState(false); // 모달 표시 여부 상태값
+
+  const [avatarFile, setAvatarFile] = useState(null); // 현재 업로드된 이미지
+
+  // 파일 업로드 시, base64로 변환하는 함수
+  const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (err) => reject(err);
+    });
+  };
+
+  // 이미지 파일 선택 시 호출
+  const handleChangeAvatar = async (info) => {
+    try {
+      if (info.file.status === "done") {
+        const file = info.file.originFileObj;
+        const preview = await getBase64(file);
+
+        setAvatarFile({ file, preview, status: "done" });
+        // handleSubmitProfile(file);
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("프로필 이미지 업로드에 실패하였습니다.");
+    }
+  };
+
+  // 프로필 이미지 변경 요청
+  const handleSubmitProfile = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      await axios.put("/api/my/profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+      message.success("프로필 이미지가 변경되었습니다.", 1);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      message.error("프로필 이미지 변경에 실패하였습니다.", 1);
+    }
+  };
 
   const handlePhoneChange = (value) => {
     setPhone(value); // 전화번호 입력값 상태 업데이트
@@ -197,6 +245,23 @@ const EditMyInfo = () => {
           <Row justify="center" align="middle" style={{ height: "100vh" }}>
             <Col span={12} align="middle">
               <Title level={3}>내 정보 수정</Title>
+              <Upload
+                onChange={handleChangeAvatar}
+                showUploadList={false}
+                beforeUpload={(file) => {
+                  handleSubmitProfile(file);
+                  return false; // 파일 업로드 중지
+                }}
+              >
+                <Avatar
+                  size={104}
+                  icon={avatarFile ? null : <UserOutlined />}
+                  src={
+                    userInfo.imageUrl ||
+                    (avatarFile ? avatarFile.preview : null)
+                  }
+                />
+              </Upload>
               <Form
                 form={form}
                 onFinish={onFinish}

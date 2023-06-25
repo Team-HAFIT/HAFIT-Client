@@ -29,3 +29,7 @@ body {
 .ant-picker-input > input {
   font-size: 16px !important;
 }
+
+.ant-upload:hover {
+  cursor: pointer;
+}
