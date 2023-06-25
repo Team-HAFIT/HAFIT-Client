@@ -498,7 +498,7 @@ const CategoryQnA = () => {
                         color: "#999999",
                       }}
                     >
-                      2
+                      {post.comment_count}
                     </span>
                   </Button>
                 </div>
