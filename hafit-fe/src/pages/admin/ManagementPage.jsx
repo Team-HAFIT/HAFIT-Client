@@ -114,29 +114,16 @@ const ManagementPage = () => {
   
   const columns = [
     {
-      title: "아이디",
+      title: "id",
       dataIndex: "userId",
       key: "userId",
-      width: "10%",
+      width: "8%",
     },
     {
-      title: "아이디",
+      title: "이메일",
       dataIndex: "email",
       key: "email",
       width: "10%",
-    },
-    {
-      title: "통신사",
-      dataIndex: "carrier",
-      key: "carrier",
-      width: "10%",
-      render: (text) => {
-        if (text === 0) {
-          return "선택안함";
-        } else {
-          return text;
-        }
-      },
     },
     {
       title: "전화번호",
