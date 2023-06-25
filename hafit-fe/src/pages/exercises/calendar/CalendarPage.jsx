@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Calendar, Modal, Form, Input, Button, Checkbox, Select } from 'antd';
+import React, { useEffect, useState, useCallback } from "react";
+import { Calendar, Modal, Form, Input, Button, message, Checkbox, DatePicker, Select } from 'antd';
 import moment from 'moment';
 import '../../../styles/pages/calendarPage.css';
-
+import { useSelector } from "react-redux";
+import axios from "axios";
 const { Option } = Select;
 
 const CalendarPage = () => {
@@ -14,6 +15,101 @@ const CalendarPage = () => {
   const [targetWeight, setTargetWeight] = useState('');
   const [repeatDays, setRepeatDays] = useState([]);
   const [exerciseSchedules, setExerciseSchedules] = useState([]);
+  const [data, setData] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [goals, setGoals] = useState([]);
+  const accessToken = useSelector((state) => state.authToken.accessToken);
+  const [keywords, setKeywords] = useState([]);
+  const [exerciseList, setExerciseList] = useState([]);
+  const [selectedExerciseId, setSelectedExerciseId] = useState(null);
+
+  const fetchGoals = useCallback(async () => {
+
+    try {
+      const response = await axios.get("/api/goals/my", {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      });
+  
+      const goals = response.data.goals;
+      setGoals(prevGoals => prevGoals.concat(goals));
+    } catch (error) {
+      console.log(error);
+      message.error("회원 정보를 불러오지 못했습니다", 1);
+    } finally {
+      // 추가적인 작업이 필요한 경우 여기에 작성합니다.
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    fetchGoals();
+  }, []);
+
+  const fetchKeywords  = useCallback(async () => {
+
+    try {
+      const response = await axios.get("/api/keywords", {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      });
+      setKeywords(response.data);
+    } catch (error) {
+      console.log(error);
+      message.error("키워드를 불러올 수 없습니다.", 1);
+    } finally {
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    fetchKeywords();
+  }, []);  
+
+  const handleKeywordChange = useCallback(async (keywordId) => {
+
+    try {
+      const response = await axios.get(`/api/exercises/keyword/${keywordId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      });
+      setExerciseList(response.data);
+    } catch (error) {
+      console.log(error);
+      message.error("키워드를 불러올 수 없습니다.", 1);
+    } finally {
+    }
+  }, [accessToken]);
+
+  const renderGoalList = () => {
+    return (
+      <div className="pill-container">
+        <ul className="goal-list">
+          {goals.map((goal, index) => (
+            <li key={index} className="goal-item">
+              <p className="goal-content first-child">{goal.goal_target_date}</p>
+              <p className="d-day last-child">{goal.goal_content}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+  
+  const handleAddGoal = () => {
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -22,6 +118,28 @@ const CalendarPage = () => {
 
   const handleModalCancel = () => {
     setModalVisible(false);
+  };
+
+  const handleExerciseClick = (exerciseId) => {
+    setSelectedExerciseId(exerciseId);
+  };
+
+  const handleGoalSubmit = async (values) => {
+    try {
+      values.exerciseId = selectedExerciseId;
+      values.goal_target_date = values.goal_target_date.format('YYYY-MM-DD');
+      const response = await axios.post('/api/goals', values, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      });
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+      message.error('운동 목표를 추가할 수 없습니다.', 1);
+    }
   };
 
   const handleModalSubmit = (values) => {
@@ -84,8 +202,8 @@ const CalendarPage = () => {
       <ul className="date-cell-schedules">
         {schedules.map((schedule, index) => (
           <p key={index}>
-              {schedule.exercise}  {schedule.reps}개 X {schedule.sets} 세트 ({schedule.weight}kg)
-            </p>
+            {schedule.exercise}  {schedule.reps}개 X {schedule.sets} 세트 ({schedule.weight}kg)
+          </p>
         ))}
       </ul>
     );
@@ -122,7 +240,7 @@ const CalendarPage = () => {
     const todaySchedules = exerciseSchedules.filter(
       (schedule) => schedule.date === date.format('YYYY-MM-DD')
     );
-  
+
     if (todaySchedules.length > 0) {
       return (
         <div>
@@ -150,13 +268,62 @@ const CalendarPage = () => {
 
   return (
     <div className="container">
-      <h1>운동 일정</h1>
+      <div className="calendar-page">
+      {goals.length === 0 && <h1>운동 목표를 추가해 주세요 &#127947;</h1>}
+        <div className="goal-list">
+          {renderGoalList()}
+        </div>
+        <Button type="primary" onClick={handleAddGoal} style={{ display: goals.length >= 2 ? 'none' : 'block', marginBottom: '1em' }}>+</Button>
+        <Modal
+          title="운동 목표를 설정해 주세요 &#127947;"
+          visible={showModal}
+          onCancel={handleModalClose}
+          footer={null}
+        >
+          <Form onFinish={handleGoalSubmit}>
+            <Form.Item name="goal_target_date" label="목표 날짜" rules={[{ required: true, message: 'D-Day를 선택해 주세요.' }]}>
+              <DatePicker />
+            </Form.Item>
+            <Form.Item name="goal_content" label="운동 목표" rules={[{ required: true, message: '운동 목표를 입력해 주세요.' }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item name="keywordId" label="키워드" rules={[{ required: true, message: '키워드를 선택해 주세요.' }]}>
+              <Select onChange={handleKeywordChange}>
+                {keywords.map((keyword) => (
+                  <Select.Option key={keyword.keywordId} value={keyword.keywordId}>
+                    {keyword.keyword_name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item>
+              {exerciseList.map((exercise) => (
+                <Button
+                  key={exercise.exerciseId}
+                  onClick={() => handleExerciseClick(exercise.exerciseId)}
+                  style={{
+                    fontWeight: selectedExerciseId === exercise.exerciseId ? 'bold' : 'normal',
+                    backgroundColor: selectedExerciseId === exercise.exerciseId ? '#8A2BE2' : 'inherit',
+                    color: selectedExerciseId === exercise.exerciseId ? '#eaeaea' : 'inherit'
+                  }}
+                >
+                  {exercise.exerciseName}
+                </Button>
+              ))}
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" style={{ backgroundColor: '#8A2BE2' }}>확인</Button>
+           </Form.Item>
+          </Form> 
+        </Modal>
+      </div>
+
       <div className="exercise-sections">
         {renderExerciseSection('오늘', 0)}
         {renderExerciseSection('내일', 1)}
         {renderExerciseSection('모레', 2)}
       </div>
-      
+
       <div className="calendar">
         <Calendar
           onSelect={handleDateSelect}
