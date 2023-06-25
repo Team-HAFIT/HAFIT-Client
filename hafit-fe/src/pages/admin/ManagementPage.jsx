@@ -117,19 +117,19 @@ const ManagementPage = () => {
       title: "id",
       dataIndex: "userId",
       key: "userId",
-      width: "8%",
+      width: "5%",
     },
     {
       title: "이메일",
       dataIndex: "email",
       key: "email",
-      width: "10%",
+      width: "15%",
     },
     {
       title: "전화번호",
       dataIndex: "phone",
       key: "phone",
-      width: "10%",
+      width: "12%",
       render: (text) => {
         if (text === 0) {
           return "선택안함";
