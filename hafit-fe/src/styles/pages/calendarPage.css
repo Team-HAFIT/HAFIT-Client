@@ -148,7 +148,7 @@ h1 {
 
 .first-child {
   flex-basis: 20vh;
-  background-color: #8A2BE2;
+  background-color: #9d6acd;
   color: white;
   height: 7vh;
   border-radius: 20px 0 0 20px;
@@ -169,6 +169,6 @@ h1 {
   width: 100vh;
   background-color: #eaeaea;
   margin: 0 auto;
-  color: #8A2BE2;
+  color: #9d6acd;
   border-radius: 20px;
 }

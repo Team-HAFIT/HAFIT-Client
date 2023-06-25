@@ -28,6 +28,36 @@ const CalendarPage = () => {
   const [goalId, setGoalId] = useState('');
   const [startDate, setStartDate] = useState('');
   const [repeatDays, setRepeatDays] = useState([]);
+  const [routines, setRoutines] = useState([]);
+
+  const fetchRoutines = useCallback(async () => {
+    axios
+      .get("/api/routines", {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      })
+      .then((response) => {
+        const routines = response.data;
+        setRoutines(routines);
+      })
+      .catch((error) => {
+        console.log(error);
+        message.error("루틴 정보를 불러오지 못했습니다", 1);
+      });
+  }, [accessToken]);
+  
+  useEffect(() => {
+    fetchRoutines();
+  }, []);
+
+  // 캘린더에서 해당 날짜에 운동 이름을 표시하는 함수
+  const renderExerciseName = (date) => {
+    const exercise = routines.find((item) => item.days === date);
+    return exercise ? exercise.exerciseName : '';
+  };
 
   const fetchGoals = useCallback(async () => {
 
@@ -238,19 +268,18 @@ const CalendarPage = () => {
   };
 
   const dateCellRender = (value) => {
-    const schedules = exerciseSchedules.filter(
-      (schedule) => schedule.date === value.format('YYYY-MM-DD')
-    );
-
-    const formatExerciseSummary = (schedule) => {
-      return `${schedule.exercise} (${schedule.reps}회, ${schedule.sets}세트, ${schedule.weight}kg)`;
-    };
+    const exercises = routines.filter((routine) => routine.days === value.format('YYYY-MM-DD'));
 
     return (
       <ul className="date-cell-schedules">
-        {schedules.map((schedule, index) => (
+        {exercises.map((exercise, index) => (
           <p key={index}>
-            {schedule.exercise}  {schedule.reps}개 X {schedule.sets} 세트 ({schedule.weight}kg)
+            <div style={{ backgroundColor: 'lightgray', padding: '5px', borderRadius: '4px' }}>
+              <div style={{ backgroundColor: '#9d6acd', color: 'white', padding: '5px', borderRadius: '4px' }}>
+              <span style={{ fontWeight: 'bold' }}>{exercise.exerciseName}</span>
+              </div>
+              {`${exercise.routineCount}개 x ${exercise.routineSet}세트${exercise.routineWeight !== null ? ` x ${exercise.routineWeight}kg` : ''}`}
+            </div>
           </p>
         ))}
       </ul>
@@ -507,20 +536,6 @@ const CalendarPage = () => {
               onChange={handleTargetWeightChange}
             />
           </Form.Item>
-          {/* <Form.Item label="반복 요일">
-            <Checkbox.Group onChange={handleRepeatDaysChange}>
-              <Checkbox value="월">월</Checkbox>
-              <Checkbox value="화">화</Checkbox>
-              <Checkbox value="수">수</Checkbox>
-              <Checkbox value="목">목</Checkbox>
-              <Checkbox value="금">금</Checkbox>
-              <Checkbox value="토">토</Checkbox>
-              <Checkbox value="일">일</Checkbox>
-            </Checkbox.Group>
-          </Form.Item>
-          <Form.Item label="메모">
-            <Input.TextArea rows={3} name="memo" />
-          </Form.Item> */}
           <Form.Item>
             <Button type="primary" htmlType="submit">
               저장
