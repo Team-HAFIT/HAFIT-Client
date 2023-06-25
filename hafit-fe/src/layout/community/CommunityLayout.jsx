@@ -107,6 +107,7 @@ const CommunityLayout = () => {
                 size={64}
                 shape="circle"
                 icon={<UserOutlined />}
+                src={userInfo.imageUrl}
               />
               <div style={{ paddingBottom: "4px" }}>
                 <div style={{ margin: "0 0 4px 16px", marginBottom: "18px" }}>

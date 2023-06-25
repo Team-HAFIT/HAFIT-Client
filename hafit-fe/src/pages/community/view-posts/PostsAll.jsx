@@ -1,4 +1,4 @@
-import { CommentOutlined } from "@ant-design/icons";
+import { CommentOutlined, UserOutlined } from "@ant-design/icons";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import {
   theme,
@@ -388,11 +388,10 @@ const PostsAll = () => {
                     <div style={{ display: "flex" }}>
                       <Avatar
                         size={56}
-                        src="#"
+                        icon={<UserOutlined />}
+                        src="post.imageUrl"
                         // style={{ width: "48px", height: "48px" }}
                         style={{
-                          display: "flex",
-                          textAlign: "left",
                           marginRight: "8px",
                         }}
                       />
