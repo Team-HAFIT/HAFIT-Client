@@ -56,7 +56,9 @@ const MainCarousel = () => {
       className={`each-slide ${isActive(index)}`}
       key={index}
       style={{ backgroundImage: item.eachSlide }}
-    ></div>
+    >
+      <h1>운동, Hafit과 함께해요!</h1>
+    </div>
     ));
 
   const renderDots = () =>

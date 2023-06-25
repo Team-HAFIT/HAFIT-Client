@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'OAGothic-ExtraBold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
 html,
 body {
   width: 100%;
@@ -105,4 +112,20 @@ body {
 .slider .each-slide.active {
   opacity: 1;
   transition: opacity 1s ease-in-out;
+}
+
+.each-slide {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.each-slide > h1 {
+  font-family: 'OAGothic-ExtraBold';
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16rem;
+  margin-left: 4rem;
 }
