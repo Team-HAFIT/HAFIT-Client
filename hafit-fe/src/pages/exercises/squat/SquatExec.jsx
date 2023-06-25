@@ -4,7 +4,7 @@ import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-backend-webgl";
 import "../../../styles/pages/exercise/execPage.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from 'axios'; // axios 호출
+import axios from "axios"; // axios 호출
 import { useSelector } from "react-redux";
 
 import warningSound from "../../../assets/mp3/warning.mp3";
@@ -18,38 +18,38 @@ const Movenet = () => {
   const detectorConfigRef = useRef(null);
   const posesRef = useRef(null);
   const skeleton = true;
-  const confidenceThreshold = 0.5;      //정확도
-  let video, ctx, canvas;               //세트 개수
-  let hurrycheckpoint;                  //허리 체크 포인트
-  let hurrycheck;                       //허리 값 변수
-  let squatStarted = false;             //스쿼트 위 아래 여부
-  let squatFinished = false;            //스쿼트 위 아래 여부
-  let kneeAngleThreshold = 140;         //무릎 각도(스쿼트)
-  let orangeHurryAngleThreshold = 15;   //허리 각도(굽혀경고)
-  let redHurryAngleThreshold = 25;      //허리 각도(굽혀짐)                
+  const confidenceThreshold = 0.5; //정확도
+  let video, ctx, canvas; //세트 개수
+  let hurrycheckpoint; //허리 체크 포인트
+  let hurrycheck; //허리 값 변수
+  let squatStarted = false; //스쿼트 위 아래 여부
+  let squatFinished = false; //스쿼트 위 아래 여부
+  let kneeAngleThreshold = 140; //무릎 각도(스쿼트)
+  let orangeHurryAngleThreshold = 15; //허리 각도(굽혀경고)
+  let redHurryAngleThreshold = 25; //허리 각도(굽혀짐)
   const accessToken = useSelector((state) => state.authToken.accessToken);
 
-  const [timer, setTimer] = useState(0);                                //타이머 변수
-  const timerRef = useRef(null);                                        //타이머 나타내는변수
-  const [isPoseDetected, setIsPoseDetected] = useState(false);          //포즈감지 여부 변수
-  const [isOrangeDetected, setIsOrangeDetected] = useState(false);      //허리 주의 여부 변수
-  const [isRedDetected, setIsRedDetected] = useState(false);            //허리 경고 여부 변수
-  const startTimeRef = useRef(null);                                    //타이머 시작변수
-  const [squatCount, setSquatCount] = useState(0);                      //스쿼트 개수 변수
-  const [currentSet, setCurrentSet] = useState(0);                      // 현재 세트 수
-  const [totalSets, setTotalSets] = useState(5);                       // 전체 세트 수
-  const [repsPerSet, setRepsPerSet] = useState(10);                     // 목표 개수
-  const [weight, setWeight] = useState(10);                             // 무게
-  const [startTime, setStartTime] = useState(new Date());               // 운동 시작 시간
-  const [restTime, setRestTime] = useState(0);                          // 휴식 시간
-  const [squatPercentage, setSquatPercentage] = useState(0);            // 스쿼트 진행 퍼센테이지 변수
+  const [timer, setTimer] = useState(0); //타이머 변수
+  const timerRef = useRef(null); //타이머 나타내는변수
+  const [isPoseDetected, setIsPoseDetected] = useState(false); //포즈감지 여부 변수
+  const [isOrangeDetected, setIsOrangeDetected] = useState(false); //허리 주의 여부 변수
+  const [isRedDetected, setIsRedDetected] = useState(false); //허리 경고 여부 변수
+  const startTimeRef = useRef(null); //타이머 시작변수
+  const [squatCount, setSquatCount] = useState(0); //스쿼트 개수 변수
+  const [currentSet, setCurrentSet] = useState(0); // 현재 세트 수
+  const [totalSets, setTotalSets] = useState(5); // 전체 세트 수
+  const [repsPerSet, setRepsPerSet] = useState(10); // 목표 개수
+  const [weight, setWeight] = useState(10); // 무게
+  const [startTime, setStartTime] = useState(new Date()); // 운동 시작 시간
+  const [restTime, setRestTime] = useState(0); // 휴식 시간
+  const [squatPercentage, setSquatPercentage] = useState(0); // 스쿼트 진행 퍼센테이지 변수
 
   let realRepsPerSet = repsPerSet; // 목표 개수
   let realWeight = weight; // 목표 무게
   let realTime = new Date() - startTime; // 소요 시간
   let realTargetSet = 0; // 목표 세트
 
-  const alertSoundRef = useRef(null);  // 경고음
+  const alertSoundRef = useRef(null); // 경고음
   const moduleRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -103,11 +103,11 @@ const Movenet = () => {
     setCurrentSet(currentSet + 1);
 
     // 추가함
-    axios  // planId로 플랜 계획 조회해오기
+    axios // planId로 플랜 계획 조회해오기
       .get(`/api/plans/${planId}`, {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         timeout: 10000,
       })
@@ -126,7 +126,7 @@ const Movenet = () => {
       })
       .catch((error) => {
         console.log(error);
-      })
+      });
   }, [planId, realSet]);
 
   useEffect(() => {
@@ -162,7 +162,7 @@ const Movenet = () => {
     clearInterval(timerRef.current);
     timerRef.current = null;
   };
-  
+
   const init = async () => {
     tf.setBackend("webgl");
     detectorConfigRef.current = {
@@ -505,7 +505,10 @@ const Movenet = () => {
       const rightAnkle = posesRef.current[0].keypoints[16];
       const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
       const rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
-      const squatPercentage = calculateSquatPercentage(leftKneeAngle, rightKneeAngle);
+      const squatPercentage = calculateSquatPercentage(
+        leftKneeAngle,
+        rightKneeAngle
+      );
       setSquatPercentage(squatPercentage);
       if (
         !squatStarted &&
@@ -521,40 +524,51 @@ const Movenet = () => {
         rightKneeAngle > kneeAngleThreshold
       ) {
         setSquatCount((prevCount) => {
-          console.log("squatCount : " + (prevCount + 1) + ", repsPerSet : " + realRepsPerSet);
-          if ((prevCount+1) === realRepsPerSet) {
-            realTime = (new Date() - startTime)/1000;
-            const data = { // 휴식 시간은 휴식 화면 끝나고 삽입
-              realCount: (prevCount+1),
+          console.log(
+            "squatCount : " +
+              (prevCount + 1) +
+              ", repsPerSet : " +
+              realRepsPerSet
+          );
+          if (prevCount + 1 === realRepsPerSet) {
+            realTime = (new Date() - startTime) / 1000;
+            const data = {
+              // 휴식 시간은 휴식 화면 끝나고 삽입
+              realCount: prevCount + 1,
               realSet: realSet,
               realTime: realTime,
               weight: realWeight,
               plan: planId,
-              startTime : startTime,
-              limitTime : weight * (prevCount + 1),
-              score : 100
+              startTime: startTime,
+              limitTime: weight * (prevCount + 1),
+              score: 100,
             };
 
-            axios.post('/api/sets', data, {
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`,
-              },
-              timeout: 10000,
-            })
-              .then(response => {
-                console.log('전송 성공:', response.data);
-                if (realSet === realTargetSet) 
-                  navigate("/exec/result", { state: { planId: planId } })
-                else
-                  navigate("/exec/rest", { state: { planId: planId, realSet: realSet } })
+            axios
+              .post("/api/sets", data, {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${accessToken}`,
+                },
+                timeout: 10000,
               })
-              .catch(error => {
-                console.error('전송 실패:', error);
+              .then((response) => {
+                console.log("전송 성공:", response.data);
+                if (realSet === realTargetSet) {
+                  navigate("/exec/result", { state: { planId: planId } });
+                  window.location.reload();
+                } else {
+                  navigate("/exec/rest", {
+                    state: { planId: planId, realSet: realSet },
+                  });
+                }
+              })
+              .catch((error) => {
+                console.error("전송 실패:", error);
               });
           }
 
-          return prevCount += 1; 
+          return (prevCount += 1);
         });
         squatStarted = false;
         squatFinished = true;
@@ -584,14 +598,18 @@ const Movenet = () => {
     const maxKneeAngle = 180; // 최대 무릎 각도 (완전히 선 상태)
     const squatKneeAngle = 140; // 스쿼트 완료 상태의 무릎 각도
     const maxPercentage = 100; // 최대 퍼센테이지
-  
-    const leftPercentage = ((maxKneeAngle - leftKneeAngle) / (maxKneeAngle - squatKneeAngle)) * maxPercentage;
-    const rightPercentage = ((maxKneeAngle - rightKneeAngle) / (maxKneeAngle - squatKneeAngle)) * maxPercentage;
-  
+
+    const leftPercentage =
+      ((maxKneeAngle - leftKneeAngle) / (maxKneeAngle - squatKneeAngle)) *
+      maxPercentage;
+    const rightPercentage =
+      ((maxKneeAngle - rightKneeAngle) / (maxKneeAngle - squatKneeAngle)) *
+      maxPercentage;
+
     const percentage = Math.min(leftPercentage, rightPercentage, maxPercentage);
-  
-    const formattedPercentage = percentage.toFixed(0); 
-  
+
+    const formattedPercentage = percentage.toFixed(0);
+
     return formattedPercentage;
   };
 
@@ -618,16 +636,17 @@ const Movenet = () => {
           <br />
           <span id="E">{formatTime(timer)}</span>
         </div>
-        <div id = "percent_line">
-          <div id ="percent_text" >
-            {squatPercentage}%
-          </div>
+        <div id="percent_line">
+          <div id="percent_text">{squatPercentage}%</div>
           <div id="progress">
             <div id="progress-bar">
-              <div id="progress-state-none" 
-                style={{ width: '100%', height: `calc(100% - ${squatPercentage}%)` }}
-              >
-              </div>
+              <div
+                id="progress-state-none"
+                style={{
+                  width: "100%",
+                  height: `calc(100% - ${squatPercentage}%)`,
+                }}
+              ></div>
               <div id="progress-state"></div>
             </div>
           </div>
