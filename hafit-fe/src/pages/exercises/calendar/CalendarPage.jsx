@@ -350,7 +350,7 @@ const CalendarPage = () => {
               const exerciseDay = moment(exercise.days);
 
               return (
-                <li key={index} style={{ textAlign: 'center' }}>
+                <li key={index} style={{ textAlign: 'center', textDecoration: exercise.perform === 'Y' ? 'line-through' : 'none' }}>
                   {showCheckbox && exerciseDay.isSame(moment(), 'day') && (
                     <Checkbox style={{ marginRight: '10px' }} checked={exercise.perform === 'Y'} onChange={() => handleCheckboxChange(exercise.routineId, exercise.days)}/>
                   )}
