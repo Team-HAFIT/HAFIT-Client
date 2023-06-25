@@ -19,6 +19,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+  height: 13em;
 }
 
 .exercise-sections .exercise-section {
@@ -27,6 +28,7 @@ h1 {
   padding: 10px;
   border-radius: 20px; /* �ձ� ������ ���� */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  align-items: center;
 }
 
 .exercise-section {
@@ -44,7 +46,6 @@ h1 {
   text-align: center;
   
 }
-
 
 .exercise-schedules {
   margin-top: 20px;
@@ -85,18 +86,16 @@ h1 {
 .date-cell-schedules {
   list-style: none;
   padding: 0;
-  margin: 0;
   text-align: left;
   font-size: 16px;
 }
 
-.date-cell-schedules li {
-  margin-bottom: 10px;
+.date-cell-schedules li{
+  margin: 2em 0 2em 0;
 }
 
-.date-cell-schedules p {
-  margin: 0;
-  font-size: 14px;
+.date-cell-schedules .exercise-button {
+  width: 100%
 }
 
 .exercise-schedules {
