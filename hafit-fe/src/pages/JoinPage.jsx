@@ -269,6 +269,37 @@ const JoinPage = () => {
                     required: false,
                     message: "전화번호를 입력해주세요",
                   },
+                  {
+                    pattern: /^\d{3}-\d{3,4}-\d{4}$/,
+                    message: "유효한 전화번호를 입력해주세요",
+                  },
+                  {
+                    validator: async (_, phone) => {
+                      if (!phone) {
+                        return Promise.resolve();
+                      }
+                      try {
+                        const response = await axios.get(
+                          `/api/auth/phone/${phone}`,
+                          {
+                            timeout: 5000,
+                          }
+                        );
+                        if (response.data) {
+                          return Promise.reject(
+                            new Error("이미 사용중인 전화번호입니다")
+                          );
+                        } else {
+                          return Promise.resolve();
+                        }
+                      } catch (error) {
+                        console.error(error);
+                        return Promise.reject(
+                          new Error("서버와 연결이 끊겼습니다")
+                        );
+                      }
+                    }
+                  }
                 ]}
                 hasFeedback
               >
