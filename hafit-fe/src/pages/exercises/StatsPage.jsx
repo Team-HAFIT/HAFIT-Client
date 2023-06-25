@@ -99,18 +99,25 @@ const StatsPage = () => {
   //   fetchData();
   // }, []);     이 부분은 실제 스프링에서 데이터를 받아와서 사용할 수 있는 코드
 
-
-
-
+  const getLastDayOfMonth = (year, month) => {
+    return new Date(year, month, 0).getDate();
+  };
 
   const getFormattedDate = (date) => {
     if (timeRange === 'monthly') {
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
-      return `${year}년 ${month}월 1일`;
+      const lastDay = getLastDayOfMonth(year, month);
+      return `${year}년 ${month}월 1일 ~ ${year}년 ${month}월 ${lastDay}일`;
     } else {
-      const options = { weekday: 'short', month: 'long', day: 'numeric' };
-      return date.toLocaleDateString('ko-KR', options);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const startDay = date.getDate();
+      const endDate = new Date(date);
+      endDate.setDate(date.getDate() + 6);
+      const endMonth = endDate.getMonth() + 1;
+      const endDay = endDate.getDate();
+      return `${year}년 ${month}월 ${startDay}일 ~ ${year}년 ${endMonth}월 ${endDay}일`;
     }
   };
 
@@ -119,7 +126,7 @@ const StatsPage = () => {
       <Content style={{ padding: '24px' }}>
         <Title level={2}>운동 통계</Title>
         <Radio.Group value={timeRange} onChange={handleTimeRangeChange}>
-          <Space direction="vertical">
+          <Space direction="horizontal" style={{ display: 'flex' }}>
             <Radio.Button value="monthly">월간</Radio.Button>
             <Radio.Button value="weekly">주간</Radio.Button>
           </Space>
@@ -140,7 +147,7 @@ const StatsPage = () => {
             <YAxis />
             <Tooltip />
             <Legend>
-                wrapperStyle={{ marginTop: '20px' , bottom: '5px' }}
+              wrapperStyle={{ marginTop: '20px', bottom: '5px' }}
             </Legend>
             <Bar
               dataKey={selectedContent}
@@ -152,7 +159,9 @@ const StatsPage = () => {
         </ResponsiveContainer>
       </Content>
     </Layout>
+
   );
+
 };
 
 const CustomizedXAxisTick = ({ x, y, payload }) => {
