@@ -274,9 +274,10 @@ const CalendarPage = () => {
       <ul className="date-cell-schedules">
         {exercises.map((exercise, index) => (
           <p key={index}>
-            <div style={{ backgroundColor: 'lightgray', padding: '5px', borderRadius: '4px' }}>
+            <div style={{ backgroundColor: 'lightgray', padding: '5px', borderRadius: '4px', marginBottom: '2px' }}>
               <div style={{ backgroundColor: '#9d6acd', color: 'white', padding: '5px', borderRadius: '4px' }}>
-              <span style={{ fontWeight: 'bold' }}>{exercise.exerciseName}</span>
+                <span style={{ fontWeight: 'bold' }}>{exercise.exerciseName}</span>
+                {exercise.perform === 'Y' && <span style={{ marginLeft: '5px' }}>&#128582;</span>}
               </div>
               {`${exercise.routineCount}개 x ${exercise.routineSet}세트${exercise.routineWeight !== null ? ` x ${exercise.routineWeight}kg` : ''}`}
             </div>
