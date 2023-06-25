@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Calendar, Modal, Form, Input, Button, Checkbox, Select } from 'antd';
+import React, { useEffect, useState, useCallback } from "react";
+import { Calendar, Modal, Form, Input, Button, message, Checkbox, DatePicker, Select } from 'antd';
 import moment from 'moment';
 import '../../../styles/pages/calendarPage.css';
-
+import { useSelector } from "react-redux";
+import axios from "axios";
 const { Option } = Select;
 
 const CalendarPage = () => {
@@ -14,6 +15,58 @@ const CalendarPage = () => {
   const [targetWeight, setTargetWeight] = useState('');
   const [repeatDays, setRepeatDays] = useState([]);
   const [exerciseSchedules, setExerciseSchedules] = useState([]);
+  const [data, setData] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [goals, setGoals] = useState([]);
+  const accessToken = useSelector((state) => state.authToken.accessToken);
+
+  const fetchGoals = useCallback(async () => {
+
+    try {
+      const response = await axios.get("/api/goals/my", {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      });
+  
+      const goals = response.data.goals;
+      setGoals(prevGoals => prevGoals.concat(goals));
+    } catch (error) {
+      console.log(error);
+      message.error("회원 정보를 불러오지 못했습니다", 1);
+    } finally {
+      // 추가적인 작업이 필요한 경우 여기에 작성합니다.
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    fetchGoals();
+  }, []);
+
+  const renderGoalList = () => {
+    return (
+      <div className="pill-container">
+        <ul className="goal-list">
+          {goals.map((goal, index) => (
+            <li key={index} className="goal-item">
+              <p className="goal-content first-child">{goal.d_day}</p>
+              <p className="d-day last-child">{goal.goal_content}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+  
+  const handleAddGoal = () => {
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -84,8 +137,8 @@ const CalendarPage = () => {
       <ul className="date-cell-schedules">
         {schedules.map((schedule, index) => (
           <p key={index}>
-              {schedule.exercise}  {schedule.reps}개 X {schedule.sets} 세트 ({schedule.weight}kg)
-            </p>
+            {schedule.exercise}  {schedule.reps}개 X {schedule.sets} 세트 ({schedule.weight}kg)
+          </p>
         ))}
       </ul>
     );
@@ -122,7 +175,7 @@ const CalendarPage = () => {
     const todaySchedules = exerciseSchedules.filter(
       (schedule) => schedule.date === date.format('YYYY-MM-DD')
     );
-  
+
     if (todaySchedules.length > 0) {
       return (
         <div>
@@ -150,13 +203,39 @@ const CalendarPage = () => {
 
   return (
     <div className="container">
+      <div className="calendar-page">
+        <h1>운동 목표</h1>
+        <div className="goal-list">
+          {renderGoalList()}
+        </div>
+        <Button type="primary" onClick={handleAddGoal} style={{ display: goals.length >= 2 ? 'none' : 'block' }}>+</Button>
+        <Modal
+          title="운동 목표 설정"
+          visible={showModal}
+          onCancel={handleModalClose}
+          footer={null}
+        >
+          <Form>
+            <Form.Item name="d_day" label="D-Day" rules={[{ required: true, message: 'D-Day를 선택해주세요.' }]}>
+              <DatePicker />
+            </Form.Item>
+            <Form.Item name="goal_content" label="운동 목표" rules={[{ required: true, message: '운동 목표를 입력해주세요.' }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">확인</Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+
       <h1>운동 일정</h1>
       <div className="exercise-sections">
         {renderExerciseSection('오늘', 0)}
         {renderExerciseSection('내일', 1)}
         {renderExerciseSection('모레', 2)}
       </div>
-      
+
       <div className="calendar">
         <Calendar
           onSelect={handleDateSelect}
