@@ -3,6 +3,7 @@ import { Menu, Avatar, Dropdown } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserOutlined, DownOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
+import jwt_decode from "jwt-decode";
 
 import { removeCookieToken } from "../storage/Cookie";
 import { DELETE_TOKEN } from "../store/Auth";
@@ -17,6 +18,15 @@ function Header() {
   const dispatch = useDispatch();
 
   const authenticated = useSelector((state) => state.authToken.authenticated);
+
+  const accessToken = useSelector((state) => state.authToken.accessToken);
+  let decoded = null; // 토큰을 decode한 값을 저장
+  let isAdmin = false; // role이 'ROLE_ADMIN'인지 여부 저장
+
+  if (accessToken) {
+    decoded = jwt_decode(accessToken);
+    isAdmin = decoded && decoded.role && decoded.role.includes("ROLE_ADMIN");
+  }
 
   // const isLoggedIn = true; // 테스트용
   const [isLoggedIn, setIsLoggedIn] = useState(authenticated); // 로그인 상태를 저장하는 state
@@ -85,16 +95,24 @@ function Header() {
                 운동 통계
               </Link>
             </Menu.Item>
-            <Menu.Item key="/community/main" className="group-menu desktop-only">
+            <Menu.Item
+              key="/community/main"
+              className="group-menu desktop-only"
+            >
               <Link to="/community/main" className="nav-menu">
                 커뮤니티
               </Link>
             </Menu.Item>
-            <Menu.Item key="/admin/ManagementPage" className="group-menu desktop-only">
-              <Link to="/admin/management" className="nav-menu">
-                회원관리
-              </Link>
-            </Menu.Item>
+            {isAdmin && (
+              <Menu.Item
+                key="/admin/ManagementPage"
+                className="group-menu desktop-only"
+              >
+                <Link to="/admin/management" className="nav-menu">
+                  회원관리
+                </Link>
+              </Menu.Item>
+            )}
           </React.Fragment>
 
           {/* 모바일에서는 '모바일 메뉴1'과 '모바일 메뉴2'가 소개와 공지사항을 대체합니다. */}
