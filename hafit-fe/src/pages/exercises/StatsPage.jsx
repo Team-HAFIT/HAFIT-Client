@@ -63,7 +63,11 @@ const StatsPage = () => {
   useEffect(() => {
     const generateRandomData = () => {
       const newData = [];
-      let currentDate = new Date(startDate.getTime()); // startDate 복제
+      let current = new Date(startDate.getTime()); // startDate 복제
+      let currentDate = new Date(current);
+      if (timeRange === 'monthly') { // 월간으로 보는 경우
+        currentDate = new Date(current.setDate(1)); // 날짜를 1일로 고정
+      }
       const numDays = timeRange === 'monthly' ? new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() : 7;
       const dateIncrement = timeRange === 'monthly' ? 1 : 1;
       for (let i = 0; i < numDays; i++) {
