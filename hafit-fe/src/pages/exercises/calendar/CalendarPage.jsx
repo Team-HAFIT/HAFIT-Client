@@ -234,6 +234,26 @@ const CalendarPage = () => {
     }
   };
 
+  const handleCheckboxChange = async (routineId, days) => {
+    try {
+      await axios.post(
+        '/api/routines/perform',
+        { routineId, days },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${accessToken}`,
+          },
+          timeout: 10000,
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+      message.error('일정을 추가할 수 없습니다.', 1);
+    }
+  };
+
   const handleRoutineCountChange = (e) => {
     setRoutineCount(e.target.value);
   };
@@ -317,7 +337,7 @@ const CalendarPage = () => {
     setModalVisible(true);
   };
 
-  const renderExerciseSection = (title, daysToAdd) => {
+  const renderExerciseSection = (title, daysToAdd, showCheckbox = false) => {
     const date = moment().add(daysToAdd, 'days');
     const exercises = routines.filter((routine) => routine.days === date.format('YYYY-MM-DD'));
   
@@ -325,13 +345,20 @@ const CalendarPage = () => {
       <div className="exercise-section">
         <h2>{title}의 운동</h2>
         <div className="exercise-schedule">
-          <ul className="date-cell-schedules" >
-            {exercises.map((exercise, index) => (
-              <li key={index} style={{ textAlign: 'center' }}>
-                <span style={{ backgroundColor: '#9d6acd', color: 'white', padding: '5px', borderRadius: '9px', fontWeight: 'bold' }}>{exercise.exerciseName}</span>
-                {` ${exercise.routineCount}개 x ${exercise.routineSet}세트${exercise.routineWeight !== null ? ` (${exercise.routineWeight}kg)` : ''}`}
-              </li>
-            ))}
+          <ul className="date-cell-schedules">
+            {exercises.map((exercise, index) => {
+              const exerciseDay = moment(exercise.days);
+
+              return (
+                <li key={index} style={{ textAlign: 'center' }}>
+                  {showCheckbox && exerciseDay.isSame(moment(), 'day') && (
+                    <Checkbox style={{ marginRight: '10px' }} checked={exercise.perform === 'Y'} onChange={() => handleCheckboxChange(exercise.routineId, exercise.days)}/>
+                  )}
+                  <span style={{ backgroundColor: '#9d6acd', color: 'white', padding: '5px', borderRadius: '9px', fontWeight: 'bold' }}>{exercise.exerciseName}</span>
+                  {` ${exercise.routineCount}개 x ${exercise.routineSet}세트${exercise.routineWeight !== null ? ` (${exercise.routineWeight}kg)` : ''}`}
+                </li>
+              );
+            })}
             <Button className="exercise-button" onClick={() => addExercise(daysToAdd)}>+</Button>
           </ul>
         </div>
@@ -476,7 +503,7 @@ const CalendarPage = () => {
       </div>
 
       <div className="exercise-sections">
-        {renderExerciseSection('오늘', 0)}
+        {renderExerciseSection('오늘', 0, true)}
         {renderExerciseSection('내일', 1)}
         {renderExerciseSection('모레', 2)}
       </div>
