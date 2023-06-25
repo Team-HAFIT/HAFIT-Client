@@ -419,6 +419,10 @@ const PostModal = (props) => {
                           value: "3",
                           label: "운동 Q&A",
                         },
+                        {
+                          value: "4",
+                          label: "자유게시판",
+                        },
                       ]}
                     />
                   </Form.Item>

@@ -484,6 +484,7 @@ const PostUpdateModal = (props) => {
                           <Option value="1">오운완</Option>
                           <Option value="2">자세 피드백</Option>
                           <Option value="3">운동 Q&A</Option>
+                          <Option value="4">자유게시판</Option>
                         </Select>
                       </Form.Item>
                     </Space>

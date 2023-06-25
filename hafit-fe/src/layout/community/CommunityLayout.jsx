@@ -121,7 +121,7 @@ const CommunityLayout = () => {
                     {userInfo.name}
                   </span>{" "}
                   <Link to="/user/info">
-                    <FiEdit3 style={{ fontSize: "16px" }}/>
+                    <FiEdit3 style={{ fontSize: "16px" }} />
                   </Link>
                 </div>
                 <span style={{ margin: "0 16px" }}>{userInfo.email}</span>
@@ -186,9 +186,18 @@ const CommunityLayout = () => {
                 <Menu.Item key="/community/posts-all">
                   <Link to="/community/posts-all">전체글 보기</Link>
                 </Menu.Item>
-                <Menu.Item key="/community/fotd">오운완</Menu.Item>
-                <Menu.Item key="/community/feedback">자세 피드백</Menu.Item>
-                <Menu.Item key="/community/qna">운동 Q&amp;A</Menu.Item>
+                <Menu.Item key="/community/fotd">
+                  <Link to="/community/fotd">오운완</Link>
+                </Menu.Item>
+                <Menu.Item key="/community/feedback">
+                  <Link to="/community/feedback">자세 피드백</Link>
+                </Menu.Item>
+                <Menu.Item key="/community/qna">
+                  <Link to="/community/qna">운동 Q&amp;A</Link>
+                </Menu.Item>
+                <Menu.Item key="/community/freeboard">
+                  <Link to="/community/freeboard">자유게시판</Link>
+                </Menu.Item>
               </div>
               <div
                 style={{

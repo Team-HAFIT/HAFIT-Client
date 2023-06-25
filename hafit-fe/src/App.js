@@ -36,6 +36,10 @@ import SquatExec from "./pages/exercises/squat/SquatExec";
 
 // 커뮤니티
 import PostsAll from "./pages/community/view-posts/PostsAll";
+import CategoryFotd from "./pages/community/view-posts/CategoryFotd";
+import CategoryFeedback from "./pages/community/view-posts/CategoryFeedback";
+import CategoryQnA from "./pages/community/view-posts/CategoryQnA";
+import CategoryFreeBoard from "./pages/community/view-posts/CategoryFreeBoard";
 
 // 테스트용
 import Test from "./pages/test";
@@ -66,9 +70,6 @@ function App() {
             <Route path="/notice" element={<NoticePage />} /> {/* 공지사항 */}
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/stats" element={<StatsPage />} />
-            
-            {/* 유진 */}
-            <Route path="/admin/management" element={<ManagementPage />} />
           </Route>
 
           {/* PublicRoute: 토큰이 없는 사용자만 접근 가능 (로그인 X) */}
@@ -106,6 +107,9 @@ function App() {
 
               <Route path="/exec/result" element={<SquatResult />} />
               <Route path="/exec/rest" element={<RestTimerPage />} />
+
+              {/* 유진 */}
+              <Route path="/admin/management" element={<ManagementPage />} />
             </Route>
           </Route>
 
@@ -125,8 +129,6 @@ function App() {
 
           {/* 임시 사용 */}
           <Route path="/stats" element={<ExecStatsPage />} />
-          {/* 유진 */}
-          <Route path="/admin/management" element={<ManagementPage />} />
         </Routes>
       </div>
     </Router>
@@ -141,6 +143,10 @@ function CommunityRoutes() {
       <Route element={<CommunityLayout />}>
         <Route path="/main" element={<PostsAll />} />
         <Route path="/posts-all" element={<PostsAll />} />
+        <Route path="/fotd" element={<CategoryFotd />} />
+        <Route path="/feedback" element={<CategoryFeedback />} />
+        <Route path="/qna" element={<CategoryQnA />} />
+        <Route path="/freeboard" element={<CategoryFreeBoard />} />
       </Route>
       {/* <Route path=":postId" element={<ViewPostDetails />} /> */}
     </Routes>
