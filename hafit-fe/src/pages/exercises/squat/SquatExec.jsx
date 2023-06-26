@@ -19,6 +19,7 @@ const Movenet = () => {
   const posesRef = useRef(null);
   const skeleton = true;
   const confidenceThreshold = 0.5; //정확도
+  const minconfidenceThreshold = 0.3;
   let video, ctx, canvas; //세트 개수
   let hurrycheckpoint; //허리 체크 포인트
   let hurrycheck; //허리 값 변수
@@ -28,6 +29,7 @@ const Movenet = () => {
   let orangeHurryAngleThreshold = 15; //허리 각도(굽혀경고)
   let redHurryAngleThreshold = 25; //허리 각도(굽혀짐)
   const accessToken = useSelector((state) => state.authToken.accessToken);
+  let kneeAnglewarringThreshold  = 80;
 
   const [timer, setTimer] = useState(0); //타이머 변수
   const timerRef = useRef(null); //타이머 나타내는변수
@@ -43,11 +45,18 @@ const Movenet = () => {
   const [startTime, setStartTime] = useState(new Date()); // 운동 시작 시간
   const [restTime, setRestTime] = useState(0); // 휴식 시간
   const [squatPercentage, setSquatPercentage] = useState(0); // 스쿼트 진행 퍼센테이지 변수
+  const [iskneeDetected, setIskneeDetected] = useState(false);
 
   let realRepsPerSet = repsPerSet; // 목표 개수
   let realWeight = weight; // 목표 무게
   let realTime = new Date() - startTime; // 소요 시간
   let realTargetSet = 0; // 목표 세트
+
+  const [redcount, setredcount]= useState(0);
+  const [orangecount, setorangecount]= useState(0);
+  const [excellentCount, setExcellentCount] = useState(0);
+  const [goodCount, setGoodCount] = useState(0);
+  const [badCount, setBadCount] = useState(0);
 
   const alertSoundRef = useRef(null); // 경고음
   const moduleRef = useRef(null);
@@ -113,9 +122,6 @@ const Movenet = () => {
       })
       .then((response) => {
         const plan = response.data;
-        console.log(plan);
-        console.log(plan.plan_target_set);
-        console.log(plan.plan_target_count);
         setWeight(plan.plan_weight);
         setTotalSets(plan.plan_target_set);
         setRepsPerSet(plan.plan_target_count);
@@ -259,6 +265,7 @@ const Movenet = () => {
       hurrycheck = calculateAngle(middleShoulder, midhip, hurrycheckpoint);
     } else {
       setIsPoseDetected(false);
+      setSquatPercentage(0);
     }
   };
 
@@ -323,13 +330,52 @@ const Movenet = () => {
         const adjustedY = y * heightRatio;
         if (score > confidenceThreshold) {
           count = count + 1;
-          ctx.fillStyle = "white";
-          ctx.strokeStyle = "black";
-          ctx.lineWidth = 4;
-          ctx.beginPath();
-          ctx.arc(adjustedX, adjustedY, 8, 0, 2 * Math.PI);
-          ctx.fill();
-          ctx.stroke();
+          if (i === 13 || i === 14) {
+            const leftHip = posesRef.current[0].keypoints[11];
+            const rightHip = posesRef.current[0].keypoints[12];
+            const leftKnee = posesRef.current[0].keypoints[13];
+            const rightKnee = posesRef.current[0].keypoints[14];
+            const leftAnkle = posesRef.current[0].keypoints[15];
+            const rightAnkle = posesRef.current[0].keypoints[16];
+            const leftKneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
+            const rightKneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
+            
+            const kneeKeypointsConfident = posesRef.current[0].keypoints
+            .slice(15, 16)
+            .every((kp) => kp.score > 0.3);
+            if(kneeKeypointsConfident){
+              if (leftKneeAngle <= kneeAnglewarringThreshold || rightKneeAngle <= kneeAnglewarringThreshold) {
+                setIskneeDetected(true)
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.arc(adjustedX, adjustedY, 30, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+              }
+              else{
+                setIskneeDetected(true)
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.arc(adjustedX, adjustedY, 8, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+              }
+            }
+          }
+          else{
+            setIskneeDetected(false)
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(adjustedX, adjustedY, 8, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+          }
         }
       }
       ctx.restore();
@@ -351,7 +397,7 @@ const Movenet = () => {
 
       const hurryKeypointsConfident = posesRef.current[0].keypoints
         .slice(16, 20)
-        .every((kp) => kp.score > confidenceThreshold);
+        .every((kp) => kp.score > minconfidenceThreshold);
 
       if (
         hurryKeypointsConfident &&
@@ -374,7 +420,7 @@ const Movenet = () => {
           const y2 = kp2.y * heightRatio;
           const c2 = kp2.score;
 
-          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+          if (c1 > minconfidenceThreshold && c2 > minconfidenceThreshold) {
             ctx.strokeStyle = "rgb(0, 255, 0)"; // Green color
             ctx.lineWidth = 6;
             ctx.beginPath();
@@ -397,13 +443,14 @@ const Movenet = () => {
           const y2 = kp2.y * heightRatio;
           const c2 = kp2.score;
 
-          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+          if (c1 > minconfidenceThreshold && c2 > minconfidenceThreshold) {
             ctx.strokeStyle = "rgb(255, 165, 0)"; // Orange color
             ctx.lineWidth = 6;
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
             ctx.stroke();
+            setorangecount((prevCount) => prevCount + 1);
           }
         }
       } else if (
@@ -426,7 +473,7 @@ const Movenet = () => {
           const y2 = kp2.y * heightRatio;
           const c2 = kp2.score;
 
-          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+          if (c1 > minconfidenceThreshold && c2 > minconfidenceThreshold) {
             ctx.strokeStyle = "rgb(0, 255, 0)"; // Green color
             ctx.lineWidth = 6;
             ctx.beginPath();
@@ -449,7 +496,7 @@ const Movenet = () => {
           const y2 = kp2.y * heightRatio;
           const c2 = kp2.score;
 
-          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+          if (c1 > minconfidenceThreshold && c2 > minconfidenceThreshold) {
             ctx.strokeStyle = "rgb(255, 0, 0)"; // Red color
             ctx.lineWidth = 6;
             ctx.beginPath();
@@ -475,7 +522,7 @@ const Movenet = () => {
           const y2 = kp2.y * heightRatio;
           const c2 = kp2.score;
 
-          if (c1 > confidenceThreshold && c2 > confidenceThreshold) {
+          if (c1 > minconfidenceThreshold && c2 > minconfidenceThreshold) {
             ctx.strokeStyle = "rgb(0, 255, 0)"; // Green color
             ctx.lineWidth = 6;
             ctx.beginPath();
@@ -494,7 +541,7 @@ const Movenet = () => {
   const countSquats = () => {
     const kneeKeypointsConfident = posesRef.current[0].keypoints
       .slice(10, 16)
-      .every((kp) => kp.score > confidenceThreshold);
+      .every((kp) => kp.score > minconfidenceThreshold);
     if (kneeKeypointsConfident) {
       setSquatPercentage(0);
       const leftHip = posesRef.current[0].keypoints[11];
@@ -523,6 +570,19 @@ const Movenet = () => {
         leftKneeAngle > kneeAngleThreshold &&
         rightKneeAngle > kneeAngleThreshold
       ) {
+        if(redcount > 0 && orangecount > 0){
+          setBadCount((prevCount) => prevCount + 1);
+          setredcount(0)
+          setorangecount(0)
+        }else if (redcount == 0 && orangecount > 0){
+          setGoodCount((prevCount) => prevCount + 1);
+          setredcount(0)
+          setorangecount(0)
+        }else{
+          setExcellentCount((prevCount) => prevCount + 1);
+          setredcount(0)
+          setorangecount(0)
+        }
         setSquatCount((prevCount) => {
           console.log(
             "squatCount : " +
@@ -614,88 +674,87 @@ const Movenet = () => {
   };
 
   return (
-    <div id="container">
+    <div id='container'>
       <div id="state" style={{ width: 1152, height: 864 }}>
-        <div id="count">
-          <span id="A">개수</span>
-          <br />
-          <span id="B">{squatCount}</span>
-          <br />
-          <span id="C">/ {repsPerSet}</span>
+        <div id="headstate">
+            <div id="countstate">
+              <div id="count">
+                <span id="textA">개수</span>
+                <span id="textB">{squatCount}</span>
+                <span id="textC">/ {repsPerSet}</span>
+              </div>
+            </div>
+            <div id ="setstate">
+              <div id="shapeContainer">
+                {Array.from({ length: totalSets }, (_, index) => (
+                  <div
+                    key={index}
+                    className={index < currentSet ? 'shape completed' : 'shape'}
+                  ></div>
+                ))}
+              </div>
+            </div>
+            <div id = "timerstate">
+              <div id="timer">
+                <span id="textD">운동 시간 </span>
+                <span id="textD">{formatTime(timer)}</span>
+              </div>
+            </div>
         </div>
-        <div id="shapeContainer">
-          {Array.from({ length: totalSets }, (_, index) => (
-            <div
-              key={index}
-              className={index < realSet ? "shape completed" : "shape"}
-            ></div>
-          ))}
-        </div>
-        <div id="timer">
-          <span id="D">운동 시간 </span>
-          <br />
-          <span id="E">{formatTime(timer)}</span>
-        </div>
-        <div id="percent_line">
-          <div id="percent_text">{squatPercentage}%</div>
-          <div id="progress">
-            <div id="progress-bar">
-              <div
-                id="progress-state-none"
-                style={{
-                  width: "100%",
-                  height: `calc(100% - ${squatPercentage}%)`,
-                }}
-              ></div>
-              <div id="progress-state"></div>
+        <div id="mainstate">
+          <div id="main1">
+            <div id= "Excellentstate">
+              <div id = "Excellent">
+                <span id="textE">Excellent</span>
+              </div>  
+            </div>
+            <div id= "goodstate">
+              <div id="good">
+                <span id="textE">good</span>
+              </div>
+            </div>
+            <div id= "badstate">
+              <div id="bad">
+                <span id="textE">bad</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div id="checkpose">
-          <div
-            id="yes1"
-            style={{ display: isPoseDetected ? "block" : "none" }}
-          ></div>
-          <div id="no1" style={{ display: isPoseDetected ? "none" : "block" }}>
-            포즈 감지가 불안정합니다.
+          <div id="main2">
+            <div id="kneecheck">
+              <div id="kneeyes" style={{ display: iskneeDetected ? 'none' : 'block' }}></div>
+              <div id="kneeno" style={{ display: iskneeDetected ? 'block' : 'none' }}>무릎이 너무 굽혀졌습니다.</div>
+            </div>
+            <div id="hurrycheck">
+              <div id="orangeyes" style={{ display: isOrangeDetected ? 'none' : 'block' }}></div>
+              <div id="orangeno" style={{ display: isOrangeDetected ? 'block' : 'none' }}>허리가 굽혀집니다 주의해주세요</div>
+              <div id="redyes" style={{ display: isRedDetected ? 'none' : 'block' }}></div>
+              <div id="redno" style={{ display: isRedDetected ? 'block' : 'none' }}>허리가 너무굽혀졌습니다.</div>
+            </div>
+            <div id="checkpose">
+              <div id="poseyes" style={{ display: isPoseDetected ? 'block' : 'none' }}></div>
+              <div id="poseno" style={{ display: isPoseDetected ? 'none' : 'block' }}>포즈감지가 불안정합니다.</div>
+            </div>   
           </div>
-          <div
-            id="yes2"
-            style={{ display: isOrangeDetected ? "none" : "block" }}
-          ></div>
-          <div
-            id="no2"
-            style={{ display: isOrangeDetected ? "block" : "none" }}
-          >
-            허리가 굽어지고 있습니다. 주의해주세요!
+          <div id="main3">
+              <div id ="percent_text" >
+                {squatPercentage}%
+              </div>
+              <div id="progress">
+                <div id="progress-bar">
+                <div id="progress-state-none" 
+                  style={{ width: '100%', height: `calc(100% - ${squatPercentage}%)` }}
+                  >
+                  </div>
+                  <div id="progress-state"></div>
+                </div>
+              </div>
+            <div id="close"><button id="closebtn">종료</button></div>
           </div>
-          <div
-            id="yes3"
-            style={{ display: isRedDetected ? "none" : "block" }}
-          ></div>
-          <div id="no3" style={{ display: isRedDetected ? "block" : "none" }}>
-            허리가 너무 굽혀졌습니다. 자세를 바로잡아주세요!
-          </div>
-        </div>
-        <div id="close">
-          <button id="closebtn">종료</button>
         </div>
       </div>
       <div id="module" ref={moduleRef}>
-        <video
-          id="webcam"
-          ref={videoRef}
-          width="1152"
-          height="864"
-          autoPlay
-          muted
-        ></video>
-        <canvas
-          id="movenet_Canvas"
-          ref={canvasRef}
-          width="1152"
-          height="864"
-        ></canvas>
+        <video id="webcam" ref={videoRef} width="1152" height="864" style={{ width: 1152, height: 864 }} autoPlay muted></video>
+        <canvas id="movenet_Canvas" ref={canvasRef} width="1152" height="864" style={{ width: 1152, height: 864 }}></canvas>
       </div>
     </div>
   );
