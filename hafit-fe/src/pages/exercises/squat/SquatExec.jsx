@@ -657,7 +657,7 @@ const Movenet = () => {
             style={{ display: isPoseDetected ? "block" : "none" }}
           ></div>
           <div id="no1" style={{ display: isPoseDetected ? "none" : "block" }}>
-            포즈감지가 불안정합니다.
+            포즈 감지가 불안정합니다.
           </div>
           <div
             id="yes2"
@@ -667,14 +667,14 @@ const Movenet = () => {
             id="no2"
             style={{ display: isOrangeDetected ? "block" : "none" }}
           >
-            허리가 굽혀집니다 주의해주세요
+            허리가 굽어지고 있습니다. 주의해주세요!
           </div>
           <div
             id="yes3"
             style={{ display: isRedDetected ? "none" : "block" }}
           ></div>
           <div id="no3" style={{ display: isRedDetected ? "block" : "none" }}>
-            허리가 너무굽혀졌습니다.
+            허리가 너무 굽혀졌습니다. 자세를 바로잡아주세요!
           </div>
         </div>
         <div id="close">
