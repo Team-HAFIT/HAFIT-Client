@@ -32,63 +32,7 @@ const { Title } = Typography;
 const { TextArea } = Input;
 const { Dragger } = Upload;
 const { Option } = Select;
-
-// 파일 관련 상태 및 함수
-export const useFileUpload = (initialFiles = []) => {
-  const [fileList, setFileList] = useState(initialFiles);
-  const [fileIdList, setFileIdList] = useState([]);
-
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
-
-  const handleCancel = () => setPreviewOpen(false);
-
-  const handleRemove = (file) => {
-    setFileIdList([...fileIdList, file.fileId]);
-  };
-
-  const onUploadChange = async ({ fileList: newFileList }) => {
-    const promises = newFileList.map(async (file) => {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-        file.status = "done";
-      }
-      return file;
-    });
-
-    const updatedFileList = await Promise.all(promises);
-    setFileList(updatedFileList);
-  };
-
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(
-      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-    );
-  };
-
-  return {
-    fileList,
-    fileIdList,
-    previewOpen,
-    previewImage,
-    previewTitle,
-    handleRemove,
-    onUploadChange,
-    handlePreview,
-    handleCancel,
-    setFileList,
-    setFileIdList,
-    setPreviewOpen,
-    setPreviewImage,
-    setPreviewTitle,
-  };
-};
+// 수정 시작 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // 파일 업로드 시, base64로 변환하는 함수
 const getBase64 = (file) => {
@@ -110,22 +54,42 @@ const PostUpdateModal = (props) => {
   const [postInfo, setPostInfo] = useState({});
 
   // --------- START : 파일 업로드 관련 ---------- //
-  const {
-    fileList,
-    fileIdList,
-    previewOpen,
-    previewImage,
-    previewTitle,
-    handleRemove,
-    onUploadChange,
-    handlePreview,
-    handleCancel,
-    setFileList,
-    setFileIdList,
-    setPreviewOpen,
-    setPreviewImage,
-    setPreviewTitle,
-  } = useFileUpload(postInfo.files || []);
+  const [fileList, setFileList] = useState([]);
+  const [fileIdList, setFileIdList] = useState([]);
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+
+  const handleRemove = (file) => {
+    setFileIdList([...fileIdList, file.fileId]);
+  };
+
+  const onUploadChange = async ({ fileList: newFileList }) => {
+    const promises = newFileList.map(async (file) => {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+        file.status = "done";
+      }
+      return file;
+    });
+
+    const updatedFileList = await Promise.all(promises);
+    setFileList(updatedFileList);
+  };
 
   const uploadButton = (
     <div>
@@ -165,9 +129,9 @@ const PostUpdateModal = (props) => {
         })
         .then((response) => {
           setPostInfo(response.data);
-          // setPostInfo({
-          //   ...response.data,
-          // });
+          setPostInfo({
+            ...response.data,
+          });
           setIsLoading(false);
         })
         .catch((error) => {

@@ -132,18 +132,159 @@ const NoticePage = () => {
     },
   ];
 
-  const data = [];
+  const data = [
+    {
+      key: "1",
+      title: "메인 페이지 이용",
+      date: "2023-05-01",
+      author: "관리자",
+      views: 10,
+    },
+    {
+      key: "2",
+      title: "서비스 이용 안내",
+      date: "2023-06-02",
+      author: "운영팀",
+      views: 20,
+    },
+    {
+      key: "3",
+      title: "신규 기능 업데이트",
+      date: "2023-04-03",
+      author: "운영팀",
+      views: 15,
+    },
+    {
+      key: "4",
+      title: "주말 할인 이벤트",
+      date: "2023-06-04",
+      author: "마케터",
+      views: 8,
+    },
+    {
+      key: "5",
+      title: "공지사항 업데이트 안내",
+      date: "2023-06-05",
+      author: "관리자",
+      views: 12,
+    },
+    {
+      key: "6",
+      title: "정기 점검 안내",
+      date: "2023-06-06",
+      author: "운영팀",
+      views: 25,
+    },
+    {
+      key: "7",
+      title: "이용 방법 안내",
+      date: "2023-06-07",
+      author: "운영팀",
+      views: 18,
+    },
+    {
+      key: "8",
+      title: "서비스 이용 공지",
+      date: "2023-03-08",
+      author: "관리자",
+      views: 5,
+    },
+    {
+      key: "9",
+      title: "이벤트 상품 소개",
+      date: "2023-05-09",
+      author: "마케터",
+      views: 30,
+    },
+    {
+      key: "10",
+      title: "시스템 업데이트 안내",
+      date: "2023-06-10",
+      author: "운영팀",
+      views: 14,
+    },
+    {
+      key: "11",
+      title: "공지사항 수정",
+      date: "2023-04-11",
+      author: "관리자",
+      views: 7,
+    },
+    {
+      key: "12",
+      title: "신규 이용자 환영",
+      date: "2023-01-12",
+      author: "운영팀",
+      views: 22,
+    },
+    {
+      key: "13",
+      title: "서비스 변경 사항",
+      date: "2023-01-13",
+      author: "운영팀",
+      views: 11,
+    },
+    {
+      key: "14",
+      title: "공지사항 이용 방법",
+      date: "2023-06-14",
+      author: "관리자",
+      views: 16,
+    },
+    {
+      key: "15",
+      title: "매주 이벤트 소식",
+      date: "2023-06-15",
+      author: "마케터",
+      views: 9,
+    },
+    {
+      key: "16",
+      title: "주요 업데이트 안내",
+      date: "2023-06-16",
+      author: "운영팀",
+      views: 13,
+    },
+    {
+      key: "17",
+      title: "공지사항 주의 사항",
+      date: "2023-06-17",
+      author: "관리자",
+      views: 21,
+    },
+    {
+      key: "18",
+      title: "기능 개선 사항",
+      date: "2023-06-18",
+      author: "운영팀",
+      views: 6,
+    },
+    {
+      key: "19",
+      title: "이용자 만족도 조사",
+      date: "2023-06-19",
+      author: "운영팀",
+      views: 19,
+    },
+    {
+      key: "20",
+      title: "서비스 종료 안내",
+      date: "2023-06-20",
+      author: "관리자",
+      views: 17,
+    },
+  ];
 
-  for (let i = 1; i <= 100; i++) {
-    const item = {
-      key: `${i}`,
-      title: `제목 ${i}`,
-      date: `2023-05-${i%30+1}`,
-      author: `작성자 ${i}`,
-      views: Math.floor(Math.random() * 100) + 1,
-    };
-    data.push(item);
-  }
+  // for (let i = 1; i <= 100; i++) {
+  //   const item = {
+  //     key: `${i}`,
+  //     title: `제목 ${i}`,
+  //     date: `2023-05-${i%30+1}`,
+  //     author: `작성자 ${i}`,
+  //     views: Math.floor(Math.random() * 100) + 1,
+  //   };
+  //   data.push(item);
+  // }
 
   const paginatedData = data.slice(
     (currentPage - 1) * pageSize,
