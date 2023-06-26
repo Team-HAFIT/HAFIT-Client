@@ -29,6 +29,8 @@ const CalendarPage = () => {
   const [startDate, setStartDate] = useState('');
   const [repeatDays, setRepeatDays] = useState([]);
   const [routines, setRoutines] = useState([]);
+  const [exercises, setExercises] = useState([]);
+  const [selectedGoal, setSelectedGoal] = useState(null);
 
   const fetchRoutines = useCallback(async () => {
     axios
@@ -124,6 +126,28 @@ const CalendarPage = () => {
     }
   }, [accessToken]);
 
+  const fetchExercises  = useCallback(async () => {
+
+    try {
+      const response = await axios.get("/api/exercises", {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      });
+      setExercises(response.data);
+    } catch (error) {
+      console.log(error);
+      message.error("키워드를 불러올 수 없습니다.", 1);
+    } finally {
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    fetchExercises();
+  }, []);  
+
   const renderGoalList = () => {
     return (
       <div className="pill-container">
@@ -172,15 +196,10 @@ const CalendarPage = () => {
         timeout: 10000,
       });
 
-      console.log(goalResponse.data);
       const routineData = {
         ...values,
         goalId: goalResponse.data,
       };
-      console.log(routineData);
-      console.log(routineData);
-      console.log(routineData);
-      console.log(routineData);
       await axios.post('/api/routines', routineData, {
         headers: {
           'Content-Type': 'application/json',
@@ -196,18 +215,43 @@ const CalendarPage = () => {
     }
   };
 
-  const handleModalSubmit = (values) => {
-    const newSchedule = {
-      date: selectedDate.format('YYYY-MM-DD'),
-      exercise: values.subExercise,
-      reps: values.targetReps,
-      sets: values.targetSets,
-      weight: targetWeight, // Use targetWeight state instead of values.targetWeight
-      repeatDays: values.repeatDays || [], // Set default value if no repeat days are selected
-      memo: values.memo,
-    };
-    setExerciseSchedules([...exerciseSchedules, newSchedule]);
-    setModalVisible(false);
+  const handleRoutineSubmit = async (values) => {
+    try {
+      values.exerciseId = selectedExerciseId;
+      values.days = selectedDate.format('YYYY-MM-DD');
+      await axios.post('/api/routines/one', values, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: 10000,
+      });
+
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+      message.error('일정을 추가할 수 없습니다.', 1);
+    }
+  };
+
+  const handleCheckboxChange = async (routineId, days) => {
+    try {
+      await axios.post(
+        '/api/routines/perform',
+        { routineId, days },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${accessToken}`,
+          },
+          timeout: 10000,
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+      message.error('일정을 추가할 수 없습니다.', 1);
+    }
   };
 
   const handleRoutineCountChange = (e) => {
@@ -226,8 +270,8 @@ const CalendarPage = () => {
     setExerciseId(e.target.value);
   };
 
-  const handleGoalIdChange = (e) => {
-    setGoalId(e.target.value);
+  const handleGoalChange = (value) => {
+    setSelectedGoal(value);
   };
 
   const handleStartDateChange = (e) => {
@@ -279,7 +323,7 @@ const CalendarPage = () => {
                 <span style={{ fontWeight: 'bold' }}>{exercise.exerciseName}</span>
                 {exercise.perform === 'Y' && <span style={{ marginLeft: '5px' }}>&#128582;</span>}
               </div>
-              {`${exercise.routineCount}개 x ${exercise.routineSet}세트${exercise.routineWeight !== null ? ` x ${exercise.routineWeight}kg` : ''}`}
+              {`${exercise.routineCount}개 x ${exercise.routineSet}세트${exercise.routineWeight !== null ? ` (${exercise.routineWeight}kg)` : ''}`}
             </div>
           </p>
         ))}
@@ -293,20 +337,35 @@ const CalendarPage = () => {
     setModalVisible(true);
   };
 
-  const renderExerciseSection = (title, daysToAdd) => {
+  const renderExerciseSection = (title, daysToAdd, showCheckbox = false) => {
     const date = moment().add(daysToAdd, 'days');
-    const currentDayExercise = getCurrentDayExercise(date);
-
+    const exercises = routines.filter((routine) => routine.days === date.format('YYYY-MM-DD'));
+  
     return (
       <div className="exercise-section">
-        <h2>{title}</h2>
+        <h2>{title}의 운동</h2>
         <div className="exercise-schedule">
-          <Button onClick={() => addExercise(daysToAdd)}>+</Button>
-          {currentDayExercise}
+          <ul className="date-cell-schedules">
+            {exercises.map((exercise, index) => {
+              const exerciseDay = moment(exercise.days);
+
+              return (
+                <li key={index} style={{ textAlign: 'center', textDecoration: exercise.perform === 'Y' ? 'line-through' : 'none' }}>
+                  {showCheckbox && exerciseDay.isSame(moment(), 'day') && (
+                    <Checkbox style={{ marginRight: '10px' }} checked={exercise.perform === 'Y'} onChange={() => handleCheckboxChange(exercise.routineId, exercise.days)}/>
+                  )}
+                  <span style={{ backgroundColor: '#9d6acd', color: 'white', padding: '5px', borderRadius: '9px', fontWeight: 'bold' }}>{exercise.exerciseName}</span>
+                  {` ${exercise.routineCount}개 x ${exercise.routineSet}세트${exercise.routineWeight !== null ? ` (${exercise.routineWeight}kg)` : ''}`}
+                </li>
+              );
+            })}
+            <Button className="exercise-button" onClick={() => addExercise(daysToAdd)}>+</Button>
+          </ul>
         </div>
       </div>
     );
   };
+  
 
   const findExerciseScheduleByDate = (date) => {
     return exerciseSchedules.find(
@@ -314,24 +373,22 @@ const CalendarPage = () => {
     );
   };
 
-  const getCurrentDayExercise = (date) => {
-    const todaySchedules = exerciseSchedules.filter(
-      (schedule) => schedule.date === date.format('YYYY-MM-DD')
-    );
+  const getCurrentDayExercise = (value) => {
+    const exercises = routines.filter((routine) => routine.days === value.format('YYYY-MM-DD'));
 
-    if (todaySchedules.length > 0) {
-      return (
-        <div>
-          {todaySchedules.map((schedule, index) => (
-            <p key={index}>
-              {schedule.exercise}  {schedule.reps}개 X {schedule.sets} 세트 ({schedule.weight}kg)
-            </p>
-          ))}
-        </div>
-      );
-    } else {
-      return <p>일정이 없습니다.</p>;
-    }
+    return (
+      <ul className="date-cell-schedules">
+        {exercises.map((exercise, index) => (
+          <p key={index} style={{ textAlign: 'center', marginBottom: '0' }}>
+          <span style={{ backgroundColor: '#9d6acd', padding: '5px', borderRadius: '4px' }}>
+            {exercise.exerciseName}
+          </span>
+          {` ${exercise.routineCount}개 x ${exercise.routineSet}세트${exercise.routineWeight !== null ? ` (${exercise.routineWeight}kg)` : ''}`}
+        </p>
+
+        ))}
+      </ul>
+    );
   };
 
   const renderCurrentDayExercise = (date) => {
@@ -446,7 +503,7 @@ const CalendarPage = () => {
       </div>
 
       <div className="exercise-sections">
-        {renderExerciseSection('오늘', 0)}
+        {renderExerciseSection('오늘', 0, true)}
         {renderExerciseSection('내일', 1)}
         {renderExerciseSection('모레', 2)}
       </div>
@@ -464,8 +521,70 @@ const CalendarPage = () => {
         onCancel={handleModalCancel}
         footer={null}
       >
-        <Form onFinish={handleModalSubmit} layout="vertical">
-          <Form.Item label="운동 선택">
+        <Form onFinish={handleRoutineSubmit} layout="vertical">
+          <Form.Item name="goalId" label="운동 목표" rules={[{ required: true, message: '운동 목표를 선택해 주세요.' }]}>
+            <Select onChange={handleGoalChange}>
+              {goals.map((goal) => (
+                <Select.Option key={goal.goalId} value={goal.goalId}>
+                  {goal.goal_content}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item>
+            {exercises.map((exercise) => (
+              <Button
+                key={exercise.exerciseId}
+                onClick={() => handleExerciseClick(exercise.exerciseId)}
+                style={{
+                  fontWeight: selectedExerciseId === exercise.exerciseId ? 'bold' : 'normal',
+                  backgroundColor: selectedExerciseId === exercise.exerciseId ? '#8A2BE2' : 'inherit',
+                  color: selectedExerciseId === exercise.exerciseId ? '#eaeaea' : 'inherit'
+                }}
+              >
+                {exercise.exerciseName}
+              </Button>
+            ))}
+          </Form.Item>
+          <Form.Item label="목표 개수">
+            <Input.Group compact>
+              <Form.Item
+                name="routineCount"
+                noStyle
+                rules={[{ required: true, message: '목표 개수를 입력해주세요' }]}
+              >
+                <Input
+                  style={{ width: '50%' }}
+                  placeholder="개"
+                  type="number"
+                  min={1}
+                  onChange={handleRoutineCountChange}
+                />
+              </Form.Item>
+              <Form.Item
+                name="routineSet"
+                noStyle
+                rules={[{ required: true, message: '목표 세트 수를 입력해주세요' }]}
+              >
+                <Input
+                  style={{ width: '50%' }}
+                  placeholder="세트"
+                  type="number"
+                  min={1}
+                  onChange={handleRoutineSetChange}
+                />
+              </Form.Item>
+            </Input.Group>
+          </Form.Item>
+          <Form.Item label="목표 중량" name="routineWeight" required={false}>
+            <Input
+              placeholder="kg"
+              type="number"
+              min={1}
+              onChange={handleRoutineWeightChange}
+            />
+          </Form.Item>
+          {/* <Form.Item label="운동 선택">
             <Input.Group compact>
               <Form.Item
                 name="mainExercise"
@@ -498,45 +617,7 @@ const CalendarPage = () => {
                 </Select>
               </Form.Item>
             </Input.Group>
-          </Form.Item>
-          <Form.Item label="목표 개수">
-            <Input.Group compact>
-              <Form.Item
-                name="targetReps"
-                noStyle
-                rules={[{ required: true, message: '목표 개수를 입력해주세요' }]}
-              >
-                <Input
-                  style={{ width: '50%' }}
-                  placeholder="개"
-                  type="number"
-                  min={1}
-                  onChange={handleTargetRepsChange}
-                />
-              </Form.Item>
-              <Form.Item
-                name="targetSets"
-                noStyle
-                rules={[{ required: true, message: '목표 세트 수를 입력해주세요' }]}
-              >
-                <Input
-                  style={{ width: '50%' }}
-                  placeholder="세트"
-                  type="number"
-                  min={1}
-                  onChange={handleTargetSetsChange}
-                />
-              </Form.Item>
-            </Input.Group>
-          </Form.Item>
-          <Form.Item label="목표 중량">
-            <Input
-              placeholder="kg"
-              type="number"
-              min={1}
-              onChange={handleTargetWeightChange}
-            />
-          </Form.Item>
+                  </Form.Item> */}
           <Form.Item>
             <Button type="primary" htmlType="submit">
               저장
