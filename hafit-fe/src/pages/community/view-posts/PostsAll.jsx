@@ -389,7 +389,7 @@ const PostsAll = () => {
                       <Avatar
                         size={56}
                         icon={<UserOutlined />}
-                        src="post.imageUrl"
+                        src={post.imageUrl}
                         // style={{ width: "48px", height: "48px" }}
                         style={{
                           marginRight: "8px",

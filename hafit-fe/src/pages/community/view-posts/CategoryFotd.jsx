@@ -388,7 +388,7 @@ const CategoryFotd = () => {
                     <div style={{ display: "flex" }}>
                       <Avatar
                         size={56}
-                        src="#"
+                        src={post.imageUrl}
                         // style={{ width: "48px", height: "48px" }}
                         style={{
                           display: "flex",
