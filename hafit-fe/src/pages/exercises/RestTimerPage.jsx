@@ -14,6 +14,8 @@ const RestTimerPage = () => {
   const [isExpired, setIsExpired] = useState(false);
   const [selectedTime ,setSelectedTime] = useState(0);
   const [inputTime, setInputTime] = useState(0);
+  const [nowTime] = useState(new Date());
+  let realTime = new Date() - nowTime; // 소요 시간
   const location = useLocation();
   const planId = location.state.planId;
   const realSet = location.state.realSet;
@@ -32,7 +34,7 @@ const RestTimerPage = () => {
       .then((response) => {
         const plan = response.data;
         console.log(plan);
-        setSelectedTime(plan.plan_rest_time);
+        setTimer(plan.plan_rest_time);
       })
       .catch((error) => {
         console.log(error);
@@ -91,7 +93,8 @@ const RestTimerPage = () => {
 
   const handleNextSet = () => {
     // Next set button functionality
-    const data = { restTime : selectedTime, 
+    realTime = (new Date() - nowTime)/1000;
+    const data = { restTime : realTime, 
                    weight : 10,
                    plan : planId
                     };
