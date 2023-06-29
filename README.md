@@ -78,7 +78,7 @@
             <td width="16%" style="padding:0;">
                <ul>
                    <li>백엔드 팀원</li>
-                   <li>토큰 기반 서버 인증 구현(Oauth2+JWT)</li>
+                   <li>토큰 기반 서버 인증 구현<br/>(Oauth2+JWT)</li>
                    <li>유저 CRUD 구현</li>
                    <li>운동 목표/일정 구현</li>
                </ul>
