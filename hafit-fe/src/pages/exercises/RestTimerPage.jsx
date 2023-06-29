@@ -185,4 +185,3 @@ const RestTimerPage = () => {
 };
 
 export default RestTimerPage;
-

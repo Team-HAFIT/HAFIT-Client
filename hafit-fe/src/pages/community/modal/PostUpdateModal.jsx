@@ -371,13 +371,16 @@ const PostUpdateModal = (props) => {
                                   borderRadius: "12px",
                                 }}
                               >
-                                <source src={file.base64} type={file.type} />
+                                <source
+                                  src={file.url || file.preview || file.base64}
+                                  type={file.type}
+                                />
                               </video>
                             ) : (
                               <img
                                 width={272}
                                 alt="slide"
-                                src={file.base64}
+                                src={file.url || file.preview || file.base64}
                                 style={{
                                   width: "100%",
                                   minHeight: "504px",
