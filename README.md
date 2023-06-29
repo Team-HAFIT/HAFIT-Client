@@ -1,4 +1,7 @@
-# YJU 3WD-A반 6조 캡스톤 디자인 : 해핏 (HAFIT)
-<img width="100%" height="100%" src="https://private-user-images.githubusercontent.com/103083251/249657004-e0a60b44-8eee-4ac2-a6ef-a291f34836cd.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJrZXkxIiwiZXhwIjoxNjg4MDA2MzA0LCJuYmYiOjE2ODgwMDYwMDQsInBhdGgiOiIvMTAzMDgzMjUxLzI0OTY1NzAwNC1lMGE2MGI0NC04ZWVlLTRhYzItYTZlZi1hMjkxZjM0ODM2Y2QuanBnP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQUlXTkpZQVg0Q1NWRUg1M0ElMkYyMDIzMDYyOSUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyMzA2MjlUMDIzMzI0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NmU4MjllZmE0M2YwYzVjMDFkZmMwZGMxMDIzNjEzNzcyOTI3ZmNiNmI1NzRhZDZhZTA0YzAwMWNiNWM5OGI0ZSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmYWN0b3JfaWQ9MCZrZXlfaWQ9MCZyZXBvX2lkPTAifQ.JAJfNky9CAOKFOuNCoYj-wTReGjmoKlzccHDemSmRF8" alt="해핏 로고">
+# 👋 영진전문대학교 3학년 WD-A반 6조(feedback) @ 캡스톤 프로젝트
+![hafit_logo](https://github.com/Team-HAFIT/HAFIT-Client/assets/103083251/6077c313-5d90-437c-8b62-e09cce3e8d0f)
 
-#### 👋 영진전문대학교 3학년 WD-A반 6조(feedback) @ 캡스톤 프로젝트
+## 프로젝트 개요 👀  
+
+- **해핏**은 Happy와 Fitness의 합성어로, 사용자가 건강하고 즐겁게 운동할 수 있는 환경을 제공하는 AI 포즈 추정 기술(Pose estimation) 기반 `실시간 운동 자세 분석 서비스`입니다.
+
