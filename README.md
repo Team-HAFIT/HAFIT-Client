@@ -49,7 +49,7 @@
            <td align="center"><b>이지환</b></td>
        </tr>
        <tr>
-            <td width="16%" style="padding:0;">
+            <td width="17%" style="padding:0;">
                <ul style="padding:0;">
                   <li>프론트엔드 팀장</li>
                   <li>프론트엔드 개발 총괄</li>
@@ -58,7 +58,7 @@
                   <li>발표 PPT 제작 총괄</li>
                </ul>
             </td>
-            <td width="16%" style="padding:0;">
+            <td width="17%" style="padding:0;">
                <ul>
                    <li>프론트엔드 팀원</li>
                    <li>운동 디테일적 요소 세팅</li>
@@ -83,7 +83,7 @@
                    <li>운동 목표/일정 구현</li>
                </ul>
             </td>
-            <td width="16%" style="padding:0;">
+            <td width="17%" style="padding:0;">
                <ul>
                    <li>백엔드 팀원</li>
                    <li>AWS S3 스토리지 구축</li>
@@ -92,7 +92,7 @@
                    <li>개발 관련 자문 요청</li>
                </ul>
             </td>
-            <td width="16%" style="padding:0;">
+            <td width="17%" style="padding:0;">
                <ul>
                    <li>백엔드 팀원</li>
                    <li>운동 모듈 개발 총괄</li>
