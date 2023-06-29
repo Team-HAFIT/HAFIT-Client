@@ -50,55 +50,43 @@
        </tr>
        <tr>
             <td width="17%" style="padding:0;">
-               <ul style="padding:0;">
-                  <li>프론트엔드 팀장</li>
-                  <li>프론트엔드 개발 총괄</li>
-                  <li>협업툴 세팅 및 관리</li>
-                  <li>UI/UX 디자인</li>
-                  <li>발표 PPT 제작 총괄</li>
-               </ul>
+               • 프론트엔드 팀장<br />
+               • 프론트엔드 개발 총괄<br />
+               • 협업툴 세팅 및 관리<br />
+               • UI/UX 디자인<br />
+               • 발표 PPT 제작 총괄
             </td>
             <td width="17%" style="padding:0;">
-               <ul>
-                   <li>프론트엔드 팀원</li>
-                   <li>운동 디테일적 요소 세팅</li>
-                   <li>일정 및 통계 개발</li>
-                   <li>헬스 레퍼런스 탐색 및 인터뷰</li>
-               </ul>
+               • 프론트엔드 팀원<br />
+               • 운동 디테일적 요소 세팅<br />
+               • 일정 및 통계 개발<br />
+               • 헬스 레퍼런스 탐색 및 인터뷰<br />
             </td>
             <td width="16%" style="padding:0;">
-               <ul>
-                   <li>백엔드 팀장</li>
-                   <li>운동 모듈 개발</li>
-                   <li>운동 CRUD 구현</li>
-                   <li>https 배포</li>
-                   <li>ERD 설계</li>
-               </ul>
+               • 백엔드 팀장<br />
+               • 운동 모듈 개발<br />
+               • 운동 CRUD 구현<br />
+               • https 배포<br />
+               • ERD 설계<br />
             </td>
             <td width="16%" style="padding:0;">
-               <ul>
-                   <li>백엔드 팀원</li>
-                   <li>토큰 기반 서버 인증 구현<br/>(Oauth2+JWT)</li>
-                   <li>유저 CRUD 구현</li>
-                   <li>운동 목표/일정 구현</li>
-               </ul>
+               • 백엔드 팀원<br />
+               • 토큰 기반 서버 인증 구현<br/>(Oauth2+JWT)<br />
+               • 유저 CRUD 구현<br />
+               • 운동 목표/일정 구현<br />
             </td>
             <td width="17%" style="padding:0;">
-               <ul>
-                   <li>백엔드 팀원</li>
-                   <li>AWS S3 스토리지 구축</li>
-                   <li>커뮤니티 CRUD 구현</li>
-                   <li>Swagger 세팅</li>
-                   <li>개발 관련 자문 요청</li>
-               </ul>
+               • 백엔드 팀원<br />
+               • AWS S3 스토리지 구축<br />
+               • 커뮤니티 CRUD 구현<br />
+               • Swagger 세팅<br />
+               • 개발 관련 자문 요청<br />
             </td>
             <td width="17%" style="padding:0;">
-               <ul>
-                   <li>백엔드 팀원</li>
-                   <li>운동 모듈 개발 총괄</li>
-                   <li>MediaPipe, PoseNet을 활용한 모델 개발</li>
-                   <li>검증 방식 설계</li>
-               </ul>
+               • 백엔드 팀원<br />
+               • 운동 모듈 개발 총괄<br />
+               • MediaPipe, PoseNet을 활용한 모델 개발<br />
+               • 검증 방식 설계<br />
             </td>
        </tr>
    </tbody>
