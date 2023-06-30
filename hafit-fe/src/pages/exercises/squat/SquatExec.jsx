@@ -689,7 +689,7 @@ const Movenet = () => {
                 {Array.from({ length: totalSets }, (_, index) => (
                   <div
                     key={index}
-                    className={index < currentSet ? 'shape completed' : 'shape'}
+                    className={index < realSet ? 'shape completed' : 'shape'}
                   ></div>
                 ))}
               </div>
