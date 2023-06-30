@@ -6,11 +6,11 @@
 
 ## 프로젝트 개요 👀
 
-- **해핏**은 Happy와 Fitness의 합성어로, 사용자가 건강하고 즐겁게 운동할 수 있는 환경을 제공하는 AI 포즈 추정 기술(Pose estimation) 기반 `실시간 운동 자세 분석 서비스`입니다.
+- **해핏**은 Happy와 Fitness의 합성어로, 사용자가 건강하고 즐겁게 운동할 수 있는 환경을 제공하는 AI 포즈 추정 기술(Pose estimation) 기반 `실시간 운동 자세 분석 • 운동 보조 플랫폼`입니다.
 
 <br />
 
-### 🏋️ 주요 서비스
+## 🏋️ 주요 서비스
 
 1. **실시간 운동 자세 분석**을 통해 불안정한 운동 자세로 인한 `부상 위험 감지`
 2. 올바른 자세를 유도하기 위한 `시각적•청각적 피드백` 제공
@@ -21,12 +21,13 @@
 ---
 
 - 6조 `프론트엔드` Repository입니다.
-- [백엔드 Repository는 여기를 클릭해주세요 ! 🔥](https://github.com/Team-HAFIT/HAFIT-Server)
+- [백엔드 Repository는 `여기`를 클릭해 주세요 ! 🔥](https://github.com/Team-HAFIT/HAFIT-Server)
+- [직접 실행을 해보고 싶다면 `여기`를 클릭해 주세요 ! 🔥 (링크 동작 X, 통합 빌드 버전 구현 후 추가하겠습니다!)](#)  
   <br />
 
 ## 👨‍💻 TEAM˚ Feedback 👩‍💻
 
-<table width="100%">
+<table width="100%" align="center">
    <thead>
       <tr align="center">
          <td colspan = "6">
@@ -118,7 +119,7 @@
                     <li>프론트엔드 팀원</li>
                     <li>운동 디테일적 요소 세팅</li>
                     <li>일정 및 통계 개발</li>
-                    <li>헬스 레퍼런스 연구 및 인터뷰</li>
+                    <li>헬스 레퍼런스 조사・연구 및 인터뷰</li>
                 </ul>
             </td>
          </tr>
@@ -170,3 +171,85 @@
          </tr>
     </tbody>
 </table>
+  
+<br />
+
+---
+
+<details>  
+    <summary><h2 style="display:inline">📌 Team Convention</h2></summary>
+        <div markdown="1">
+            <h3>📍 Commit Convention</h3><br />  
+            <br />  
+            <h3>📍 Branch Convention</h3>
+            <hr />
+        </div>
+</details>
+
+<br />
+
+## 📚 기술 스택
+
+### 🔎 Front-end
+
+<div align=center> 
+    <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
+    <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
+    <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
+    <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> 
+    <br />
+    <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
+    <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white">
+    <img src="https://img.shields.io/badge/Ant Design-0170FE?style=for-the-badge&logo=ant-design&logoColor=white">
+    <br />
+</div>
+
+<br />
+
+### 🔎 Back-end
+
+<div align=center> 
+    <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
+    <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
+    <img src="https://img.shields.io/badge/maria db-003545?style=for-the-badge&logo=mariadb&logoColor=white">
+    <img src="https://img.shields.io/badge/jwt-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white">
+    <br />
+    <img src="https://img.shields.io/badge/oauth 2.0-0F2727?style=for-the-badge&logo=oauth&logoColor=white">
+    <img src="https://img.shields.io/badge/aws s3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
+    <img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black">
+    <img src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white">
+    <br />
+</div>
+
+<br />
+
+### 🔎 UI/UX
+
+<div align=center> 
+    <img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
+    <img src="https://img.shields.io/badge/photoshop-31A8FF?style=for-the-badge&logo=adobephotoshop&logoColor=white">
+    <img src="https://img.shields.io/badge/illustrator-FF9A00?style=for-the-badge&logo=adobeillustrator&logoColor=white">
+</div>
+
+<br />
+
+### 🔎 협업 툴
+
+<div align=center> 
+    <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+    <img src="https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white">
+    <img src="https://img.shields.io/badge/slack-4A154B?style=for-the-badge&logo=slack&logoColor=white">
+    <img src="https://img.shields.io/badge/notion-EFEBF8?style=for-the-badge&logo=notion&logoColor=black">
+</div>
+
+<br />
+
+---
+
+<br />
+
+## ⚙️ 개발 환경
+
+<br />
+
+## 🗓️ 개발 일정
