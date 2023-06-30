@@ -89,7 +89,9 @@
 </table>
 
 <table width="100%" align="center">
-    <thead>
+        <tr align="center">
+          <td colspan="4">저희는 2명의 프론트엔드,  4명의 백엔드 개발자로 이루어져 있습니다. 🚴</td>
+        </tr>
         <tr align="center" style="background-color: #F6F6F6;">
             <th width="10%">
                 <span><b>이름</b></span>
@@ -104,8 +106,6 @@
                 <span><b>역할 🌱</b></span>
             </th>
         </tr>
-    </thead>
-    <tbody>
          <tr>
             <td align="center"><span style="color:#999999;">1801125</span><br /><b>백정훈</b></td>
             <td align="left">
@@ -169,7 +169,6 @@
                 </ul>
             </td>
          </tr>
-    </tbody>
 </table>
   
 <br />
