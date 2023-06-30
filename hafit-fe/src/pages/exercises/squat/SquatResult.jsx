@@ -24,6 +24,7 @@ const SquatResult = () => {
   const [time, setTime] = useState(0); // 소모 시간(몇초 기준)
   const [weight, setWeight] = useState(0); // 무게
   const [forceRender, setForceRender] = useState(false); // 렌더링을 강제로 발생시킬 상태 추가
+  const [calorie, setCalorie] = useState(0);
   const currentDate = new Date();
   const currentDateString = `${currentDate.getFullYear()}. ${
     currentDate.getMonth() + 1
@@ -46,6 +47,19 @@ const SquatResult = () => {
         setCount(item.realCount);
         setSet(item.realSet);
         setTime(item.realTime);
+        axios.get('/api/my', {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          timeout: 10000,
+        })
+        .then((res) => {
+          const list = res.data;
+          let height = list.height;
+          let weight = list.weight;
+          setCalorie(parseInt(((6.0 + (0.1 * item.weight / list.weight) * 3.5 * list.weight / 200) * (item.realCount * item.realSet * (item.realTime/60)))));
+        })
         setForceRender(true); // 렌더링을 강제로 발생시킬 상태를 true로 설정
       })
       .catch((error) => {
@@ -174,7 +188,7 @@ const SquatResult = () => {
                       marginRight: "10px",
                     }}
                   >
-                    {time}
+                    {calorie}
                   </span>
                   <span style={{ fontSize: "16px" }}>kcal</span>
                 </p>
@@ -192,26 +206,6 @@ const SquatResult = () => {
                     {weight}
                   </span>
                   <span style={{ fontSize: "16px" }}>kg</span>
-                </p>
-                <p style={{ margin: "32px 0" }}>
-                  <span style={{ fontSize: "16px", marginRight: "12px" }}>
-                    운동 강도
-                  </span>
-                  <span style={{ fontSize: "28px", marginRight: "24px" }}>
-                    😢
-                  </span>
-                  <span style={{ fontSize: "28px", marginRight: "24px" }}>
-                    🙁
-                  </span>
-                  <span style={{ fontSize: "28px", marginRight: "24px" }}>
-                    😐
-                  </span>
-                  <span style={{ fontSize: "28px", marginRight: "24px" }}>
-                    🙂
-                  </span>
-                  <span style={{ fontSize: "28px", marginRight: "24px" }}>
-                    😃
-                  </span>
                 </p>
               </div>
             </Col>
