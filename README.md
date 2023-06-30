@@ -88,15 +88,21 @@
    </tbody>
 </table>
 
-<table width="100%">
+<table width="100%" align="center">
     <thead>
-        <tr align="center">
-            <td width="10%">
+        <tr align="center" style="background-color: #F6F6F6;">
+            <th width="10%">
                 <span><b>이름</b></span>
-            </td>
-            <td width="90%">
+            </th>
+            <th width="40%">
                 <span><b>역할 🌱</b></span>
-            </td>
+            </th>
+            <th width="10%">
+                <span><b>이름</b></span>
+            </th>
+            <th width="40%">
+                <span><b>역할 🌱</b></span>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -111,8 +117,6 @@
                     <li>발표 PPT 제작 총괄</li>
                 </ul>
             </td>
-         </tr>
-         <tr>
             <td align="center"><span style="color:#999999;">1801243</span><br /><b>장준규</b></td>
             <td align="left">
                 <ul>
@@ -134,8 +138,6 @@
                     <li>ERD 설계</li>
                 </ul>
             </td>
-         </tr>
-         <tr>
             <td align="center"><span style="color:#999999;">2101012</span><br /><b>곽유진</b></td>
             <td align="left">
                 <ul>
@@ -157,8 +159,6 @@
                     <li>개발 관련 자문 요청</li>
                 </ul>
             </td>
-         </tr>
-         <tr>
             <td align="center"><span style="color:#999999;">1801219</span><br /><b>이지환</b></td>
             <td align="left">
                 <ul>
@@ -190,8 +190,7 @@
 
 ## 📚 기술 스택
 
-### 🔎 Front-end
-
+<div align=center><h3>🚀 Front-End</h3></div>
 <div align=center> 
     <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
     <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
@@ -206,8 +205,7 @@
 
 <br />
 
-### 🔎 Back-end
-
+<div align=center><h3>🚀 Back-End</h3></div>
 <div align=center> 
     <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
     <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
@@ -223,8 +221,7 @@
 
 <br />
 
-### 🔎 UI/UX
-
+<div align=center><h3>🚀 UI / UX</h3></div>
 <div align=center> 
     <img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
     <img src="https://img.shields.io/badge/photoshop-31A8FF?style=for-the-badge&logo=adobephotoshop&logoColor=white">
@@ -233,8 +230,7 @@
 
 <br />
 
-### 🔎 협업 툴
-
+<div align=center><h3>🚀 협업 툴</h3></div>
 <div align=center> 
     <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
     <img src="https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white">
