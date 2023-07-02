@@ -90,7 +90,7 @@
 
 <table width="100%" align="center">
         <tr align="center">
-          <td colspan="4">저희는 2명의 `프론트엔드`,  4명의 `백엔드` 개발자로 이루어진 팀입니다. 🚴</td>
+          <td colspan="4">저희는 2명의 '프론트엔드',  4명의 '백엔드' 개발자로 이루어진 팀입니다. 🚴</td>
         </tr>
         <tr align="center" style="background-color: #F6F6F6;">
             <th width="10%">
@@ -110,7 +110,7 @@
             <td align="center"><span style="color:#999999;">1801125</span><br /><b>백정훈</b></td>
             <td align="left">
                 <ul>
-                    <li>`프론트엔드` 팀장</li>
+                    <li>프론트엔드 팀장</li>
                     <li>프론트엔드 개발 총괄</li>
                     <li>협업툴 세팅 및 관리</li>
                     <li>UI/UX 디자인</li>
@@ -120,7 +120,7 @@
             <td align="center"><span style="color:#999999;">1801243</span><br /><b>장준규</b></td>
             <td align="left">
                 <ul>
-                    <li>`프론트엔드` 팀원</li>
+                    <li>프론트엔드 팀원</li>
                     <li>운동 디테일적 요소 세팅</li>
                     <li>일정 및 통계 개발</li>
                     <li>헬스 레퍼런스 조사・연구 및 인터뷰</li>
@@ -131,7 +131,7 @@
             <td align="center"><span style="color:#999999;">1901253</span><br /><b>전종훈</b></td>
             <td align="left">
                 <ul>
-                    <li>`백엔드` 팀장</li>
+                    <li>백엔드 팀장</li>
                     <li>운동 모듈 개발</li>
                     <li>운동 CRUD 구현</li>
                     <li>https 배포</li>
@@ -141,7 +141,7 @@
             <td align="center"><span style="color:#999999;">2101012</span><br /><b>곽유진</b></td>
             <td align="left">
                 <ul>
-                    <li>`백엔드` 팀원</li>
+                    <li>백엔드 팀원</li>
                     <li>Oauth2 + JWT를 활용한 토큰 기반 서버 인증 구현</li>
                     <li>유저 CRUD 구현</li>
                     <li>운동 목표/일정 구현</li>
@@ -152,7 +152,7 @@
             <td align="center"><span style="color:#999999;">2101149</span><br /><b>유다연</b></td>
             <td align="left">
                 <ul>
-                    <li>`백엔드` 팀원</li>
+                    <li>백엔드 팀원</li>
                     <li>AWS S3 스토리지 구축</li>
                     <li>커뮤니티 CRUD 구현</li>
                     <li>Swagger 세팅</li>
@@ -162,7 +162,7 @@
             <td align="center"><span style="color:#999999;">1801219</span><br /><b>이지환</b></td>
             <td align="left">
                 <ul>
-                    <li>`백엔드` 팀원</li>
+                    <li>백엔드 팀원</li>
                     <li>운동 모듈 개발 총괄</li>
                     <li>MediaPipe, PoseNet을 활용한 모듈 개발</li>
                     <li>검증 방식 설계</li>
@@ -188,47 +188,47 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Feat ✨</td>
+                        <th>Feat ✨</th>
                         <td>새로운 기능 추가</td>
                     </tr>
                     <tr>
-                        <td>Fix 🐛</td>
+                        <th>Fix 🐛</th>
                         <td>버그 수정</td>
                     </tr>
                     <tr>
-                        <td>Design 🎨</td>
+                        <th>Design 🎨</th>
                         <td>CSS 등 UI 디자인 변경</td>
                     </tr>
                     <tr>
-                        <td>Style 🩹</td>
+                        <th>Style 🩹</th>
                         <td>오타 수정, 변수명 변경, 세미콜론 빠졌을 때, 코드 변경이 없는 수정(줄바꿈, ...)</td>
                     </tr>
                     <tr>
-                        <td>Comment 💬</td>
+                        <th>Comment 💬</th>
                         <td>주석 추가/수정</td>
                     </tr>
                     <tr>
-                        <td>Chore 📦</td>
+                        <th>Chore 📦</th>
                         <td>build 관련 수정, package 관련 수정</td>
                     </tr>
                     <tr>
-                        <td>Rename 🚚</td>
+                        <th>Rename 🚚</th>
                         <td>파일을 수정/이동 작업만 했을 경우</td>
                     </tr>
                     <tr>
-                        <td>Remove 🔥</td>
+                        <th>Remove 🔥</th>
                         <td>파일을 삭제하는 작업만 했을 경우</td>
                     </tr>
                     <tr>
-                        <td>Test ✅</td>
+                        <th>Test ✅</th>
                         <td>테스트 코드</td>
                     </tr>
                     <tr>
-                        <td>Docs 📝</td>
+                        <th>Docs 📝</th>
                         <td>문서 수정 (Readme.md 등)</td>
                     </tr>
                     <tr>
-                        <td>Refactor ♻️</td>
+                        <th>Refactor ♻️</th>
                         <td>코드 리팩토링, 현재 구현된 코드를 개선</td>
                     </tr>
                 </tbody>
@@ -241,21 +241,19 @@
             </ul>
             <br/>
             <ol>
-                <li>모든 기능 구현은 `feature` 브랜치에서 시작합니다.</li>
-                <li>`feature` 브랜치는 `develop` 브랜치에서 분기되고 머지됩니다.</li>
-                <li>`develop` 브랜치에선 머지된 기능에 대한 테스트를 진행합니다.</li>
-                <li>전체적인 테스트가 완료되었다면 `main` 브랜치에서 배포를 준비합니다.</li>
+                <li>모든 기능 구현은 'feature' 브랜치에서 시작합니다.</li>
+                <li>'feature' 브랜치는 'develop' 브랜치에서 분기되고 머지됩니다.</li>
+                <li>'develop' 브랜치에선 머지된 기능에 대한 테스트를 진행합니다.</li>
+                <li>전체적인 테스트가 완료되었다면 'main' 브랜치에서 배포를 준비합니다.</li>
             </ol>
             <br/>
             <h3>📍 작업 진행 순서</h3>
             <ol>
-                <li>`Jira`에서 작업을 할당합니다.</li>
+                <li>Jira에서 작업을 할당합니다.</li>
                 <li>Jira 이슈번호를 포함한 Branch를 생성합니다.</li>
-                ```
-                ex) feat/HF-123-작업내용
-                ```
+                  ⌜ <em>ex) feat/HF-123-작업내용</em> ⌟
                 <li>생성된 Branch로 전환합니다.</li>
-                <li>작업 전, `develop 브랜치`를 `pull` 받고 작업을 시작해주세요!</li>
+                <li>작업 전, 'develop 브랜치'를 'pull' 받고 작업을 시작해주세요!</li>
                 <li>작업을 완료했다면, PR 후 카톡 남겨주시면 확인 후 merge 하겠습니다! 😆 </li>
             </ol>
             <hr />
