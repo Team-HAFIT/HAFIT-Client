@@ -1,12 +1,14 @@
-import React from 'react'
+import React from "react";
+import { Layout } from 'antd';
 
-function Footer() {
+const { Footer } = Layout;
+
+function MyFooter() {
   return (
-    <div>
-        <hr />
-        <p>Footer</p>
-    </div>
-  )
+    <Footer style={{ textAlign: 'center' }}>
+      <p style={{ color: "#999999" }}>© 2023 HAFIT. All rights reserved.</p>
+    </Footer>
+  );
 }
 
-export default Footer
+export default MyFooter;

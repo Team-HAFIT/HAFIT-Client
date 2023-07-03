@@ -1,0 +1,117 @@
+@font-face {
+  font-family: 'OAGothic-ExtraBold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+html,
+body {
+  height: 100vh;
+}
+
+.body-wrapper {
+  padding-bottom: 60px; /* footer의 높이 */
+  margin-left: 80px;
+  margin-right: 80px;
+}
+
+/* Header */
+.header {
+  height: 80vh;
+  min-height: 600px;
+  background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.85),
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0.55),
+      rgba(255, 255, 255, 0.98)
+    ),
+    url("../../assets/img/isometric_gym_fitness_illust.png");
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+  text-align: center;
+  margin-top: 0;
+}
+
+.header > h3 {
+  font-size: 19px;
+  margin-top: 56px;
+  margin-bottom: 0;
+  margin-right: 120px;
+  font-weight: 450;
+  border-bottom: #ffffff24 solid 1px;
+  padding-right: 32px;
+}
+
+.header > div {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  height: 200px;
+  width: 100px;
+  margin-right: 218px;
+  border-radius: 8px;
+  background-color: rgba(108, 0, 240, 0.65);
+  margin-top: 8px;
+  padding: 10px;
+}
+
+.header > div > h1 {
+  font-family: 'OAGothic-ExtraBold';
+  font-size: 120px;
+  font-weight: 800;
+  color: white;
+  text-shadow: 4px 4px 64px #fff;
+}
+
+.header > p {
+  font-size: 16px;
+  color: rgb(220, 220, 220);
+  margin-top: 32px;
+}
+
+.btn-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 140px;
+  margin-bottom: 16px;
+  padding: 24px 16px;
+  border-radius: 8px;
+  background-color: rgb(108, 0, 240);
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-start:hover {
+  background-color: rgb(1, 1, 1);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+}
+
+/* Container */
+.container {
+  padding: 50px;
+  text-align: center;
+  margin-left: 4rem;
+  margin-right: 4rem;
+}
+
+/* Feature */
+.feature {
+  margin-bottom: 60px;
+}
+
+.feature > img {
+  width: 40%;
+}

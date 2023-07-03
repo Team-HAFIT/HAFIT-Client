@@ -1,0 +1,31 @@
+.stats-page {
+    padding: 24px;
+  }
+  
+  .stats-page .title {
+    margin-bottom: 16px;
+  }
+  
+  .stats-page .radio-group {
+    margin-bottom: 16px;
+  }
+  
+  .stats-page .date-controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .stats-page .date-controls button {
+    margin-right: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  
+  .stats-page .content-select {
+    width: 200px;
+    margin-bottom: 16px;
+  }
+
+  
