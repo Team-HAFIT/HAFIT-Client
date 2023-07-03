@@ -21,8 +21,8 @@
 ---
 
 - 6조 `프론트엔드` Repository입니다.
-- [백엔드 Repository는 `여기`를 클릭해 주세요 ! 🔥](https://github.com/Team-HAFIT/HAFIT-Server)
-- [HaFit을 체험해 보고 싶다면 `여기`를 클릭해 주세요 ! 🔥 (실행 방법 설명) (링크 동작 X, 통합 빌드 버전 구현 후 추가하겠습니다!)]()  
+- [백엔드 Repository는 `여기`를 클릭해 주세요 ! 🔥](https://github.com/Team-HAFIT/HAFIT-Server)  
+
   <br />
 
 ## 👨‍💻 TEAM˚ Feedback 👩‍💻
@@ -260,6 +260,26 @@
 </details>
 
 ---
+
+<br />
+
+## 🪄 실행 방법
+
+1. 먼저 [**`서버 Repository`**](https://github.com/Team-HAFIT/HAFIT-Server) 에서 clone 받은 프로젝트를 **`run`** 합니다.
+   
+2. [**`클라이언트 Repository`**](https://github.com/Team-HAFIT/HAFIT-Client) 도 clone 후, 폴더를 열어주세요.
+  
+3. `/3WDA-HaFit-Client/hafit-fe` 경로에서 아래 명령어를 실행합니다.
+```
+npm install
+```
+  
+4. **`HAFIT`**을 체험할 준비가 완료되었습니다! 아래 명령어를 실행합니다.
+```
+npm start
+```  
+  
+- 웹페이지가 자동으로 열리지 않을 경우, 브라우저 주소창에 **`http://localhost:3000/`** 을 입력해주세요! 😆
 
 <br />
 
