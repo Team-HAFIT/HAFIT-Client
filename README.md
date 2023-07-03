@@ -22,7 +22,7 @@
 
 - 6조 `프론트엔드` Repository입니다.
 - [백엔드 Repository는 `여기`를 클릭해 주세요 ! 🔥](https://github.com/Team-HAFIT/HAFIT-Server)
-- [`HaFit`을 체험해 보고 싶다면 `여기`를 클릭해 주세요 ! 🔥 (실행 방법 설명) (링크 동작 X, 통합 빌드 버전 구현 후 추가하겠습니다!)]()  
+- [HaFit을 체험해 보고 싶다면 `여기`를 클릭해 주세요 ! 🔥 (실행 방법 설명) (링크 동작 X, 통합 빌드 버전 구현 후 추가하겠습니다!)]()  
   <br />
 
 ## 👨‍💻 TEAM˚ Feedback 👩‍💻
@@ -90,7 +90,7 @@
 
 <table width="100%" align="center">
         <tr align="center">
-          <td colspan="4">저희는 2명의 '프론트엔드',  4명의 '백엔드' 개발자로 이루어진 팀입니다. 🚴</td>
+          <td colspan="4">저희는 2명의 `프론트엔드`,  4명의 `백엔드` 개발자로 이루어진 팀입니다. 🚴</td>
         </tr>
         <tr align="center" style="background-color: #F6F6F6;">
             <th width="10%">
@@ -235,7 +235,7 @@
             </table>
             <br />  
             <h3>📍 Branch Convention</h3>
-            <img src="https://github.com/Team-HAFIT/HAFIT-Client/assets/103083251/3ec0ada7-ceb3-4d50-ad2d-7bff4d6589e3" alt="our-branch">
+            <img src="https://github.com/Team-HAFIT/HAFIT-Client/assets/103083251/3ec0ada7-ceb3-4d50-ad2d-7bff4d6589e3" width="80%" alt="our-branch">
             <ul>
                 <li>Git 학습을 목표로, Branch 전략은 최대한 간결하게 결정하게 되었습니다.</li>
             </ul>
@@ -249,18 +249,67 @@
             <br/>
             <h3>📍 작업 진행 순서</h3>
             <ol>
-                <li>Jira에서 작업을 할당합니다.</li>
-                <li>Jira 이슈번호를 포함한 Branch를 생성합니다.</li>
+                <li>Jira에서 작업을 할당해주세요.</li>
+                <li>Jira 이슈번호를 포함한 Branch를 생성해주세요.</li>
                   ⌜ <em>ex) feat/HF-123-작업내용</em> ⌟
-                <li>생성된 Branch로 전환합니다.</li>
-                <li>작업 전, 'develop 브랜치'를 'pull' 받고 작업을 시작해주세요!</li>
+                <li>작업 전, 생성된 Branch로 전환하고,</li>
+                <li>'develop 브랜치'를 'pull' 받고 작업을 시작해주세요!</li>
                 <li>작업을 완료했다면, PR 후 카톡 남겨주시면 확인 후 merge 하겠습니다! 😆 </li>
             </ol>
-            <hr />
         </div>
 </details>
 
+---
+
 <br />
+
+## ⚙️ 개발 환경
+
+### ✨ Front-End
+
+```
+* OS : M1 Mac (Ventura 13.1), Windows 10
+* IDE : Visual Studio Code (1.79.2)
+* Package Manager : npm (9.5.0)
+```
+
+<br />
+
+### ✨ Back-End
+
+```
+* OS: Windows 10
+* IDE: IntelliJ IDEA (2023. 01 (Community Edition))
+* Package Manager: Gradle (7.6.1)
+* Framework: Spring Boot (2.7.6)
+* Java: JDK 17
+* DB: MariaDB
+```
+
+<br />
+
+## 🗓️ 개발 일정
+
+| 👩‍💻 2023. 02. 16  ~  2023. 06. 27 (총 132일) 👨‍💻 |
+| :------------------------------------------: |
+| **`2월 16일 ~ 19일:`** Pose Estimation 조사 및 라이브러리 결정 |
+| **`2월 20일 ~ 21일:`** Hafit 기획서 작성 및 시장 조사 |
+| **`2월 22일 ~ 27일:`** 운동 모듈 래퍼런스 수집 및 코드 분석 |
+| **`2월 28일 ~ 3월 9일:`** 운동 모듈 프로토타입 제작 및 테스트 (구현 가능성 검증) |
+| **`3월 8일 ~ 14일:`** 역할 및 기술 스택 결정 |
+| **`3월 15일 ~ :`** React, Spring Boot 스터디 |
+| **`3월 15일 ~ 23일:`** 킬러 콘텐츠 선정 및 메뉴 구조도 작성 |
+| **`3월 24일 ~ 4월 6일:`** 스토리보드 작성 |
+| **`3월 24일 ~ 27일:`** Github, Jira 스터디 |
+| **`3월 28일 ~ 31일:`** WBS 작성 |
+| **`4월 1일 ~ 18일:`** 요구사항 분석 및 ERD 설계 |
+| **`4월 19일 ~ 24일:`** 개발 환경 세팅 |
+| **`4월 25일 ~ 6월 26일:`** Hafit 개발 |
+| **`6월 27일:`** 캡스톤 디자인 최종 발표 |
+
+<br />
+
+---
 
 ## 📚 기술 스택
 
@@ -311,15 +360,3 @@
     <img src="https://img.shields.io/badge/slack-4A154B?style=for-the-badge&logo=slack&logoColor=white">
     <img src="https://img.shields.io/badge/notion-EFEBF8?style=for-the-badge&logo=notion&logoColor=black">
 </div>
-
-<br />
-
----
-
-<br />
-
-## ⚙️ 개발 환경
-
-<br />
-
-## 🗓️ 개발 일정
