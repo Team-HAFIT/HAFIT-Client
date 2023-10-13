@@ -381,3 +381,10 @@ npm start
     <img src="https://img.shields.io/badge/slack-4A154B?style=for-the-badge&logo=slack&logoColor=white">
     <img src="https://img.shields.io/badge/notion-EFEBF8?style=for-the-badge&logo=notion&logoColor=black">
 </div>
+
+<br />
+
+---
+
+![해핏_설명포스터](https://github.com/Team-HAFIT/HAFIT-Client/assets/103083251/14dca15c-7e26-42ee-8e2a-22ad4620cd70)
+
