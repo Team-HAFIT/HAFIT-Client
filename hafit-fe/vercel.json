@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "http://13.124.127.102:8080/:path*"
+      "destination": "https://hafit-ser.com/:path*"
     }
   ]
 }
