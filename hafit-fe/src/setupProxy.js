@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: "http://13.124.127.102:8080/",
+      target: "https://www.hafit.net/",
       changeOrigin: true,
     })
   );
