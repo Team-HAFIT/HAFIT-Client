@@ -44,7 +44,7 @@ const CommunityLayout = () => {
         timeout: 5000,
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setUserInfo(response.data);
       })
       .catch((error) => {
