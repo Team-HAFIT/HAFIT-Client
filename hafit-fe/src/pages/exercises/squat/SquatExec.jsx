@@ -366,7 +366,7 @@ const Movenet = () => {
               }
             }
           }
-          else{
+          else {
             setIskneeDetected(false)
             ctx.fillStyle = 'white';
             ctx.strokeStyle = 'black';
