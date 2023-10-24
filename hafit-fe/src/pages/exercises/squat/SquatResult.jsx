@@ -56,8 +56,8 @@ const SquatResult = () => {
         })
         .then((res) => {
           const list = res.data;
-          let height = list.height;
-          let weight = list.weight;
+          let mHeight = list.height;
+          let mWeight = list.weight;
           if (list.height === undefined || list.weight === undefined) {
             mHeight = 70;
             mWeight = 70;
