@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/:path*",
-      "destination": "https://hafit-ser.com/:path*"
+      "source": "/api/:path*",
+      "destination": "https://hafit-ser.com/api/:path*"
     }
   ]
 }
