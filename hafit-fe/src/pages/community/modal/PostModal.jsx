@@ -23,6 +23,7 @@ import {
   PictureOutlined,
   LeftOutlined,
   RightOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { IoArrowBack } from "react-icons/io5";
 
@@ -85,6 +86,7 @@ const PostModal = (props) => {
     // },
   ]);
   const [userName, setUserName] = useState({});
+  const [userProfileImg, setUserProfileImg] = useState({});
 
   useEffect(() => {
     axios
@@ -96,8 +98,8 @@ const PostModal = (props) => {
         timeout: 5000,
       })
       .then((response) => {
-        // console.log(response.data);
         setUserName(response.data.name);
+        setUserProfileImg(response.data.imageUrl);
       })
       .catch((error) => {
         console.log(error);
@@ -372,10 +374,16 @@ const PostModal = (props) => {
               <Col span={24} className="content-header">
                 <Space className="writer-info">
                   <Avatar
+                    size={56}
+                    icon={<UserOutlined />}
+                    src={userProfileImg}
                     style={{
+                      display: "flex",
                       width: "48px",
                       height: "48px",
                       marginRight: "2px",
+                      alignItems: "center",
+                      justifyContent: "center"
                     }}
                   />
                   <Space direction="vertical" size={0}>

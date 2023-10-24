@@ -23,6 +23,7 @@ import {
   PictureOutlined,
   LeftOutlined,
   RightOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { IoArrowBack } from "react-icons/io5";
 
@@ -411,10 +412,16 @@ const PostUpdateModal = (props) => {
                   <Col span={24} className="content-header">
                     <Space className="writer-info">
                       <Avatar
+                        size={56}
+                        icon={<UserOutlined />}
+                        src={postInfo.imageUrl}
                         style={{
+                          display: "flex",
                           width: "48px",
                           height: "48px",
                           marginRight: "2px",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
                       />
                       <Space direction="vertical" size={0}>
