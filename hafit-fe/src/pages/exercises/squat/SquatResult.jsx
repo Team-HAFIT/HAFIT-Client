@@ -56,18 +56,11 @@ const SquatResult = () => {
         })
         .then((res) => {
           const list = res.data;
-          console.log(list.height);
-          console.log(list.weight);
           if (list.height == 0 || list.weight == 0) {
             setCalorie(parseInt(((6.0 + (0.1 * item.weight / 70) * 3.5 * 70 / 200) * (item.realCount * item.realSet * (item.realTime/60)))));
           } else {
             setCalorie(parseInt(((6.0 + (0.1 * item.weight / list.weight) * 3.5 * list.height / 200) * (item.realCount * item.realSet * (item.realTime/60)))));
           }
-          console.log(item.weight);
-          console.log(item.realCount);
-          console.log(item.realSet);
-          console.log(item.realTime);
-          console.log(parseInt(((6.0 + (0.1 * item.weight / list.weight) * 3.5 * list.weight / 200) * (item.realCount * item.realSet * (item.realTime/60)))));
         })
         setForceRender(true); // 렌더링을 강제로 발생시킬 상태를 true로 설정
       })
