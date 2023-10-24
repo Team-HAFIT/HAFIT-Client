@@ -96,7 +96,7 @@ const PostModal = (props) => {
         timeout: 5000,
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setUserName(response.data.name);
       })
       .catch((error) => {
@@ -175,10 +175,10 @@ const PostModal = (props) => {
 
       for (let i = 0; i < fileList.length; i++) {
         formData.append("files", fileList[i].originFileObj);
-        console.log(`파일 [${i}]: ` + JSON.stringify(fileList[i]));
+        // console.log(`파일 [${i}]: ` + JSON.stringify(fileList[i]));
       }
 
-      console.log(formData.getAll("files"));
+      // console.log(formData.getAll("files"));
 
       // let endPoint;
       // if (fileList.length === 0) {
@@ -199,7 +199,7 @@ const PostModal = (props) => {
         timeout: 5000,
       });
 
-      console.log(response.data);
+      // console.log(response.data);
 
       // Reset form and close the modal
       form.resetFields();

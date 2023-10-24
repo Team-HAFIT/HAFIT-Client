@@ -16,7 +16,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
 import { useSelector } from "react-redux";
-// import jwt_decode from "jwt-decode";
+import jwt_decode from "jwt-decode";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Pagination } from "swiper";
@@ -38,6 +38,15 @@ const ContainerHeight = 1200;
 
 const CategoryFotd = () => {
   const accessToken = useSelector((state) => state.authToken.accessToken);
+  let decoded = null; // 토큰 decode 값
+  let isAdmin = null;
+  let authEmail = null;
+
+  if(accessToken) {
+    decoded = jwt_decode(accessToken);
+    isAdmin = decoded && decoded.role && decoded.role.includes("ROLE_ADMIN");
+    authEmail = decoded.email;
+  }
 
   const [modalVisible, setModalVisible] = useState(false); // 모달 표시 여부 상태값
   const [selectedPostId, setSelectedPostId] = useState(null); // 선택한 게시글 id
@@ -153,7 +162,7 @@ const CategoryFotd = () => {
       })
       .finally(() => {
         setLoading(false);
-        console.log("마지막 포스트 id " + lastPostId);
+        // console.log("마지막 포스트 id " + lastPostId);
       });
   }, [accessToken, lastPostId, loading, reachedEnd, size]);
 
@@ -424,6 +433,7 @@ const CategoryFotd = () => {
                       </div>
                     </div>
                     <Menu>
+                    {(post.email === authEmail || isAdmin) && ( // 본인이 작성한 글 or 관리자만 보이는 메뉴
                       <Menu.Item>
                         <Dropdown
                           overlay={menu}
@@ -443,6 +453,7 @@ const CategoryFotd = () => {
                           />
                         </Dropdown>
                       </Menu.Item>
+                    )}
                     </Menu>
                   </List.Item>
                 </div>
